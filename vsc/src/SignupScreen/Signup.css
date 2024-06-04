@@ -1,47 +1,54 @@
+/* signup.css */
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   background-color: #f9f9f9;
+  padding: 10px; /* Added padding to prevent touching the edges */
 }
 
 .signup-box {
-  width: 300px;
-  padding: 20px;
+  width: 100%;
+  max-width: 350px; /* Reduced max-width */
+  padding: 15px; /* Reduced padding */
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
   border-radius: 10px;
+  margin: 10px; /* Added margin to prevent touching the edges */
 }
 
 .logo img {
-  width: 120px;
-  margin-bottom: 20px;
+  width: 100px; /* Reduced logo size */
+  margin-bottom: 15px; /* Reduced margin-bottom */
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* Reduced margin-bottom */
   text-align: left;
 }
 
 .form-control {
   width: 100%;
-  padding: 10px;
+  padding: 8px; /* Reduced padding */
   margin-top: 5px;
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 5px;
+  font-size: 14px; /* Reduced font size */
 }
 
 .btn {
   width: 100%;
-  padding: 10px;
+  padding: 8px; /* Reduced padding */
   background-color: #007bff;
   border: none;
   color: #fff;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px; /* Reduced font size */
 }
 
 .btn:hover {
@@ -54,8 +61,39 @@
   color: #007bff;
   text-decoration: underline;
   cursor: pointer;
+  font-size: 14px; /* Reduced font size */
 }
 
 .link-button:hover {
   color: #0056b3;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.required-fields {
+  color: #ff0000;
+  margin-bottom: 15px;
+  font-size: 14px; /* Reduced font size */
+}
+
+.password-requirement {
+  color: #000;
+  margin-top: 5px; /* Added margin-top */
+  margin-bottom: 10px;
+  font-size: 12px; /* Reduced font size */
+}
+
+.preview-image {
+  width: 80px; /* Reduced image size */
+  height: 80px; /* Reduced image size */
+  border-radius: 50%;
+  margin-top: 10px;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
