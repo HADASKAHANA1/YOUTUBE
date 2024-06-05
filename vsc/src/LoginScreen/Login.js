@@ -1,50 +1,53 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+// Login.js
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../Users/UserContext';
 import './Login.css';
 
 function Login() {
-  // State for form data
+  const { users } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
   });
 
-  // State for form errors
   const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState('');
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const newErrors = {};
 
-    // Validate username
     if (!formData.username) {
       newErrors.username = 'Username is required';
     }
 
-    // Validate password
     if (!formData.password) {
       newErrors.password = 'Password is required';
     }
 
-    // Check if there are any errors
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Clear errors if validation passes
     setErrors({});
-    
-    // Handle login
-    console.log('Form submitted successfully:', formData);
+
+    const user = users.find(user => user.username === formData.username && user.password === formData.password);
+
+    if (user) {
+      setLoginError('');
+      navigate('/dashboard');
+    } else {
+      setLoginError('Invalid username or password');
+    }
   };
 
   return (
@@ -55,6 +58,7 @@ function Login() {
         </div>
         <form onSubmit={handleSubmit}>
           <p className="required-fields">All fields are required</p>
+          {loginError && <p className="error">{loginError}</p>}
           <div className="form-group">
             <label>Username</label>
             <input

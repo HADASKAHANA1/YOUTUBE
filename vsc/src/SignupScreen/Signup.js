@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+// Signup.js
+import React, { useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserContext } from '../Users/UserContext';
 import './Signup.css';
 
 function Signup() {
-  // State for form data
+  const { addUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -12,65 +16,55 @@ function Signup() {
     profilePicture: null,
   });
 
-  // State for form errors
   const [errors, setErrors] = useState({});
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Handle image file change
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, profilePicture: URL.createObjectURL(file) });
-    }
-  };
-
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const newErrors = {};
 
-    // Validate username
     if (!formData.username) {
       newErrors.username = 'Username is required';
     }
 
-    // Validate password length
     if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters long';
     }
 
-    // Validate password match
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
     }
 
-    // Validate display name
     if (!formData.displayName) {
       newErrors.displayName = 'Display name is required';
     }
 
-    // Validate profile picture
     if (!formData.profilePicture) {
       newErrors.profilePicture = 'Profile picture is required';
     }
 
-    // Check if there are any errors
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // Clear errors if validation passes
     setErrors({});
-    
-    // Handle registration
-    console.log('Form submitted successfully:', formData);
+    addUser({ ...formData });
+    setRegistrationSuccess(true);
+    navigate('/login'); // Link back to the login screen
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({ ...formData, profilePicture: URL.createObjectURL(file) });
+    }
   };
 
   return (
@@ -95,7 +89,6 @@ function Signup() {
           </div>
           <div className="form-group">
             <label>Password</label>
-            <p className="password-requirement">Password must be at least 8 characters long</p>
             <input
               type="password"
               className="form-control"
@@ -141,8 +134,9 @@ function Signup() {
           <button type="submit" className="btn">Sign Up</button>
         </form>
         <div className="text-center mt-3">
-          <span>Already have an account? <Link to="/" className="link-button">Sign In</Link></span>
+          <span>Already have an account? <Link to="/login" className="link-button">Sign In</Link></span>
         </div>
+        {registrationSuccess && <p className="registration-success">Registration successful! You are now signed up.</p>}
       </div>
     </div>
   );
