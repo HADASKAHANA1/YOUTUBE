@@ -1,11 +1,10 @@
-// Login.js
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './Login.css';
 
 function Login() {
-  const { users } = useContext(UserContext);
+  const { users, login } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -44,7 +43,8 @@ function Login() {
 
     if (user) {
       setLoginError('');
-      navigate('/dashboard');
+      login(formData.username);
+      navigate('/');
     } else {
       setLoginError('Invalid username or password');
     }

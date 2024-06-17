@@ -1,4 +1,3 @@
-// Signup.js
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
@@ -12,8 +11,8 @@ function Signup() {
     username: '',
     password: '',
     confirmPassword: '',
-    displayName: '',
     profilePicture: null,
+    videos: []
   });
 
   const [errors, setErrors] = useState({});
@@ -39,10 +38,6 @@ function Signup() {
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (!formData.displayName) {
-      newErrors.displayName = 'Display name is required';
     }
 
     if (!formData.profilePicture) {
@@ -110,18 +105,6 @@ function Signup() {
               onChange={handleChange}
             />
             {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-          </div>
-          <div className="form-group">
-            <label>Display Name</label>
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Enter display name"
-              name="displayName"
-              value={formData.displayName}
-              onChange={handleChange}
-            />
-            {errors.displayName && <p className="error">{errors.displayName}</p>}
           </div>
           <div className="form-group">
             <label>Profile Picture</label>

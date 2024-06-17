@@ -1,0 +1,96 @@
+.homepage-container {
+  padding: 20px;
+}
+
+.homepage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.logo img {
+  height: 40px;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.auth-buttons .btn {
+  margin-left: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info .profile-picture {
+  width: 60px; /* רוחב התמונה בעיגול */
+  height: 60px; /* גובה התמונה בעיגול */
+  border-radius: 50%; /* עיגול תמונה */
+  overflow: hidden; /* הסתרת חלקים מתוך העיגול */
+  margin-right: 10px; /* מרווח קטן בין התמונה לשם המשתמש */
+  position: relative; /* מיקום יחסי לעיגול */
+}
+
+.user-info .profile-picture img {
+  width: 100%; /* כדי למלא את התמונה */
+  height: 100%; /* כדי למלא את התמונה */
+  object-fit: cover; /* כדי למלא את התמונה */
+  border-radius: 50%; /* הגדרה עיגול תמונה */
+  position: absolute; /* מיקום יחסי לעיגול */
+  top: 0;
+  left: 0;
+}
+
+
+
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.video-item {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.video-item:hover {
+  transform: scale(1.05);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 150px; /* כדי להתאים את הגובה של פריט הווידאו */
+  object-fit: cover;
+}
+
+.video-item h3 {
+  margin: 10px;
+  font-size: 16px; /* גודל גופן של כותרת הווידאו */
+}
+
+.upload-button-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.upload-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
