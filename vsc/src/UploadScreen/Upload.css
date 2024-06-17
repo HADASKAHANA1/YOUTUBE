@@ -52,16 +52,20 @@
         background-color: #cc0000;
         }
         
-        .error {
-        color: red;
-        font-size: 0.9rem;
-        margin-top: 0.5rem;
-        }
-        
         .preview-image {
         display: block;
         margin-top: 1rem;
         max-width: 100%;
         border-radius: 5px;
         }
+        .error {
+            color: red; /* צביעת הטקסט בצבע אדום */
+            font-size: 0.9rem; /* גודל הגופן */
+            margin-top: 0.5rem; /* מרווח למעלה */
+            background-color: #ffebee; /* רקע אדום בהיר */
+            padding: 0.5rem; /* ריפוד בתוך התיבה */
+            border: 1px solid #ffcdd2; /* גבולות סופרים עם צבע קרם */
+            border-radius: 5px; /* פינות מעוגלות */
+          }
+          
         

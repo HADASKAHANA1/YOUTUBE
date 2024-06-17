@@ -21,11 +21,13 @@ const UserContextProvider = (props) => {
   };
 
   const addVideo = (newVideo) => {
+    // Assign a unique id to the new video
+    newVideo.id = Math.random().toString(36).substr(2, 9); // Generate random id
     setVideos([...videos, newVideo]);
     if (currentUser) {
       setCurrentUser({
         ...currentUser,
-        videos: [...currentUser.videos, newVideo]
+        videos: [...currentUser.videos, newVideo.id]
       });
     }
   };

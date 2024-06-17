@@ -1,11 +1,12 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import UserContextProvider from './Users/UserContext';
-import HomePage from './HomePage/HomePage';
+import HomePage from './HomeScreen/HomePage';
 import Login from './LoginScreen/Login';
 import Signup from './SignupScreen/Signup';
-import Upload from './HomePage/Upload';
-import VideoPage from './HomePage/VideoPage';
+import Upload from './UploadScreen/Upload';
+import VideoPage from './VideoScreen/VideoPage';
 import './App.css';
 
 function App() {

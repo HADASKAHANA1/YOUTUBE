@@ -50,9 +50,9 @@ function HomePage() {
       </div>
 
       <div className="video-grid">
-        {filteredVideos.map((video, index) => (
-          <div key={index} className="video-item">
-            <Link to={`/videos/${index}`}>
+        {filteredVideos.map((video) => (
+          <div key={video.id} className="video-item">
+            <Link to={`/videos/${video.id}`}>
               <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
               <h3>{video.title}</h3>
             </Link>
