@@ -19,7 +19,7 @@ function VideoPage() {
     <div className="video-page">
       <div className="video-details">
         <h2>{currentVideo.title}</h2>
-        <video controls src={currentVideo.url} className="video-player" />
+        <video controls autoPlay src={currentVideo.url} className="video-player" />
         <p>{currentVideo.description}</p>
       </div>
       <div className="video-list">
