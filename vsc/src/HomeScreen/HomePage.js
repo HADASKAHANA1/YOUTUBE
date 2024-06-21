@@ -28,9 +28,10 @@ function HomePage() {
   return (
     <div className="homepage-container">
       <div className="homepage-header">
-        <div className="logo">
+        {/* Make the YouTube logo clickable using React Router's Link */}
+        <Link to="/" className="logo">
           <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
-        </div>
+        </Link>
         <div className="auth-buttons">
           {currentUser ? (
             <div className="user-info">

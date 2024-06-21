@@ -54,7 +54,10 @@ function Login() {
     <div className="login-container">
       <div className="login-box">
         <div className="logo">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
+          {/* Make the YouTube logo clickable using React Router's Link */}
+          <Link to="/" className="logo-link">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
+          </Link>
         </div>
         <form onSubmit={handleSubmit}>
           <p className="required-fields">All fields are required</p>
