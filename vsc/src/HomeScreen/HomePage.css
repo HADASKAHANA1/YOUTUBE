@@ -9,8 +9,13 @@
   margin-bottom: 20px;
 }
 
-.logo img {
+.logo {
   height: 40px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
 }
 
 .auth-buttons {
@@ -22,26 +27,49 @@
   margin-left: 10px;
 }
 
+.search-bar {
+  flex-grow: 1; /* To fill the remaining space */
+  margin-right: 20px;
+}
+
+.upload-button-container {
+  margin-left: auto; /* Pushes the upload button to the right */
+}
+
+.upload-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.upload-button:hover {
+  background-color: #0056b3;
+}
+
 .user-info {
   display: flex;
   align-items: center;
 }
 
 .user-info .profile-picture {
-  width: 60px; /* רוחב התמונה בעיגול */
-  height: 60px; /* גובה התמונה בעיגול */
-  border-radius: 50%; /* עיגול תמונה */
-  overflow: hidden; /* הסתרת חלקים מתוך העיגול */
-  margin-right: 10px; /* מרווח קטן בין התמונה לשם המשתמש */
-  position: relative; /* מיקום יחסי לעיגול */
+  width: 40px; /* Set the width and height to maintain a circular shape */
+  height: 40px;
+  border-radius: 50%; /* Ensure it's a circle */
+  overflow: hidden;
+  margin-right: 10px;
+  position: relative;
 }
 
 .user-info .profile-picture img {
-  width: 100%; /* כדי למלא את התמונה */
-  height: 100%; /* כדי למלא את התמונה */
-  object-fit: cover; /* כדי למלא את התמונה */
-  border-radius: 50%; /* הגדרה עיגול תמונה */
-  position: absolute; /* מיקום יחסי לעיגול */
+  width: 100%; /* Make the image fill the container */
+  height: 100%;
+  object-fit: cover; /* Maintain aspect ratio and cover */
+  position: absolute;
   top: 0;
   left: 0;
 }
@@ -66,31 +94,11 @@
 
 .video-thumbnail {
   width: 100%;
-  height: 150px; /* כדי להתאים את הגובה של פריט הווידאו */
+  height: 150px;
   object-fit: cover;
 }
 
 .video-item h3 {
   margin: 10px;
-  font-size: 16px; /* גודל גופן של כותרת הווידאו */
-}
-
-.upload-button-container {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.upload-button {
-  padding: 10px 20px;
   font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.upload-button:hover {
-  background-color: #0056b3;
 }

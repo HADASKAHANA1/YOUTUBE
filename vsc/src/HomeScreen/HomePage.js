@@ -28,37 +28,54 @@ function HomePage() {
   return (
     <div className="homepage-container">
       <div className="homepage-header">
-        {/* Make the YouTube logo clickable using React Router's Link */}
+        {/* Logo */}
         <Link to="/" className="logo">
           <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
         </Link>
-        <div className="auth-buttons">
-          {currentUser ? (
-            <div className="user-info">
-              {currentUser.profilePicture && (
-                <div className="profile-picture">
-                  <img src={currentUser.profilePicture} alt="Profile" />
-                </div>
-              )}
-              <span>Welcome, {currentUser.username}</span>
-              <button className="btn" onClick={logout}>Logout</button>
-            </div>
-          ) : (
-            <Link to="/login" className="btn">Sign In</Link>
-          )}
+
+        {/* Upload button */}
+        <div className="upload-button-container">
+          <button className="btn upload-button" onClick={handleUploadClick}>Upload Video</button>
+        </div>
+
+        {/* Logout button */}
+        {currentUser && (
+          <div className="auth-buttons">
+            <button className="btn" onClick={logout}>Logout</button>
+          </div>
+        )}
+
+        {/* Right section */}
+        <div className="header-right">
+          {/* Authentication buttons */}
+          <div className="auth-buttons">
+            {currentUser ? (
+              <div className="user-info">
+                {currentUser.profilePicture && (
+                  <div className="profile-picture">
+                    <img src={currentUser.profilePicture} alt="Profile" />
+                  </div>
+                )}
+                <span>Welcome, {currentUser.username}</span>
+              </div>
+            ) : (
+              <Link to="/login" className="btn">Sign In</Link>
+            )}
+          </div>
+
+          {/* Search bar */}
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search videos..."
+              value={searchQuery}
+              onChange={handleSearchInputChange}
+            />
+          </div>
         </div>
       </div>
-      
-      {/* Search bar */}
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search videos..."
-          value={searchQuery}
-          onChange={handleSearchInputChange}
-        />
-      </div>
 
+      {/* Video grid */}
       <div className="video-grid">
         {filteredVideos.map((video) => (
           <div key={video.id} className="video-item">
@@ -68,10 +85,6 @@ function HomePage() {
             </Link>
           </div>
         ))}
-      </div>
-      
-      <div className="upload-button-container">
-        <button className="btn upload-button" onClick={handleUploadClick}>Upload Video</button>
       </div>
     </div>
   );
