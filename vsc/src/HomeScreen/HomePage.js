@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './HomePage.css';
 
 function HomePage() {
   const { currentUser, logout, videos } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
+  const navigate = useNavigate();
 
   // Filter videos based on searchQuery
   const filteredVideos = videos.filter(video =>
@@ -14,6 +15,14 @@ function HomePage() {
 
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleUploadClick = () => {
+    if (currentUser) {
+      navigate('/upload');
+    } else {
+      alert('You must be logged in to upload a video.');
+    }
   };
 
   return (
@@ -60,11 +69,9 @@ function HomePage() {
         ))}
       </div>
       
-      {currentUser && (
-        <div className="upload-button-container">
-          <Link to="/upload" className="btn upload-button">Upload Video</Link>
-        </div>
-      )}
+      <div className="upload-button-container">
+        <button className="btn upload-button" onClick={handleUploadClick}>Upload Video</button>
+      </div>
     </div>
   );
 }
