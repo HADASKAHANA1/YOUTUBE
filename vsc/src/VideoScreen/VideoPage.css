@@ -3,12 +3,14 @@
 }
 
 .home-link {
-  margin-right: 20px; /* מרווח מימין */
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 1000;
 }
 
-.home-link .youtube-logo {
-  height: 40px; /* גובה הלוגו */
-  cursor: pointer; /* סמל לכפתור */
+.youtube-logo {
+  height: 40px;
 }
 
 .video-details {
@@ -31,16 +33,19 @@
 }
 
 .video-player {
-  width: 100%; 
-  height: 80vh; 
+  width: 100%;
+  height: 70vh; /* הגובה החדש שברצונך להגדיר */
   border-radius: 10px;
+  margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
 
 .video-list {
   width: 20%; /* רוחב רשימת הסרטונים */
   margin-left: 2rem; /* מרווח מימין */
   padding: 1rem; /* ריווח פנימי */
+  margin-top: 2rem; /* מרווח מלמעלה */
 }
 
 .video-item-link {
