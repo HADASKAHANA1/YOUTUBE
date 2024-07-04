@@ -6,17 +6,28 @@ import './HomePage.css';
 function HomePage() {
   const { currentUser, logout, videos } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
+  const [darkMode, setDarkMode] = useState(false); // הוספת state ל-Dark Mode
   const navigate = useNavigate();
 
-  // Filter videos based on searchQuery
+  // סטייט ופונקציה לשינוי ה-Dark Mode
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  // קבוצת סגנונות ל-Dark Mode ולברירת המחדל
+  const themeClass = darkMode ? 'dark-theme' : '';
+
+  // פונקציה לסינון הסרטונים לפי החיפוש
   const filteredVideos = videos.filter(video =>
     video.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // טיפול בשינוי במילוי שדה החיפוש
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
+  // טיפול בלחיצה על כפתור ההעלאה
   const handleUploadClick = () => {
     if (currentUser) {
       navigate('/upload');
@@ -26,53 +37,59 @@ function HomePage() {
   };
 
   return (
-    <div className="homepage-container">
-      <div className="homepage-header">
-        {/* Logo */}
-        <Link to="/" className="logo">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
-        </Link>
+    <div className={`homepage-container ${themeClass}`}>
+      {/* Logo */}
+      <Link to="/" className="logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
+      </Link>
 
-        {/* Upload button */}
-        <div className="upload-button-container">
-          <button className="btn upload-button" onClick={handleUploadClick}>Upload Video</button>
-        </div>
+      {/* Search bar */}
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search videos..."
+          value={searchQuery}
+          onChange={handleSearchInputChange}
+          className={darkMode ? 'dark-mode-input' : ''}
+        />
+      </div>
 
-        {/* Logout button */}
-        {currentUser && (
+      {/* Right section */}
+      <div className="header-right">
+        {/* Authentication buttons */}
+        {currentUser ? (
+          <div className="user-info">
+            {currentUser.profilePicture && (
+              <div className="profile-picture">
+                <img src={currentUser.profilePicture} alt="Profile" />
+              </div>
+            )}
+            <span>Welcome, {currentUser.username}</span>
+          </div>
+        ) : (
           <div className="auth-buttons">
-            <button className="btn" onClick={logout}>Logout</button>
+            <Link to="/login" className="btn">Sign In</Link>
           </div>
         )}
+      </div>
 
-        {/* Right section */}
-        <div className="header-right">
-          {/* Authentication buttons */}
-          <div className="auth-buttons">
-            {currentUser ? (
-              <div className="user-info">
-                {currentUser.profilePicture && (
-                  <div className="profile-picture">
-                    <img src={currentUser.profilePicture} alt="Profile" />
-                  </div>
-                )}
-                <span>Welcome, {currentUser.username}</span>
-              </div>
-            ) : (
-              <Link to="/login" className="btn">Sign In</Link>
-            )}
-          </div>
+      {/* Upload button */}
+      <div className="auth-buttons">
+        <button className="btn" onClick={handleUploadClick}>Upload Video</button>
+      </div>
 
-          {/* Search bar */}
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search videos..."
-              value={searchQuery}
-              onChange={handleSearchInputChange}
-            />
-          </div>
+      {/* Logout button */}
+      {currentUser && (
+        <div className="auth-buttons">
+          <button className="btn" onClick={logout}>Logout</button>
         </div>
+      )}
+
+      {/* Theme toggle button */}
+      <div className="auth-buttons">
+        <button className={`btn dark-mode-btn ${darkMode ? 'btn-dark' : ''}`} onClick={toggleDarkMode}>
+          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        </button>
       </div>
 
       {/* Video grid */}

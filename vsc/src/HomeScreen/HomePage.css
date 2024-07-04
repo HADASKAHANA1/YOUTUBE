@@ -1,74 +1,50 @@
+/* סגנון כללי לעמוד הבית */
 .homepage-container {
   padding: 20px;
 }
 
-.homepage-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
 .logo {
-  height: 40px;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
+  height: 50px; /* תיקון גודל הלוגו */
 }
 
 .auth-buttons {
-  display: flex;
-  align-items: center;
+  margin-right: 85%; /* מרווח ימני בכפתורי ההתחברות וההתנתקות */
 }
 
 .auth-buttons .btn {
-  margin-left: 10px;
+  background-color: white;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  text-align: left;
 }
 
 .search-bar {
-  flex-grow: 1; /* To fill the remaining space */
-  margin-right: 20px;
-}
-
-.upload-button-container {
-  margin-left: auto; /* Pushes the upload button to the right */
-}
-
-.upload-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.upload-button:hover {
-  background-color: #0056b3;
-}
-
-.user-info {
-  display: flex;
+  margin-left: 45%;
+  position: absolute;
   align-items: center;
 }
 
+.user-info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .user-info .profile-picture {
-  width: 40px; /* Set the width and height to maintain a circular shape */
+  width: 40px;
   height: 40px;
-  border-radius: 50%; /* Ensure it's a circle */
+  border-radius: 50%;
   overflow: hidden;
   margin-right: 10px;
   position: relative;
+  float: right;
 }
 
 .user-info .profile-picture img {
-  width: 100%; /* Make the image fill the container */
+  width: 100%;
   height: 100%;
-  object-fit: cover; /* Maintain aspect ratio and cover */
+  object-fit: cover;
   position: absolute;
   top: 0;
   left: 0;
@@ -78,6 +54,8 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  margin-left: 15%;
+  float: left;
 }
 
 .video-item {
@@ -101,4 +79,39 @@
 .video-item h3 {
   margin: 10px;
   font-size: 16px;
+}
+
+/* סגנונות עבור ערכת צבעים חשוכה */
+.dark-theme {
+  background-color: #555;
+  color: #fff;
+}
+
+.dark-theme .auth-buttons .btn {
+  background-color: #555;
+  color: #fff;
+}
+
+.dark-theme .auth-buttons .btn:hover {
+  background-color: #777;
+}
+
+.dark-theme .video-item {
+  background-color: #555;
+  color: #fff;
+}
+
+/* סגנונות נוספים עבור ערכת צבעים חשוכה */
+.dark-theme .homepage-container {
+  background-color: #777;
+}
+
+.dark-theme .search-bar input {
+  background-color: #888;
+  color: #fff;
+  border: 1px solid #666;
+}
+
+.dark-theme .user-info span {
+  color: #fff;
 }
