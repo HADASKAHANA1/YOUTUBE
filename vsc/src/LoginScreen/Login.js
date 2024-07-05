@@ -4,7 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Login.css';
 
 function Login() {
-  const { users, login } = useContext(UserContext);
+  const { users, login, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -51,7 +51,7 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className={`login-container ${darkMode ? 'dark-theme' : ''}`}>
       <div className="login-box">
         <div className="logo">
           {/* Make the YouTube logo clickable using React Router's Link */}
@@ -66,7 +66,7 @@ function Login() {
             <label>Username</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${darkMode ? 'dark-mode-input' : ''}`}
               placeholder="Enter username"
               name="username"
               value={formData.username}
@@ -78,7 +78,7 @@ function Login() {
             <label>Password</label>
             <input
               type="password"
-              className="form-control"
+              className={`form-control ${darkMode ? 'dark-mode-input' : ''}`}
               placeholder="Password"
               name="password"
               value={formData.password}

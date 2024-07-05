@@ -1,3 +1,6 @@
+/* Signup.css */
+
+/* Light mode */
 .signup-container {
   display: flex;
   justify-content: center;
@@ -76,4 +79,69 @@
   padding: 0.5rem;
   border: 1px solid #ffcdd2;
   border-radius: 5px;
+}
+
+.registration-success {
+  color: green;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  background-color: #e8f5e9;
+  padding: 0.5rem;
+  border: 1px solid #c8e6c9;
+  border-radius: 5px;
+}
+
+.preview-image {
+  width: 100%;
+  margin-top: 0.5rem;
+  border-radius: 5px;
+}
+
+/* Dark mode */
+.signup-container.dark-theme {
+  background-color: #333;
+  color: #ccc; /* Text color in dark mode */
+}
+
+.signup-box.dark-theme {
+  background: #444;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.required-fields.dark-theme {
+  color: #888;
+}
+
+.form-control.dark-theme {
+  background-color: #555;
+  color: #ccc;
+}
+
+.btn.dark-theme {
+  background-color: #ff4444;
+  color: #fff;
+}
+
+.btn.dark-theme:hover {
+  background-color: #cc4444;
+}
+
+.link-button.dark-theme {
+  color: #ff4444;
+}
+
+.link-button.dark-theme:hover {
+  text-decoration: underline;
+}
+
+.error.dark-theme {
+  color: #ffb3b3;
+  background-color: #441111;
+  border: 1px solid #ffeeee;
+}
+
+.registration-success.dark-theme {
+  color: #a5d6a7;
+  background-color: #1b5e20;
+  border: 1px solid #4caf50;
 }

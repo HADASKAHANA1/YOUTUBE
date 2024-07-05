@@ -1,3 +1,6 @@
+/* Upload.css */
+
+/* Light mode */
 .upload-container {
   display: flex;
   justify-content: center;
@@ -65,4 +68,39 @@
   padding: 0.5rem;
   border: 1px solid #ffcdd2;
   border-radius: 5px;
+}
+
+/* Dark mode */
+.upload-container.dark-theme {
+  background-color: #333;
+  color: #ccc; /* Text color in dark mode */
+}
+
+.upload-box.dark-theme {
+  background: #444;
+  box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+}
+
+.upload-box.dark-theme h2 {
+  color: #eee; /* Heading color in dark mode */
+}
+
+.form-control.dark-theme {
+  background-color: #555;
+  color: #ccc;
+}
+
+.btn.dark-theme {
+  background-color: #ff4444;
+  color: #fff;
+}
+
+.btn.dark-theme:hover {
+  background-color: #cc4444;
+}
+
+.error.dark-theme {
+  color: #ffb3b3;
+  background-color: #441111;
+  border: 1px solid #ffeeee;
 }

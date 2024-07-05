@@ -4,7 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Upload.css';
 
 function Upload() {
-  const { addVideo, currentUser } = useContext(UserContext);
+  const { addVideo, currentUser, darkMode } = useContext(UserContext); // צוריך לוודא שהתומך גם במצב חושך
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -73,8 +73,8 @@ function Upload() {
   };
 
   return (
-    <div className="upload-container">
-      <div className="upload-box">
+    <div className={`upload-container ${darkMode ? 'dark-theme' : ''}`}>
+      <div className={`upload-box ${darkMode ? 'dark-theme' : ''}`}>
         <h2>Upload Video</h2>
         <div className="logo">
           <Link to="/" className="logo-link">
@@ -86,39 +86,39 @@ function Upload() {
             <label>Title</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${darkMode ? 'dark-theme' : ''}`}
               placeholder="Enter title"
               name="title"
               value={formData.title}
               onChange={handleChange}
             />
-            {errors.title && <p className="error">{errors.title}</p>}
+            {errors.title && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.title}</p>}
           </div>
           <div className="form-group">
             <label>Thumbnail</label>
-            <input type="file" className="form-control" onChange={handleImageChange} />
-            {errors.thumbnail && <p className="error">{errors.thumbnail}</p>}
+            <input type="file" className={`form-control ${darkMode ? 'dark-theme' : ''}`} onChange={handleImageChange} />
+            {errors.thumbnail && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.thumbnail}</p>}
             {formData.thumbnail && (
               <img src={formData.thumbnail} alt="Thumbnail Preview" className="preview-image" />
             )}
           </div>
           <div className="form-group">
             <label>Video File</label>
-            <input type="file" className="form-control" onChange={handleVideoChange} />
-            {errors.videoFile && <p className="error">{errors.videoFile}</p>}
+            <input type="file" className={`form-control ${darkMode ? 'dark-theme' : ''}`} onChange={handleVideoChange} />
+            {errors.videoFile && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.videoFile}</p>}
           </div>
           <div className="form-group">
             <label>Description</label>
             <textarea
-              className="form-control"
+              className={`form-control ${darkMode ? 'dark-theme' : ''}`}
               placeholder="Enter description"
               name="description"
               value={formData.description}
               onChange={handleChange}
             />
-            {errors.description && <p className="error">{errors.description}</p>}
+            {errors.description && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.description}</p>}
           </div>
-          <button type="submit" className="btn">Upload</button>
+          <button type="submit" className={`btn ${darkMode ? 'dark-theme' : ''}`}>Upload</button>
         </form>
       </div>
     </div>

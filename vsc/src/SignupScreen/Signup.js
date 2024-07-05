@@ -4,7 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Signup.css';
 
 function Signup() {
-  const { addUser } = useContext(UserContext);
+  const { addUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -62,8 +62,11 @@ function Signup() {
     }
   };
 
+  // CSS class for dark mode
+  const themeClass = darkMode ? 'dark-theme' : '';
+
   return (
-    <div className="signup-container">
+    <div className={`signup-container ${themeClass}`}>
       <div className="signup-box">
         <div className="logo">
           {/* Make the YouTube logo clickable using React Router's Link */}
