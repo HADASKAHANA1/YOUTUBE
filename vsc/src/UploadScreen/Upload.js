@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
-import './Upload.css'; // Assuming you have an Upload.css file for styling
+import './Upload.css';
 
 function Upload() {
   const { addVideo, currentUser } = useContext(UserContext);
@@ -61,12 +61,14 @@ function Upload() {
     }
 
     setErrors({});
-    addVideo({ 
+    const newVideo = {
       title: formData.title,
       thumbnail: formData.thumbnail,
       url: formData.videoFile,
       description: formData.description
-    });
+    };
+    addVideo(newVideo, currentUser); // Pass currentUser as uploader
+
     navigate('/');
   };
 
@@ -75,7 +77,6 @@ function Upload() {
       <div className="upload-box">
         <h2>Upload Video</h2>
         <div className="logo">
-          {/* Make the YouTube logo clickable using React Router's Link */}
           <Link to="/" className="logo-link">
             <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
           </Link>

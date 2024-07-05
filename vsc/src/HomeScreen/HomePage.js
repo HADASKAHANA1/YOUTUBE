@@ -4,30 +4,16 @@ import { UserContext } from '../Users/UserContext';
 import './HomePage.css';
 
 function HomePage() {
-  const { currentUser, logout, videos } = useContext(UserContext);
+  const { currentUser, logout, videos, darkMode, toggleDarkMode } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode, setDarkMode] = useState(false); // הוספת state ל-Dark Mode
   const navigate = useNavigate();
 
-  // סטייט ופונקציה לשינוי ה-Dark Mode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
-
-  // קבוצת סגנונות ל-Dark Mode ולברירת המחדל
-  const themeClass = darkMode ? 'dark-theme' : '';
-
-  // פונקציה לסינון הסרטונים לפי החיפוש
-  const filteredVideos = videos.filter(video =>
-    video.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // טיפול בשינוי במילוי שדה החיפוש
+  // Function to handle search input change
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  // טיפול בלחיצה על כפתור ההעלאה
+  // Function to handle upload button click
   const handleUploadClick = () => {
     if (currentUser) {
       navigate('/upload');
@@ -35,6 +21,14 @@ function HomePage() {
       alert('You must be logged in to upload a video.');
     }
   };
+
+  // CSS class for dark mode
+  const themeClass = darkMode ? 'dark-theme' : '';
+
+  // Function to filter videos based on search query
+  const filteredVideos = videos.filter(video =>
+    video.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className={`homepage-container ${themeClass}`}>
@@ -54,9 +48,8 @@ function HomePage() {
         />
       </div>
 
-      {/* Right section */}
-      <div className="header-right">
-        {/* Authentication buttons */}
+      {/* Authentication buttons */}
+      <div className="auth-buttons">
         {currentUser ? (
           <div className="user-info">
             {currentUser.profilePicture && (
@@ -67,26 +60,18 @@ function HomePage() {
             <span>Welcome, {currentUser.username}</span>
           </div>
         ) : (
-          <div className="auth-buttons">
-            <Link to="/login" className="btn">Sign In</Link>
-          </div>
+          <Link to="/login" className="btn">Sign In</Link>
         )}
-      </div>
 
-      {/* Upload button */}
-      <div className="auth-buttons">
+        {/* Upload button */}
         <button className="btn" onClick={handleUploadClick}>Upload Video</button>
-      </div>
 
-      {/* Logout button */}
-      {currentUser && (
-        <div className="auth-buttons">
+        {/* Logout button */}
+        {currentUser && (
           <button className="btn" onClick={logout}>Logout</button>
-        </div>
-      )}
+        )}
 
-      {/* Theme toggle button */}
-      <div className="auth-buttons">
+        {/* Theme toggle button */}
         <button className={`btn dark-mode-btn ${darkMode ? 'btn-dark' : ''}`} onClick={toggleDarkMode}>
           {darkMode ? 'Light Mode' : 'Dark Mode'}
         </button>

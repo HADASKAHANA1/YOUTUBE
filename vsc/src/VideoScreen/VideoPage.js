@@ -9,6 +9,9 @@ function VideoPage() {
   const videoRef = useRef(null);
   const currentVideo = videos.find((vid) => vid.id === id);
 
+  // Filter out the current video from the list
+  const otherVideos = videos.filter((vid) => vid.id !== id);
+
   useEffect(() => {
     const videoElement = videoRef.current;
 
@@ -35,9 +38,6 @@ function VideoPage() {
     return <div>Video not found</div>;
   }
 
-  // Filter out the current video from the list
-  const otherVideos = videos.filter((vid) => vid.id !== id);
-
   return (
     <div className="video-page">
       {/* Link to Home Page */}
@@ -48,6 +48,7 @@ function VideoPage() {
       <div className="video-details">
         <video controls src={currentVideo.url} className="video-player" ref={videoRef} />
         <h2>{currentVideo.title}</h2>
+        <p>Uploaded by: {currentVideo.uploadedBy}</p>
         <p>{currentVideo.description}</p>
       </div>
 

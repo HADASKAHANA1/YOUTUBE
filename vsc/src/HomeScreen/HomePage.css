@@ -1,14 +1,14 @@
-/* סגנון כללי לעמוד הבית */
+/* General styles for the homepage */
 .homepage-container {
   padding: 20px;
 }
 
 .logo {
-  height: 50px; /* תיקון גודל הלוגו */
+  height: 50px;
 }
 
 .auth-buttons {
-  margin-right: 85%; /* מרווח ימני בכפתורי ההתחברות וההתנתקות */
+  margin-right: 85%;
 }
 
 .auth-buttons .btn {
@@ -81,7 +81,7 @@
   font-size: 16px;
 }
 
-/* סגנונות עבור ערכת צבעים חשוכה */
+/* Styles for dark mode */
 .dark-theme {
   background-color: #555;
   color: #fff;
@@ -101,7 +101,6 @@
   color: #fff;
 }
 
-/* סגנונות נוספים עבור ערכת צבעים חשוכה */
 .dark-theme .homepage-container {
   background-color: #777;
 }
