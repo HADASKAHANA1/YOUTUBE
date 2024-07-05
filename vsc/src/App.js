@@ -7,12 +7,13 @@ import Login from './LoginScreen/Login';
 import Signup from './SignupScreen/Signup';
 import Upload from './UploadScreen/Upload';
 import VideoPage from './VideoScreen/VideoPage';
-import './App.css';
+import ScrollToTop from './ScrollToTop'; // הוסף את קומפוננטת ScrollToTop
 
 function App() {
   return (
     <UserContextProvider>
       <Router>
+        <ScrollToTop /> {/* קרא את ScrollToTop כאן */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
