@@ -1,6 +1,10 @@
 /* General styles for the homepage */
 .homepage-container {
   padding: 20px;
+  background-color: #fff; /* רקע לבן במצב מואר */
+  color: #333; /* צבע טקסט כהה */
+  min-height: 100vh; /* גובה מינימלי של 100% מגובה החלון */
+  overflow-y: auto; /* גלילה רק כאשר יש צורך */
 }
 
 .logo {
@@ -83,17 +87,17 @@
 
 /* Styles for dark mode */
 .dark-theme {
-  background-color: #555;
-  color: #fff;
+  background-color: #777;
+  color: #333;
 }
 
 .dark-theme .auth-buttons .btn {
-  background-color: #555;
+  background-color: #777;
   color: #fff;
 }
 
 .dark-theme .auth-buttons .btn:hover {
-  background-color: #777;
+  background-color: #555;
 }
 
 .dark-theme .video-item {
@@ -102,7 +106,8 @@
 }
 
 .dark-theme .homepage-container {
-  background-color: #777;
+  background-color: #777; /* רקע אפור רק בחלק העליון */
+  color: #333;
 }
 
 .dark-theme .search-bar input {
@@ -114,3 +119,4 @@
 .dark-theme .user-info span {
   color: #fff;
 }
+
