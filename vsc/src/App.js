@@ -7,19 +7,21 @@ import Login from './LoginScreen/Login';
 import Signup from './SignupScreen/Signup';
 import Upload from './UploadScreen/Upload';
 import VideoPage from './VideoScreen/VideoPage';
-import ScrollToTop from './ScrollToTop'; // הוסף את קומפוננטת ScrollToTop
+import EditVideo from './EditVideo/EditVideo'; // Import the EditVideo component
+import ScrollToTop from './ScrollToTop';
 
 function App() {
   return (
     <UserContextProvider>
       <Router>
-        <ScrollToTop /> {/* קרא את ScrollToTop כאן */}
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/upload" element={<Upload />} />
           <Route path="/videos/:id" element={<VideoPage />} />
+          <Route path="/edit/:id" element={<EditVideo />} /> {/* Route for editing video */}
         </Routes>
       </Router>
     </UserContextProvider>

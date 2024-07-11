@@ -55,11 +55,26 @@ const UserContextProvider = (props) => {
     setDarkMode(!darkMode);
   };
 
+  const editVideo = (updatedVideo) => {
+    setVideos(videos.map((video) => (video.id === updatedVideo.id ? updatedVideo : video)));
+  };
+  
+  const deleteVideo = (videoId) => {
+    setVideos(videos.filter((video) => video.id !== videoId));
+    if (currentUser) {
+      setCurrentUser({
+        ...currentUser,
+        videos: currentUser.videos.filter((id) => id !== videoId)
+      });
+    }
+  };
+  
   return (
-    <UserContext.Provider value={{ users, addUser, login, logout, currentUser, setCurrentUser, videos, addVideo, darkMode, toggleDarkMode }}>
+    <UserContext.Provider value={{ users, addUser, login, logout, currentUser, setCurrentUser, videos, addVideo, editVideo, deleteVideo, darkMode, toggleDarkMode }}>
       {props.children}
     </UserContext.Provider>
   );
+  
 };
 
 export default UserContextProvider;
