@@ -46,21 +46,6 @@ function HomePage() {
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
       </Link>
 
-      <div className="search-bar">
-        <div className={`input-group ${darkMode ? 'dark-mode-input-group' : ''}`}>
-          <span className={`input-group-text ${darkMode ? 'dark-mode-input-group-text' : ''}`} onClick={handleSearchClick}>
-            <i className="bi bi-search"></i>
-          </span>
-          <input
-            type="text"
-            placeholder="Search videos..."
-            value={searchQuery}
-            onChange={handleSearchInputChange}
-            className={`form-control ${darkMode ? 'dark-mode-input' : ''}`}
-          />
-        </div>
-      </div>
-
       <div className="auth-buttons">
         {currentUser ? (
           <div className="user-info">
@@ -100,6 +85,21 @@ function HomePage() {
         )}
       </div>
 
+      <div className="search-bar">
+        <div className={`input-group ${darkMode ? 'dark-mode-input-group' : ''}`}>
+          <span className={`input-group-text ${darkMode ? 'dark-mode-input-group-text' : ''}`} onClick={handleSearchClick}>
+            <i className="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            placeholder="Search videos..."
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            className={`form-control ${darkMode ? 'dark-mode-input' : ''}`}
+          />
+        </div>
+      </div>
+
       <div className="video-grid">
         {filteredVideos.map((video) => (
           <div key={video.id} className="video-item">
@@ -115,3 +115,4 @@ function HomePage() {
 }
 
 export default HomePage;
+
