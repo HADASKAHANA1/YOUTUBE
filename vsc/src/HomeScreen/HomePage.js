@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './HomePage.css';
@@ -6,14 +7,29 @@ import './HomePage.css';
 function HomePage() {
   const { currentUser, logout, videos, darkMode, toggleDarkMode } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredVideos, setFilteredVideos] = useState(videos);
   const navigate = useNavigate();
 
-  // Function to handle search input change
+  useEffect(() => {
+    setFilteredVideos(videos);
+  }, [videos]);
+
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);
   };
 
-  // Function to handle upload button click
+  const handleSearchClick = () => {
+    const filtered = videos.filter(video =>
+      video.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredVideos(filtered);
+  };
+
+  const handleLogoClick = () => {
+    setFilteredVideos(videos);
+    setSearchQuery(''); // Clear the search input
+  };
+
   const handleUploadClick = () => {
     if (currentUser) {
       navigate('/upload');
@@ -22,33 +38,29 @@ function HomePage() {
     }
   };
 
-  // CSS class for dark mode
   const themeClass = darkMode ? 'dark-theme' : '';
-
-  // Function to filter videos based on search query
-  const filteredVideos = videos.filter(video =>
-    video.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className={`homepage-container ${themeClass}`}>
-      {/* Logo */}
-      <Link to="/" className="logo">
+      <Link to="/" className="logo" onClick={handleLogoClick}>
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg" alt="YouTube Logo" />
       </Link>
 
-      {/* Search bar */}
       <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search videos..."
-          value={searchQuery}
-          onChange={handleSearchInputChange}
-          className={darkMode ? 'dark-mode-input' : ''}
-        />
+        <div className={`input-group ${darkMode ? 'dark-mode-input-group' : ''}`}>
+          <span className={`input-group-text ${darkMode ? 'dark-mode-input-group-text' : ''}`} onClick={handleSearchClick}>
+            <i className="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            placeholder="Search videos..."
+            value={searchQuery}
+            onChange={handleSearchInputChange}
+            className={`form-control ${darkMode ? 'dark-mode-input' : ''}`}
+          />
+        </div>
       </div>
 
-      {/* Authentication buttons */}
       <div className="auth-buttons">
         {currentUser ? (
           <div className="user-info">
@@ -60,24 +72,34 @@ function HomePage() {
             <span>Welcome, {currentUser.username}</span>
           </div>
         ) : (
-          <Link to="/login" className="btn">Sign In</Link>
+          <Link to="/login" className="btn">
+            <i className="bi bi-box-arrow-in-right"></i> Sign In
+          </Link>
         )}
 
-        {/* Upload button */}
-        <button className="btn" onClick={handleUploadClick}>Upload Video</button>
-
-        {/* Logout button */}
-        {currentUser && (
-          <button className="btn" onClick={logout}>Logout</button>
-        )}
-
-        {/* Theme toggle button */}
-        <button className={`btn dark-mode-btn ${darkMode ? 'btn-dark' : ''}`} onClick={toggleDarkMode}>
-          {darkMode ? 'Light Mode' : 'Dark Mode'}
+        <button className={`btn ${darkMode ? 'btn-light' : 'btn-dark'}`} onClick={toggleDarkMode}>
+          {darkMode ? (
+            <>
+              <i className="bi bi-brightness-high-fill"></i> Light Mode
+            </>
+          ) : (
+            <>
+              <i className="bi bi-moon-stars"></i> Dark Mode
+            </>
+          )}
         </button>
+
+        <button className="btn" onClick={handleUploadClick}>
+          <i className="bi bi-upload"></i> Upload Video
+        </button>
+
+        {currentUser && (
+          <button className="btn" onClick={logout}>
+            <i className="bi bi-box-arrow-in-left"></i> Logout
+          </button>
+        )}
       </div>
 
-      {/* Video grid */}
       <div className="video-grid">
         {filteredVideos.map((video) => (
           <div key={video.id} className="video-item">
