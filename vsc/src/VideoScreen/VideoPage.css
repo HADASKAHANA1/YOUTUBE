@@ -176,3 +176,29 @@
   width: 100%;
   border-radius: 5px;
 }
+
+.like-section {
+  display: flex;
+  align-items: center;
+}
+
+.like-button {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.like-button:hover {
+  text-decoration: underline;
+}
+
+.like-button i {
+  margin-right: 0.5rem;
+}
+
+.like-count {
+  margin-left: 0.5rem;
+}

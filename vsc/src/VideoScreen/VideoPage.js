@@ -5,7 +5,7 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id } = useParams();
-  const { videos, currentUser, deleteVideo, darkMode, addComment, deleteComment, editComment } = useContext(UserContext);
+  const { videos, currentUser, deleteVideo, darkMode, addComment, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
@@ -70,6 +70,18 @@ function VideoPage() {
     }
   };
 
+  const handleLike = () => {
+    if (currentUser) {
+      if (currentVideo.likes.includes(currentUser.username)) {
+        unlikeVideo(id);
+      } else {
+        likeVideo(id);
+      }
+    } else {
+      alert('You must be logged in to like a video.');
+    }
+  };
+
   if (!currentVideo) {
     navigate('/');
     return null;
@@ -87,6 +99,16 @@ function VideoPage() {
           <h2>{currentVideo.title}</h2>
           <p>Uploaded by: {currentVideo.uploadedBy}</p>
           <p>{currentVideo.description}</p>
+          <div className="like-section">
+            <button onClick={handleLike} className="like-button">
+              {currentUser && currentVideo.likes.includes(currentUser.username) ? (
+                <i className="bi bi-hand-thumbs-up-fill"></i>
+              ) : (
+                <i className="bi bi-hand-thumbs-up"></i>
+              )}
+            </button>
+            <span>{currentVideo.likes.length} Likes</span>
+          </div>
 
           {currentUser && currentUser.username === currentVideo.uploadedBy && (
             <div className="edit-delete-buttons">
