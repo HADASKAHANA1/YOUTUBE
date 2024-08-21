@@ -38,15 +38,16 @@ const UserContextProvider = (props) => {
   const logout = () => {
     setCurrentUser(null);
   };
-
   const addVideo = (newVideo, uploader) => {
+    if (!uploader || !uploader.username) return;
+    
     newVideo.id = Math.random().toString(36).substr(2, 9);
     newVideo.uploadedBy = uploader.username;
     newVideo.comments = [];
-    newVideo.likes = [];
+    newVideo.likes = newVideo.likes || [];
     setVideos([...videos, newVideo]);
-
-    if (currentUser) {
+  
+    if (currentUser && currentUser.videos) {
       setCurrentUser({
         ...currentUser,
         videos: [...currentUser.videos, newVideo.id]
@@ -54,9 +55,25 @@ const UserContextProvider = (props) => {
     }
   };
 
-  const editVideo = (updatedVideo) => {
-    setVideos(videos.map((video) => (video.id === updatedVideo.id ? updatedVideo : video)));
-  };
+
+
+
+const editVideo = (updatedVideo) => {
+  // Ensure the likes array exists
+  updatedVideo.likes = updatedVideo.likes || [];
+
+  // Filter out the video to be replaced
+  const filteredVideos = videos.filter((video) => video.id !== updatedVideo.id);
+
+  // Add the updated video
+  const newVideosList = [...filteredVideos, updatedVideo];
+
+  // Update the state with the new list of videos
+  setVideos(newVideosList);
+};
+
+
+  
 
   const deleteVideo = (videoId) => {
     setVideos(videos.filter((video) => video.id !== videoId));
@@ -103,15 +120,17 @@ const UserContextProvider = (props) => {
 
   const likeVideo = (videoId) => {
     if (!currentUser) return;
+    
     setVideos(videos.map((video) =>
       video.id === videoId
-        ? { ...video, likes: [...video.likes, currentUser.username] }
+        ? { ...video, likes: [...(video.likes || []), currentUser.username] }
         : video
     ));
   };
-
+  
   const unlikeVideo = (videoId) => {
     if (!currentUser) return;
+    
     setVideos(videos.map((video) =>
       video.id === videoId
         ? { ...video, likes: video.likes.filter((username) => username !== currentUser.username) }

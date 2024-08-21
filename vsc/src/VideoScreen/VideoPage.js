@@ -11,11 +11,18 @@ function VideoPage() {
   const [newComment, setNewComment] = useState('');
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editedComment, setEditedComment] = useState('');
-  const currentVideo = videos.find((vid) => vid.id === id);
 
-  const otherVideos = videos.filter((vid) => vid.id !== id);
+  // חפש את הסרטון הנוכחי
+  const currentVideo = videos ? videos.find((vid) => vid.id === id) : null;
+  const otherVideos = videos ? videos.filter((vid) => vid.id !== id) : [];
 
+  // אם אין סרטון נוכחי, נווט הביתה
   useEffect(() => {
+    if (!currentVideo) {
+      navigate('/');
+      return;
+    }
+    
     const videoElement = videoRef.current;
 
     const handleLoadedMetadata = () => {
@@ -35,7 +42,7 @@ function VideoPage() {
         videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [currentVideo]);
+  }, [currentVideo, navigate]);
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this video?')) {
@@ -45,6 +52,11 @@ function VideoPage() {
   };
 
   const handleAddComment = () => {
+    if (!currentUser) {
+      alert('You must be logged in to comment.');
+      return;
+    }
+  
     if (newComment.trim()) {
       addComment(id, { text: newComment, user: currentUser.username });
       setNewComment('');
@@ -71,20 +83,20 @@ function VideoPage() {
   };
 
   const handleLike = () => {
-    if (currentUser) {
-      if (currentVideo.likes.includes(currentUser.username)) {
-        unlikeVideo(id);
-      } else {
-        likeVideo(id);
-      }
-    } else {
+    if (!currentUser) {
       alert('You must be logged in to like a video.');
+      return;
+    }
+    
+    if (currentVideo && currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
+      unlikeVideo(id);
+    } else {
+      likeVideo(id);
     }
   };
 
   if (!currentVideo) {
-    navigate('/');
-    return null;
+    return null; // מצאנו פתרון אחר לביצוע הנוויגציה במקרה הזה
   }
 
   return (
@@ -101,13 +113,13 @@ function VideoPage() {
           <p>{currentVideo.description}</p>
           <div className="like-section">
             <button onClick={handleLike} className="like-button">
-              {currentUser && currentVideo.likes.includes(currentUser.username) ? (
+              {currentUser && currentVideo.likes && currentVideo.likes.includes(currentUser.username) ? (
                 <i className="bi bi-hand-thumbs-up-fill"></i>
               ) : (
                 <i className="bi bi-hand-thumbs-up"></i>
               )}
             </button>
-            <span>{currentVideo.likes.length} Likes</span>
+            <span>{currentVideo.likes ? currentVideo.likes.length : 0} Likes</span>
           </div>
 
           {currentUser && currentUser.username === currentVideo.uploadedBy && (
@@ -120,7 +132,7 @@ function VideoPage() {
           <div className={`comments-section ${darkMode ? 'dark-theme' : ''}`}>
             <h3>Comments</h3>
             <ul>
-              {currentVideo.comments.map((comment, index) => (
+              {currentVideo.comments && currentVideo.comments.map((comment, index) => (
                 <li key={index}>
                   {editingCommentIndex === index ? (
                     <div>

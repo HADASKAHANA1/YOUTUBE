@@ -52,7 +52,7 @@ function EditVideo() {
     e.preventDefault();
     const newErrors = {};
 
-    if (!formData.title) {
+    if (!formData.title.trim()) {
       newErrors.title = 'Title is required';
     }
 
@@ -64,7 +64,7 @@ function EditVideo() {
       newErrors.videoFile = 'Video file is required';
     }
 
-    if (!formData.description) {
+    if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
 
@@ -80,12 +80,24 @@ function EditVideo() {
       thumbnail: formData.thumbnail,
       url: formData.videoFile,
       description: formData.description,
-      uploadedBy: currentVideo.uploadedBy
+      uploadedBy: currentVideo.uploadedBy,
+      likes: currentVideo.likes,  // שמירה על הלייקים הקיימים
     };
-    editVideo(updatedVideo);
 
+    editVideo(updatedVideo);
     navigate(`/videos/${id}`);
   };
+
+  if (!currentUser) {
+    navigate('/login');
+    return null;
+  }
+
+  if (currentUser.username !== currentVideo.uploadedBy) {
+    alert("You do not have permission to edit this video.");
+    navigate('/');
+    return null;
+  }
 
   return (
     <div className={`edit-video-container ${darkMode ? 'dark-theme' : ''}`}>
