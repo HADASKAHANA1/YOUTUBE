@@ -43,6 +43,7 @@ const UserContextProvider = (props) => {
     
     newVideo.id = Math.random().toString(36).substr(2, 9);
     newVideo.uploadedBy = uploader.username;
+    
     newVideo.comments = [];
     newVideo.likes = newVideo.likes || [];
     setVideos([...videos, newVideo]);

@@ -20,7 +20,7 @@ function Login() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -39,15 +39,38 @@ function Login() {
 
     setErrors({});
 
-    const user = users.find(user => user.username === formData.username && user.password === formData.password);
-
-    if (user) {
+    try {
+      let res = await fetch('http://localhost:8000/api/login', {
+      method: 'POST',
+      'headers': {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok){
       setLoginError('');
       login(formData.username);
       navigate('/');
-    } else {
+    }
+    if(res.status===401){
       setLoginError('Invalid username or password');
     }
+    if(res.status===500){
+      //TODO: ?
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+  }
+
+    // const user = users.find(user => user.username === formData.username && user.password === formData.password);
+
+    // if (user) {
+    //   setLoginError('');
+    //   login(formData.username);
+    //   navigate('/');
+    // } else {
+    //   setLoginError('Invalid username or password');
+    // }
   };
 
   return (

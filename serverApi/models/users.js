@@ -1,7 +1,7 @@
 import videoModel from './video.js'
 
 
-const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture: null, videos: []}]
+const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture: null, videos: [1,2,3,4,5,6,7,8,9,10]}]
 
 function getUsers(){
     return users
@@ -20,6 +20,11 @@ function getUserById(id){
        }
     }
     return null
+}
+
+function usernamePasswordAreExist(username,password){
+    return users.find(user => user.username === username && user.password === password);
+
 }
 
 function editUser(){
@@ -87,5 +92,6 @@ export default {
     getVideo,
     deleteVideo,
     editVideo,
-    addComment
+    addComment,
+    usernamePasswordAreExist
 }
