@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './Signup.css';
 
 function Signup() {
+  //const [imageSrc, setImageSrc] = useState('');
   const { addUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ function Signup() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
@@ -50,11 +51,65 @@ function Signup() {
     }
 
     setErrors({});
-    addUser({ ...formData });
-    setRegistrationSuccess(true);
-    navigate('/login'); // Link back to the login screen
-  };
+    //  // Create a FormData object
+    // const formDataToSend = new FormData();
 
+    // formDataToSend.append('username', formData.username);
+    // formDataToSend.append('password', formData.password);
+    
+    // // Append the file if it exists
+    // if (formData.profilePicture) {
+    //   const file = document.querySelector('input[type="file"]').files[0];
+    //   formDataToSend.append('profilePicture', file);
+    // }
+    //setFormData({username:formData.username})
+    console.log(formData)
+    
+    try {
+      // Send the FormData to the server
+      let res = await fetch('http://localhost:8000/api/users', {
+      method: 'POST',
+      'headers': {
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok){
+      setRegistrationSuccess(true);
+      navigate('/login'); // Link back to the login screen
+    }
+    if(res.status===500){
+      //TODO: check user not exist
+    }
+  } catch (error) {
+    console.error('Error during registration:', error);
+    // Handle registration errors
+  }
+   // addUser({ ...formData });
+   // setRegistrationSuccess(true);
+    //navigate('/login'); // Link back to the login screen
+  };
+  // useEffect(() => {
+  //   console.log('imageSrc: ', imageSrc);
+  // }, [imageSrc]); // Only re-run the effect if count changes
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    console.log('event.target.files[0]: ', event.target.files[0]);
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      // setImageSrc(e.target.result);
+      setFormData((prevFormData)=>{
+        let temp = {...prevFormData}
+        temp.profilePicture=e.target.result
+        return temp
+      })
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  };
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -114,10 +169,10 @@ function Signup() {
           </div>
           <div className="form-group">
             <label>Profile Picture</label>
-            <input type="file" className="form-control" onChange={handleImageChange} />
+            <input id="file-upload" type="file" name="fileUpload" className="form-control" accept='image/png, image/jpeg' onChange={handleFileUpload} />
             {errors.profilePicture && <p className="error">{errors.profilePicture}</p>}
             {formData.profilePicture && (
-              <img src={formData.profilePicture} alt="Profile Preview" className="preview-image" />
+              <img src={formData.profilePicture } alt="Profile Preview" className="preview-image" />
             )}
           </div>
           <button type="submit" className="btn">Sign Up</button>
