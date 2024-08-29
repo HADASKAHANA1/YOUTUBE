@@ -5,12 +5,41 @@ import { UserContext } from '../Users/UserContext';
 import './HomePage.css';
 
 function HomePage() {
+
   const { currentUser, logout, videos, darkMode, toggleDarkMode } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredVideos, setFilteredVideos] = useState(videos);
   const navigate = useNavigate();
 
+  const handleLogOut = async() =>{
+    const userid = currentUser.id
+      const path=  `http://localhost:8000/api/users/logout/${userid}`
+      try{
+        let res = await fetch(path, {
+          method: 'get',
+          'headers': {
+               Authorization: localStorage.getItem("token"),
+              'Content-Type': 'application/json',
+            },
+        });
+        if(res.ok){
+          logout()
+        }
+        else{
+          alert("cannot log out")
+        }
+
+      }catch(error){
+        console.error('Error during logout:', error);
+
+
+      }
+  }
+
+  
+
   useEffect(() => {
+    
     setFilteredVideos(videos);
   }, [videos]);
 
@@ -32,8 +61,10 @@ function HomePage() {
 
   const handleUploadClick = () => {
     if (currentUser) {
-      navigate('/upload');
-    } else {
+   //if (localStorage.getItem("userId")){
+    navigate('/upload');
+
+   } else {
       alert('You must be logged in to upload a video.');
     }
   };
@@ -79,7 +110,7 @@ function HomePage() {
         </button>
 
         {currentUser && (
-          <button className="btn" onClick={logout}>
+          <button className="btn" onClick={handleLogOut}>
             <i className="bi bi-box-arrow-in-left"></i> Logout
           </button>
         )}

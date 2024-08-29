@@ -2,6 +2,7 @@ import userController from '../controllers/users.js'
 import express from 'express'
 // Use a library to perform the cryptographic operations
 import jwt from "jsonwebtoken"
+import verifyToken from "../auth/authMiddleware.js"
 // We are using cryptography, to ensure that no one else will be able to impersonate users
 // To that end, we are going to use the following secret key
 // Keep it safe. No one except the server should know this secret value
@@ -17,6 +18,8 @@ router.route('/').post(userController.createUser)
 router.route('/').get(userController.getUsers)
 
 router.route('/:id').get(userController.getUserById)
+
+router.route('/logout/:id').get(verifyToken.verifyToken,userController.logout)
 
 
 

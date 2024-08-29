@@ -35,7 +35,7 @@ function Upload() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -61,13 +61,36 @@ function Upload() {
     }
 
     setErrors({});
-    const newVideo = {
-      title: formData.title,
-      thumbnail: formData.thumbnail,
-      url: formData.videoFile,
-      description: formData.description
-    };
-    addVideo(newVideo, currentUser); // Pass currentUser as uploader
+    try {
+      // Send the FormData to the server
+      const userid = currentUser.id
+      const path = `http://localhost:8000/api/users/${userid}/videos`
+
+      let res = await fetch(path, {
+      method: 'POST',
+      'headers': {
+          Authorization: localStorage.getItem("token"),
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok){
+      const newVideo = {
+        title: formData.title,
+        thumbnail: formData.thumbnail,
+        url: formData.videoFile,
+        description: formData.description
+      };
+      addVideo(newVideo, currentUser); // Pass currentUser as uploader
+    }
+    if(res.status===500){
+      alert("cannot upload video") 
+    }
+  } catch (error) {
+    console.error('Error during upload video:', error);
+    // Handle registration errors
+  }
+
 
     navigate('/');
   };

@@ -30,9 +30,8 @@ const UserContextProvider = (props) => {
     setUsers([...users, newUser]);
   };
 
-  const login = (username) => {
-    const user = users.find(user => user.username === username);
-    setCurrentUser(user);
+  const login = (currentuser) => {
+    setCurrentUser(currentuser);
   };
 
   const logout = () => {

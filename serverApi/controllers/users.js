@@ -63,10 +63,29 @@ const createUser  = async (req, res) => {
     }
   }
 
+  const logout = async (req,res) => {
+    try{
+        console.log("logout")
+        const user = usersModel.getUserById(req.params.id)
+        console.log('req.params.id: ', req.params.id);
+
+        if(user){
+            res.status(200).json({ message: 'user is exist' });
+        }
+        else{
+            res.status(401).json({ error: 'user isnt exist' });
+        }
+    } catch (error){
+        res.status(500).json({ error: 'Failed to logout user' });
+    }
+
+  }
+
 
 export default {
     createUser,
     getUsers,
     getUserById,
-    login
+    login,
+    logout
 }

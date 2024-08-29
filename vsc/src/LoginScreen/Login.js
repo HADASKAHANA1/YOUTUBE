@@ -40,25 +40,32 @@ function Login() {
     setErrors({});
 
     try {
-      let res = await fetch('http://localhost:8000/api/login', {
+      let res = await fetch('http://localhost:8000/api/tokens', {
       method: 'POST',
       'headers': {
           'Content-Type': 'application/json',
         },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({username: formData.username, password: formData.password}),
     });
-    if (res.ok){
-      setLoginError('');
-      login(formData.username);
-      navigate('/');
-    }
-    if(res.status===401){
-      setLoginError('Invalid username or password');
-    }
-    if(res.status===500){
-      //TODO: ?
-    }
+    const resBody = await res.json();
+    if (res.status !== 200) {
+      localStorage.setItem("authenticated", false);
+      setLoginError(resBody.error);
+      //return;
+  }
+       localStorage.setItem("authenticated", true);
+       localStorage.setItem("token", resBody.token);
+       localStorage.setItem("userId", resBody.user.id);
+       localStorage.setItem("user",resBody.user)
+      // console.log('user: ', resBody.user);
+
+       setLoginError('');
+       login(resBody.user);
+       navigate('/');
+    
+   
   } catch (error) {
+    localStorage.setItem("authenticated", false);
     console.error('Error during login:', error);
   }
 

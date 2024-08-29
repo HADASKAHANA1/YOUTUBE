@@ -7,6 +7,10 @@ function getUsers(){
     return users
 }
 
+function getUserByUsernameAndPassword(username,password){
+    
+}
+
 function createUser(username,password,profilePicture){
     const newUser = {id: users[users.length-1].id+1, username: username, password: password,profilePicture: profilePicture,videos:[]}
     users.push(newUser)
@@ -23,7 +27,19 @@ function getUserById(id){
 }
 
 function usernamePasswordAreExist(username,password){
-    return users.find(user => user.username === username && user.password === password);
+    console.log(getUsers());
+    console.log(username,password);
+    for (const i in users) {
+        console.log(users[i].password,password)
+        console.log(users[i].username,username)
+
+        if(users[i].username==username && users[i].password==password){
+        //    console.log(users[i])
+            return users[i]
+        }
+    }
+
+   // return users.find(user => user.username === username && user.password === password);
 
 }
 
