@@ -35,7 +35,7 @@ function getCombinedVideoList(videos) {
 
 function createVideo(title,url,thumbnail,description,uploadBy){
     const newVideo = {id: videos[videos.length-1].id+1, title : title, url: url, thumbnail: thumbnail, 
-        description: description, uploadBy: uploadBy, comments: [], likes: [] ,
+        description: description, uploadedBy: uploadBy, comments: [], likes: [] ,
         views: Math.floor(Math.random() * (1000000000 - 0 + 1)) + 0}
 
     videos.push(newVideo)

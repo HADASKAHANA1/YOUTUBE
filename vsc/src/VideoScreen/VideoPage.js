@@ -99,6 +99,7 @@ function VideoPage() {
   if (!currentVideo) {
     return null; // מצאנו פתרון אחר לביצוע הנוויגציה במקרה הזה
   }
+  console.log("video  ",currentVideo)
 
   return (
     <div className={`video-page ${darkMode ? 'dark-theme' : ''}`}>
