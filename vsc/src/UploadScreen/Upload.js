@@ -74,14 +74,15 @@ function Upload() {
         },
       body: JSON.stringify(formData),
     });
-    if (res.ok){
-      const newVideo = {
-        title: formData.title,
-        thumbnail: formData.thumbnail,
-        url: formData.videoFile,
-        description: formData.description
-      };
-      addVideo(newVideo, currentUser); // Pass currentUser as uploader
+     if (res.ok){
+      addVideo()
+    //   const newVideo = {
+    //     title: formData.title,
+    //     thumbnail: formData.thumbnail,
+    //     url: formData.videoFile,
+    //     description: formData.description
+    //   };
+    //   addVideo(newVideo, currentUser); // Pass currentUser as uploader
     }
     if(res.status===500){
       alert("cannot upload video") 
@@ -90,8 +91,6 @@ function Upload() {
     console.error('Error during upload video:', error);
     // Handle registration errors
   }
-
-
     navigate('/');
   };
 

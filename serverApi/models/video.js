@@ -83,11 +83,15 @@ function editComment(videoId, userId, newComment)
         {
             for (const j in videos[i].comments)
             {
-                
+
             }
         }
      }
 
+}
+function getVideos(){
+    console.log("viiddeeoos: ")
+    return videos;
 }
 
 
@@ -98,5 +102,6 @@ export default {
     getCombinedVideoList,
     deleteVideo,
     editVideo,
-    addComment
+    addComment,
+    getVideos
 }

@@ -1,5 +1,6 @@
 import userRoutes from './routes/users.js'
 import apiRoutes from './routes/apiRouter.js'
+import videoRouter from './routes/video.js'
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -15,6 +16,7 @@ server.use(express.static('public'))
 
 server.use("/api/users",userRoutes);
 server.use("/api",apiRoutes)
+server.use("/api/videos",videoRouter)
 
 const server2 = http.createServer(server)
 

@@ -1,6 +1,5 @@
 import usersModel from '../models/users.js'
 import multer from 'multer';
-import path from 'path';
 
 // const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
@@ -28,13 +27,11 @@ const createUser  = async (req, res) => {
   };
 
   const getUsers  = async (req, res) => {
-    //console.log(req.body); 
        
     try {
       const users = usersModel.getUsers();
-      console.log('users: ', users);
   
-      res.status(200).json({ message: 'User created successfully' });
+      res.status(200).json({ users: users, message: 'User created successfully' });
     } catch (error) {
       res.status(500).json({ error: 'Failed to create user' });
     }
@@ -65,10 +62,7 @@ const createUser  = async (req, res) => {
 
   const logout = async (req,res) => {
     try{
-        console.log("logout")
         const user = usersModel.getUserById(req.params.id)
-        console.log('req.params.id: ', req.params.id);
-
         if(user){
             res.status(200).json({ message: 'user is exist' });
         }
@@ -80,6 +74,21 @@ const createUser  = async (req, res) => {
     }
 
   }
+  const uploadVideo = async(req,res)=>{
+    try{
+        const newVideo = usersModel.addVideo(req.params.id,req.body.title,req.body.url,req.body.thumbnail,req.body.description)
+        if(newVideo){
+            res.status(200).json({ message: 'success to upload video' });
+        }
+        else{
+            res.status(400).json({ error: 'fail to upload video' });
+        }
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed to upload video' });
+    }
+    
+  }
 
 
 export default {
@@ -87,5 +96,6 @@ export default {
     getUsers,
     getUserById,
     login,
-    logout
+    logout,
+    uploadVideo
 }

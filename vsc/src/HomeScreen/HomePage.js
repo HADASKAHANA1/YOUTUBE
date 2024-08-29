@@ -6,9 +6,9 @@ import './HomePage.css';
 
 function HomePage() {
 
-  const { currentUser, logout, videos, darkMode, toggleDarkMode } = useContext(UserContext);
+  const { currentUser, logout, videos, darkMode, toggleDarkMode, setVideos } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredVideos, setFilteredVideos] = useState(videos);
+  const [filteredVideos, setFilteredVideos] = useState([]);
   const navigate = useNavigate();
 
   const handleLogOut = async() =>{
@@ -39,8 +39,29 @@ function HomePage() {
   
 
   useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+          const res = await fetch(`http://localhost:8000/api/videos/allVideos`, {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          });
+          if (!res.ok) {
+              alert("Failed fetch videos");
+              return;
+          }
+          const resbody = await res.json();
+
+          setFilteredVideos(resbody.videos);
+          setVideos(resbody.videos);
+          
+      } catch (err) {
+          console.log(err);
+      }
+  };
+  fetchVideos();
     
-    setFilteredVideos(videos);
   }, [videos]);
 
   const handleSearchInputChange = (event) => {

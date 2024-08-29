@@ -66,9 +66,9 @@ function getUsersVideo(id){
      return null
 }
 
-function addVideo(idUser,title,url,thumbnail,description,uploadBy)
+function addVideo(idUser,title,url,thumbnail,description)
 {
-    const newVideo = videoModel.createVideo(title,url,thumbnail,description,uploadBy)
+    const newVideo = videoModel.createVideo(title,url,thumbnail,description,getUserById(idUser).username)
 
     for (const i in users) {
         if (users[i].id==idUser)
@@ -76,6 +76,7 @@ function addVideo(idUser,title,url,thumbnail,description,uploadBy)
             users[i].videos.push(newVideo.id)
         }
     }
+    return newVideo
 }
 function getVideo(idUser,idVideo){
     return videoModel.getVideoById(idVideo)
