@@ -68,7 +68,8 @@ function getUsersVideo(id){
 
 function addVideo(idUser,title,url,thumbnail,description)
 {
-    const newVideo = videoModel.createVideo(title,url,thumbnail,description,getUserById(idUser).username)
+    const username = getUserById(idUser).username
+    const newVideo = videoModel.createVideo(title,url,thumbnail,description,username)
 
     for (const i in users) {
         if (users[i].id==idUser)

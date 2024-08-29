@@ -90,7 +90,6 @@ function editComment(videoId, userId, newComment)
 
 }
 function getVideos(){
-    console.log("viiddeeoos: ")
     return videos;
 }
 

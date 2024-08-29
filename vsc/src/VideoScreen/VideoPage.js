@@ -15,6 +15,7 @@ function VideoPage() {
   // חפש את הסרטון הנוכחי
   const currentVideo = videos ? videos.find((vid) => vid.id === id) : null;
   const otherVideos = videos ? videos.filter((vid) => vid.id !== id) : [];
+  console.log(currentVideo.url)
 
   // אם אין סרטון נוכחי, נווט הביתה
   useEffect(() => {

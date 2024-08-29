@@ -18,6 +18,8 @@ server.use("/api/users",userRoutes);
 server.use("/api",apiRoutes)
 server.use("/api/videos",videoRouter)
 
+
+
 const server2 = http.createServer(server)
 
 server2.listen(8000,()=>{

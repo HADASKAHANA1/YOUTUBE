@@ -72,10 +72,10 @@ function Upload() {
           Authorization: localStorage.getItem("token"),
           'Content-Type': 'application/json',
         },
-      body: JSON.stringify(formData),
+      body: JSON.stringify({title:formData.title, url:formData.videoFile, thumbnail:formData.thumbnail, description:formData.description}),
     });
      if (res.ok){
-      addVideo()
+    //  addVideo()
     //   const newVideo = {
     //     title: formData.title,
     //     thumbnail: formData.thumbnail,

@@ -1,5 +1,6 @@
 import usersModel from '../models/users.js'
 import multer from 'multer';
+import video from './video.js';
 
 // const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
@@ -77,8 +78,9 @@ const createUser  = async (req, res) => {
   const uploadVideo = async(req,res)=>{
     try{
         const newVideo = usersModel.addVideo(req.params.id,req.body.title,req.body.url,req.body.thumbnail,req.body.description)
+    
         if(newVideo){
-            res.status(200).json({ message: 'success to upload video' });
+            res.status(200).json({video: newVideo, message: 'success to upload video' });
         }
         else{
             res.status(400).json({ error: 'fail to upload video' });
