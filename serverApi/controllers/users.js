@@ -91,6 +91,34 @@ const createUser  = async (req, res) => {
     }
     
   }
+  const deleteVideo = async(req,res)=>{
+    try{
+        const ret = usersModel.deleteVideo(req.params.id,req.params.pid)
+        console.log("ret: ",ret)
+      
+
+        if(ret ==1){
+
+            res.status(200).json({ message: 'success to delete video' });
+        }
+        if(ret==404){
+          console.log("ret: 404")
+
+        
+            res.status(404).json({ error: 'video is not exist' });
+        }
+        if(ret==400){
+          console.log("ret: 400")
+
+        
+          res.status(400).json({ error: 'user is not exist' });
+      }
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed to delete video' });
+    }
+    
+  }
 
 
 export default {
@@ -99,5 +127,6 @@ export default {
     getUserById,
     login,
     logout,
-    uploadVideo
+    uploadVideo,
+    deleteVideo
 }

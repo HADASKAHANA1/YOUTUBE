@@ -7,13 +7,14 @@ import jwt from "jsonwebtoken"
 
 const router = express.Router()
 
-//const upload = multer({ dest: 'uploads/' }); // מיקום לשמירת קבצים
 
 router.route('/').post(userController.createUser)
 router.route('/').get(userController.getUsers)
 
 router.route('/:id').get(userController.getUserById)
 router.route('/:id/videos').post(userController.uploadVideo)
+
+router.route('/:id/videos/:pid').delete(verifyToken.verifyToken,userController.deleteVideo)
 
 
 router.route('/logout/:id').get(verifyToken.verifyToken,userController.logout)

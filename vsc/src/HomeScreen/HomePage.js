@@ -41,7 +41,7 @@ function HomePage() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-          const res = await fetch(`http://localhost:8000/api/videos/allVideos`, {
+          const res = await fetch(`http://localhost:8000/api/videos`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json",
@@ -62,7 +62,7 @@ function HomePage() {
   };
   fetchVideos();
     
-  }, [videos]);
+  }, []);
 
   const handleSearchInputChange = (event) => {
     setSearchQuery(event.target.value);

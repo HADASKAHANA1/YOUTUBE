@@ -8,5 +8,7 @@ const router = express.Router()
 
 
 router.route('/allVideos').get(videoController.getVideos)
+router.route('/').get(videoController.getPopularVideos)
+
 
 export default router;

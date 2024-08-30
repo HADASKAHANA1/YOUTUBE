@@ -84,7 +84,20 @@ function getVideo(idUser,idVideo){
 }
 
 function deleteVideo(userId, videoId){
-    videoModel.deleteVideo(videoId)
+
+    for (const i in users) {
+        if (users[i].id==userId) {
+            if(videoModel.deleteVideo(videoId)==1){
+
+                    users[i].videos = users[i].videos.filter(video => video.id !== videoId);
+                    return 1
+            }
+            return 404 //video isnt exist
+        }
+            
+    }
+    return 400 //user isnt exist
+    
 }
 
 function editVideo(userId, videoId,newTitle)

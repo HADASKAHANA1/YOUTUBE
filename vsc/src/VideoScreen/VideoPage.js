@@ -13,8 +13,9 @@ function VideoPage() {
   const [editedComment, setEditedComment] = useState('');
 
   // חפש את הסרטון הנוכחי
-  const currentVideo = videos ? videos.find((vid) => vid.id === id) : null;
-  const otherVideos = videos ? videos.filter((vid) => vid.id !== id) : [];
+  const videoId = parseInt(id); // המרה למספר
+  const currentVideo = videos ? videos.find((vid) => vid.id === videoId) : null;
+  const otherVideos = videos ? videos.filter((vid) => vid.id !== videoId) : [];
   console.log(currentVideo.url)
 
   // אם אין סרטון נוכחי, נווט הביתה
@@ -45,10 +46,39 @@ function VideoPage() {
     };
   }, [currentVideo, navigate]);
 
-  const handleDelete = () => {
+  const handleDelete = async() => {
     if (window.confirm('Are you sure you want to delete this video?')) {
-      deleteVideo(id);
-      navigate('/');
+      
+        const userid = currentUser.id
+        const videoid = currentVideo.id
+          const path=  `http://localhost:8000/api/users/${userid}/videos/${videoid}`
+          try{
+            let res = await fetch(path, {
+              method: 'DELETE',
+              'headers': {
+                   Authorization: localStorage.getItem("token"),
+                  'Content-Type': 'application/json',
+                },
+            });
+            const resbody = await res.json()
+            if(res.ok){
+              console.log("hhh")
+             // deleteVideo(videoid);
+              navigate('/');
+              
+            }
+            
+            else{
+              alert(resbody.error)
+            }
+    
+          }catch(error){
+            console.error('Error during delete:', error);
+    
+    
+          }
+      
+
     }
   };
 
