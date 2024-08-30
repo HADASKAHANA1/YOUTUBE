@@ -10,6 +10,8 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredVideos, setFilteredVideos] = useState([]);
   const navigate = useNavigate();
+  console.log("videos page homa",videos)
+
 
   const handleLogOut = async() =>{
     const userid = currentUser.id
@@ -55,6 +57,7 @@ function HomePage() {
 
           setFilteredVideos(resbody.videos);
           setVideos(resbody.videos);
+          console.log("videis: ",videos)
           
       } catch (err) {
           console.log(err);

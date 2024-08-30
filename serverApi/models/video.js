@@ -1,3 +1,5 @@
+
+
 const videos = [  { id: 1, title: 'Video 1', url: '/videos/video1.mp4', thumbnail: '/thumbnails/1.png', description: 'Description for Video 1', uploadedBy: 'Sinai Cohen', comments: [], likes: [] ,views:0},
 { id: 2, title: 'Video 2', url: '/videos/video2.mp4', thumbnail: '/thumbnails/2.png', description: 'Description for Video 2', uploadedBy: 'Sinai Cohen', comments: [], likes: [] ,views:892},
 { id: 3, title: 'Video 3', url: '/videos/video3.mp4', thumbnail: '/thumbnails/3.png', description: 'Description for Video 3', uploadedBy: 'Sinai Cohen', comments: [], likes: [] ,views:46},
@@ -73,13 +75,18 @@ function getVideoById(id){
     return null
 }
 
-function editVideo(newTitle,videoId){
+function editVideo(newTitle,videoId,newThumbnail, newVideo, newDescription){
     for (const i in videos) {
         if (videos[i].id==videoId)
         {
             videos[i].title=newTitle
+            videos[i].description=newDescription
+            videos[i].thumbnail=newThumbnail
+            videos[i].url=newVideo
+            return 1
         }
      }
+     return 0
 }
 function addComment(videoId, userId, comment)
 {

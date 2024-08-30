@@ -7,7 +7,7 @@ function EditVideo() {
   const { id } = useParams();
   const { videos, editVideo, currentUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
-  const currentVideo = videos.find((vid) => vid.id === id);
+  const currentVideo = videos.find((vid) => Number(vid.id) == id);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -48,7 +48,7 @@ function EditVideo() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -74,29 +74,56 @@ function EditVideo() {
     }
 
     setErrors({});
-    const updatedVideo = {
-      id: currentVideo.id,
-      title: formData.title,
-      thumbnail: formData.thumbnail,
-      url: formData.videoFile,
-      description: formData.description,
-      uploadedBy: currentVideo.uploadedBy,
-      likes: currentVideo.likes,  // שמירה על הלייקים הקיימים
-    };
+    try {
+      // Send the FormData to the server
+      const userid = currentUser.id
+      const videoid = currentVideo.id
+      const path = `http://localhost:8000/api/users/${userid}/videos/${videoid}`
 
-    editVideo(updatedVideo);
-    navigate(`/videos/${id}`);
+      let res = await fetch(path, {
+      method: 'put',
+      'headers': {
+          Authorization: localStorage.getItem("token"),
+          'Content-Type': 'application/json',
+        },
+      body: JSON.stringify({newtitle:formData.title, newurl:formData.videoFile, newthumbnail:formData.thumbnail, newdescription:formData.description}),
+    });
+     if (res.ok){
+      const updatedVideo = {
+        id: currentVideo.id,
+        title: formData.title,
+        thumbnail: formData.thumbnail,
+        url: formData.videoFile,
+        description: formData.description,
+        uploadedBy: currentVideo.uploadedBy,
+        likes: currentVideo.likes,  // שמירה על הלייקים הקיימים
+      };
+  
+      editVideo(updatedVideo);
+      navigate(`/videos/${id}`);
+
+    }
+    else{
+      alert("cannot edit video") 
+    }
+  } catch (error) {
+    console.error('Error during edit video:', error);
+    // Handle registration errors
+  }
+    navigate('/');
   };
+    
+  
 
   if (!currentUser) {
     navigate('/login');
-    return null;
+    //return null;
   }
 
   if (currentUser.username !== currentVideo.uploadedBy) {
     alert("You do not have permission to edit this video.");
     navigate('/');
-    return null;
+   // return null;
   }
 
   return (

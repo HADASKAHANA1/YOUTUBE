@@ -100,9 +100,9 @@ function deleteVideo(userId, videoId){
     
 }
 
-function editVideo(userId, videoId,newTitle)
+function editVideo(userId, videoId,newTitle,newVideo,newThumbnail, newDescription)
 {
-    videoModel.editVideo(newTitle,videoId)
+    return videoModel.editVideo(newTitle,videoId,newThumbnail,newVideo,newDescription)
 }
 function addComment(videoId,userId, comment){
     videoModel.addComment(videoId,userId,comment)

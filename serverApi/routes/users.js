@@ -12,9 +12,10 @@ router.route('/').post(userController.createUser)
 router.route('/').get(userController.getUsers)
 
 router.route('/:id').get(userController.getUserById)
-router.route('/:id/videos').post(userController.uploadVideo)
+router.route('/:id/videos').post(verifyToken.verifyToken,userController.uploadVideo)
 
 router.route('/:id/videos/:pid').delete(verifyToken.verifyToken,userController.deleteVideo)
+router.route('/:id/videos/:pid').put(verifyToken.verifyToken,userController.editVideo)
 
 
 router.route('/logout/:id').get(verifyToken.verifyToken,userController.logout)

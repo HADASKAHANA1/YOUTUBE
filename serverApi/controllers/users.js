@@ -120,6 +120,26 @@ const createUser  = async (req, res) => {
     
   }
 
+  const editVideo = async(req,res)=>{
+    try{
+        const ret = usersModel.editVideo(req.params.id, req.params.pid, req.body.newtitle,req.body.newurl, req.body.newthumbnail,  req.body.newdescription)
+      
+        if(ret){
+
+            res.status(200).json({ message: 'success to edit video' });
+        }
+        
+        else{
+        
+          res.status(400).json({ error: 'video is not exist' });
+      }
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed to edit video' });
+    }
+    
+  }
+
 
 export default {
     createUser,
@@ -128,5 +148,6 @@ export default {
     login,
     logout,
     uploadVideo,
-    deleteVideo
+    deleteVideo,
+    editVideo
 }

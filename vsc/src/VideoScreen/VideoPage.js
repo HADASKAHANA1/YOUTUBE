@@ -12,11 +12,12 @@ function VideoPage() {
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editedComment, setEditedComment] = useState('');
 
+
   // חפש את הסרטון הנוכחי
   const videoId = parseInt(id); // המרה למספר
   const currentVideo = videos ? videos.find((vid) => vid.id === videoId) : null;
   const otherVideos = videos ? videos.filter((vid) => vid.id !== videoId) : [];
-  console.log(currentVideo.url)
+  console.log(videos)
 
   // אם אין סרטון נוכחי, נווט הביתה
   useEffect(() => {
@@ -156,7 +157,7 @@ function VideoPage() {
 
           {currentUser && currentUser.username === currentVideo.uploadedBy && (
             <div className="edit-delete-buttons">
-              <Link to={`/edit/${id}`} className="edit-button">Edit Video</Link>
+              <Link to={`/edit/${videoId}`} className="edit-button">Edit Video</Link>
               <button onClick={handleDelete} className="delete-button">Delete Video</button>
             </div>
           )}
