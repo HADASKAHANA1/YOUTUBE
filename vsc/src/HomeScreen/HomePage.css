@@ -1,3 +1,13 @@
+.home-page {
+  text-align: center;
+  padding: 20px;
+}
+
+
+
+.go-to-profile-button:hover {
+  background-color: #e60000;
+}
 
 /* General styles for the homepage */
 .homepage-container {

@@ -10,7 +10,8 @@ function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredVideos, setFilteredVideos] = useState([]);
   const navigate = useNavigate();
-  console.log("videos page homa",videos)
+  const [ homePagevideos , setHomePageVideos] = useState([]);
+
 
 
   const handleLogOut = async() =>{
@@ -56,8 +57,8 @@ function HomePage() {
           const resbody = await res.json();
 
           setFilteredVideos(resbody.videos);
+          setHomePageVideos(resbody.videos);
           setVideos(resbody.videos);
-          console.log("videis: ",videos)
           
       } catch (err) {
           console.log(err);
@@ -72,15 +73,16 @@ function HomePage() {
   };
 
   const handleSearchClick = () => {
-    const filtered = videos.filter(video =>
+    const filtered = homePagevideos.filter(video =>
       video.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredVideos(filtered);
   };
 
   const handleLogoClick = () => {
-    setFilteredVideos(videos);
+    setFilteredVideos(homePagevideos);
     setSearchQuery(''); // Clear the search input
+
   };
 
   const handleUploadClick = () => {
@@ -138,6 +140,7 @@ function HomePage() {
             <i className="bi bi-box-arrow-in-left"></i> Logout
           </button>
         )}
+        
       </div>
 
       <div className="search-bar">
@@ -154,6 +157,7 @@ function HomePage() {
           />
         </div>
       </div>
+      
 
       <div className="video-grid">
         {filteredVideos.map((video) => (

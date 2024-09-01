@@ -1,7 +1,7 @@
 import videoModel from './video.js'
 
 
-const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture: null, videos: [1,2,3,4,5,6,7,8,9,10]}]
+const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture:"/thumbnails/1.png", videos: [1,2,3,4,5,6,7,8,9,10]}]
 
 function getUsers(){
     return users
@@ -57,19 +57,23 @@ function deleteUserById(id){
 }
 
 function getUsersVideo(id){
+    const videos = []
     for (const i in users) {
         if (users[i].id==id)
         {
-         return users[i].videos
+            for ( const j in users[i].videos){
+                videos.push(videoModel.getVideoById(users[i].videos[j]))
+            }
         }
      }
-     return null
+     console.log("vi , " ,  videos)
+     return videos
 }
 
 function addVideo(idUser,title,url,thumbnail,description)
 {
     const username = getUserById(idUser).username
-    const newVideo = videoModel.createVideo(title,url,thumbnail,description,username)
+    const newVideo = videoModel.createVideo(title,url,thumbnail,description,username,idUser)
 
     for (const i in users) {
         if (users[i].id==idUser)
@@ -80,6 +84,7 @@ function addVideo(idUser,title,url,thumbnail,description)
     return newVideo
 }
 function getVideo(idUser,idVideo){
+    
     return videoModel.getVideoById(idVideo)
 }
 

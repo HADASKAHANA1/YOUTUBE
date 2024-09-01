@@ -5,27 +5,88 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id } = useParams();
-  const { videos, currentUser, deleteVideo, darkMode, addComment, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
+  const { videos, deleteVideo, darkMode, currentUser, addComment, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editedComment, setEditedComment] = useState('');
+  const videoId = parseInt(id);
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const [otherVideos, setOtherVideos] = useState([]);
+  const [onTheSideVideos, setOnTheSideVideos] = useState([]);
+  const [author, setAuthor] = useState(null);
+  let authorId;
 
-
-  // חפש את הסרטון הנוכחי
-  const videoId = parseInt(id); // המרה למספר
-  const currentVideo = videos ? videos.find((vid) => vid.id === videoId) : null;
-  const otherVideos = videos ? videos.filter((vid) => vid.id !== videoId) : [];
-  console.log(videos)
-
-  // אם אין סרטון נוכחי, נווט הביתה
+  // Fetch all videos and the current video
   useEffect(() => {
-    if (!currentVideo) {
-      navigate('/');
-      return;
+    const fetchVideos = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/videos/allVideos', {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error('Failed to fetch videos');
+        const { videos } = await res.json();
+        setOtherVideos(videos);
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch videos");
+      }
+    };
+
+    const fetchVideo = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error('Failed to fetch video');
+        const { video } = await res.json();
+        authorId = video.idUser;
+        setCurrentVideo(video);
+
+        // Call fetchAuthor after setting the authorId
+        if (authorId) {
+          fetchAuthor(authorId);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch video");
+      }
+    };
+
+    const fetchAuthor = async (authorId) => {
+      try {
+        const res = await fetch(`http://localhost:8000/api/users/${authorId}`, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+        if (!res.ok) throw new Error('Failed to fetch user');
+        const { user } = await res.json();
+        setAuthor(user);
+        console.log('Fetched user:', user); // הוסף לוג לבדוק את התוצאה
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to fetch user");
+      }
+    };
+
+    fetchVideos();
+    fetchVideo();
+  }, [videoId]);
+
+  // Update `onTheSideVideos` whenever `currentVideo` or `otherVideos` changes
+  useEffect(() => {
+    if (currentVideo && otherVideos.length) {
+      setOnTheSideVideos(otherVideos.filter((vid) => vid.id !== videoId));
     }
-    
+  }, [currentVideo, otherVideos, videoId]);
+
+  useEffect(() => {
+    if (!currentVideo) return;
+
     const videoElement = videoRef.current;
 
     const handleLoadedMetadata = () => {
@@ -45,41 +106,28 @@ function VideoPage() {
         videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
       }
     };
-  }, [currentVideo, navigate]);
+  }, [currentVideo]);
 
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this video?')) {
-      
-        const userid = currentUser.id
-        const videoid = currentVideo.id
-          const path=  `http://localhost:8000/api/users/${userid}/videos/${videoid}`
-          try{
-            let res = await fetch(path, {
-              method: 'DELETE',
-              'headers': {
-                   Authorization: localStorage.getItem("token"),
-                  'Content-Type': 'application/json',
-                },
-            });
-            const resbody = await res.json()
-            if(res.ok){
-              console.log("hhh")
-             // deleteVideo(videoid);
-              navigate('/');
-              
-            }
-            
-            else{
-              alert(resbody.error)
-            }
-    
-          }catch(error){
-            console.error('Error during delete:', error);
-    
-    
-          }
-      
-
+      const path = `http://localhost:8000/api/users/${currentUser.id}/videos/${currentVideo.id}`;
+      try {
+        const res = await fetch(path, {
+          method: 'DELETE',
+          headers: {
+            Authorization: localStorage.getItem("token"),
+            'Content-Type': 'application/json',
+          },
+        });
+        if (res.ok) {
+          navigate('/');
+        } else {
+          const { error } = await res.json();
+          alert(error);
+        }
+      } catch (error) {
+        console.error('Error during delete:', error);
+      }
     }
   };
 
@@ -88,7 +136,7 @@ function VideoPage() {
       alert('You must be logged in to comment.');
       return;
     }
-  
+
     if (newComment.trim()) {
       addComment(id, { text: newComment, user: currentUser.username });
       setNewComment('');
@@ -119,8 +167,8 @@ function VideoPage() {
       alert('You must be logged in to like a video.');
       return;
     }
-    
-    if (currentVideo && currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
+
+    if (currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
       unlikeVideo(id);
     } else {
       likeVideo(id);
@@ -128,9 +176,8 @@ function VideoPage() {
   };
 
   if (!currentVideo) {
-    return null; // מצאנו פתרון אחר לביצוע הנוויגציה במקרה הזה
+    return null; // Handle case where video is not yet loaded
   }
-  console.log("video  ",currentVideo)
 
   return (
     <div className={`video-page ${darkMode ? 'dark-theme' : ''}`}>
@@ -142,8 +189,20 @@ function VideoPage() {
         <div className={`video-details ${darkMode ? 'dark-theme' : ''}`}>
           <video controls src={currentVideo.url} className="video-player" ref={videoRef} />
           <h2>{currentVideo.title}</h2>
-          <p>Uploaded by: {currentVideo.uploadedBy}</p>
+          <div className='author'>
+            {author && (
+              <Link to={`/UserPage/${author.id}`}>
+                <img 
+                  src={author.profilePicture} 
+                  alt="Profile"
+                  className="profile-picture"
+                />
+              </Link>
+            )}
+            <p>Uploaded by: {currentVideo.uploadedBy}</p>
+          </div>
           <p>{currentVideo.description}</p>
+          <p>{currentVideo.views} views</p>
           <div className="like-section">
             <button onClick={handleLike} className="like-button">
               {currentUser && currentVideo.likes && currentVideo.likes.includes(currentUser.username) ? (
@@ -197,7 +256,7 @@ function VideoPage() {
         </div>
 
         <div className={`video-list ${darkMode ? 'dark-theme' : ''}`}>
-          {otherVideos.map((vid) => (
+          {onTheSideVideos.map((vid) => (
             <Link key={vid.id} to={`/videos/${vid.id}`} className="video-item-link">
               <div className="video-item">
                 <img src={vid.thumbnail} alt={vid.title} className="video-thumbnail" />

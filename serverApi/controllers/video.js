@@ -7,6 +7,7 @@ const getVideos  = async (req, res) => {
 
       const videos = videoModel.getVideos()
 
+
   
       res.status(200).json({ videos: videos, message: 'all vidoes seccess' });
     } catch (error) {
@@ -28,7 +29,22 @@ const getPopularVideos  = async (req, res) => {
   }
 };
 
+const getVideoById  = async (req, res) => {
+       
+  try {
+
+    const video = videoModel.getVideoById(req.params.id)
+
+
+    res.status(200).json({ video: video, message: 'bring vidoe seccess' });
+  } catch (error) {
+    res.status(500).json({video:null, error: 'video is not exist' });
+  }
+};
+
+
   export default{
     getVideos,
-    getPopularVideos
+    getPopularVideos,
+    getVideoById
   }

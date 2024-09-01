@@ -41,7 +41,7 @@ const createUser  = async (req, res) => {
     try{
         const user = usersModel.getUserById(req.params.id)
         
-        res.status(200).json({ message: 'User received successfully' });
+        res.status(200).json({user:user, message: 'User received successfully' });
 
     } catch (error){
         res.status(500).json({ error: 'Failed to get user' });
@@ -139,6 +139,21 @@ const createUser  = async (req, res) => {
     }
     
   }
+  const getUsersVideos = async(req,res)=>{
+    try{
+      console.log("req.params.id ", req.params.id)
+
+
+        const userVideos = usersModel.getUsersVideo(req.params.id);
+
+        res.status(200).json({ videos : userVideos, message: 'user videos' });
+        
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed in user videos' });
+    }
+    
+  }
 
 
 export default {
@@ -149,5 +164,6 @@ export default {
     logout,
     uploadVideo,
     deleteVideo,
-    editVideo
+    editVideo,
+    getUsersVideos
 }
