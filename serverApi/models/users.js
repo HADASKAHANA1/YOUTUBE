@@ -1,7 +1,7 @@
 import videoModel from './video.js'
 
 
-const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture:"/thumbnails/1.png", videos: [1,2,3,4,5,6,7,8,9,10]}]
+const users = [{id: 0, username: "Sinai Cohen", password: '12345ee!', profilePicture:'/thumbnails/4.png', videos: [1,2,3,4,5,6,7,8,9,10]}]
 
 function getUsers(){
     return users

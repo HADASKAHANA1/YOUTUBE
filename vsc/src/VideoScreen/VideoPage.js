@@ -17,6 +17,7 @@ function VideoPage() {
   const [onTheSideVideos, setOnTheSideVideos] = useState([]);
   const [author, setAuthor] = useState(null);
   let authorId;
+  const [authorProfile , setAuthorProfile] = useState(null)
 
   // Fetch all videos and the current video
   useEffect(() => {
@@ -37,24 +38,26 @@ function VideoPage() {
 
     const fetchVideo = async () => {
       try {
+
         const res = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
         });
         if (!res.ok) throw new Error('Failed to fetch video');
         const { video } = await res.json();
-        authorId = video.idUser;
+        authorId = await video.authorId;
         setCurrentVideo(video);
-
+    
         // Call fetchAuthor after setting the authorId
-        if (authorId) {
-          fetchAuthor(authorId);
-        }
+
+        fetchAuthor(authorId);
+        
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching video:', err);
         alert("Failed to fetch video");
       }
     };
+    
 
     const fetchAuthor = async (authorId) => {
       try {
@@ -65,13 +68,14 @@ function VideoPage() {
         if (!res.ok) throw new Error('Failed to fetch user');
         const { user } = await res.json();
         setAuthor(user);
-        console.log('Fetched user:', user); // הוסף לוג לבדוק את התוצאה
-
+       
+        setAuthorProfile(user.profilePicture)
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching user:', err);
         alert("Failed to fetch user");
       }
     };
+    
 
     fetchVideos();
     fetchVideo();
@@ -193,7 +197,7 @@ function VideoPage() {
             {author && (
               <Link to={`/UserPage/${author.id}`}>
                 <img 
-                  src={author.profilePicture} 
+                  src={authorProfile} 
                   alt="Profile"
                   className="profile-picture"
                 />

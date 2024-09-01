@@ -1,7 +1,7 @@
 /* Styles for the User Page */
 .user-page-container {
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #ffffff; /* שינוי צבע הרקע ללבן */
   color: #333;
   min-height: 100vh;
 }
@@ -11,39 +11,39 @@
   align-items: center;
   padding: 20px;
   background-color: #fcfcfc;
-  color: white;
-}
-.title {
-  font:bolder
-}
-
-.youtube-logo {
-  height: 50px;
-  margin-right: 20px;
 }
 
 .user-page-main {
   margin-top: 20px;
 }
 
-.profile-section {
+.user-info-centered {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+.profile-picture-large {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
   margin-bottom: 20px;
 }
 
-.profile-picture {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 20px;
-}
-
-.profile-picture img {
+.profile-picture-large img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.username-title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
 }
 
 .video-grid {

@@ -57,7 +57,8 @@ function Login() {
        localStorage.setItem("token", resBody.token);
        localStorage.setItem("userId", resBody.user.id);
        localStorage.setItem("user",resBody.user)
-      // console.log('user: ', resBody.user);
+
+       console.log('user: ', resBody.user);
 
        setLoginError('');
        login(resBody.user);

@@ -11,7 +11,6 @@ const jwtProvider = async (req, res) => {
         console.log('req.body: ', req.body);
 
         const user = User.usernamePasswordAreExist(username,password) 
-        console.log('user: ', user);
         if(!user){
             return res.status(401).json({ error: "Invalid username and/or password" });
         }

@@ -11,6 +11,7 @@ function HomePage() {
   const [filteredVideos, setFilteredVideos] = useState([]);
   const navigate = useNavigate();
   const [ homePagevideos , setHomePageVideos] = useState([]);
+  
 
 
 
@@ -42,6 +43,7 @@ function HomePage() {
   
 
   useEffect(() => {
+    
     const fetchVideos = async () => {
       try {
           const res = await fetch(`http://localhost:8000/api/videos`, {
