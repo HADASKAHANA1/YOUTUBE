@@ -154,6 +154,39 @@ const createUser  = async (req, res) => {
     }
     
   }
+  
+  const editUser = async(req,res)=>{
+    try{
+
+        const ret = usersModel.editUser(req.params.id);
+        if(!ret){
+          res.status(400).json({ error: 'user isnot exist' });
+
+        }
+        res.status(200).json({ message: 'edit user success'})
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed in edit user' });
+    }
+    
+  }
+
+  const deleteUser = async(req,res)=>{
+    try{
+
+        const ret = usersModel.deleteUserById(req.params.id);
+        if(!ret){
+          res.status(400).json({ error: 'user isnot exist' });
+
+        }
+        res.status(200).json({ message: 'delete user success'})
+
+    }catch(error){
+        res.status(500).json({ error: 'Failed in delete user' });
+    }
+    
+  }
+  
 
 
 export default {
@@ -165,5 +198,7 @@ export default {
     uploadVideo,
     deleteVideo,
     editVideo,
-    getUsersVideos
+    getUsersVideos,
+    editUser,
+    deleteUser
 }

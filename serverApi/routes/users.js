@@ -12,6 +12,11 @@ router.route('/').post(userController.createUser)
 router.route('/').get(userController.getUsers)
 
 router.route('/:id').get(userController.getUserById)
+router.route('/:id').put(verifyToken.verifyToken,userController.editUser)
+router.route('/:id').delete(verifyToken.verifyToken,userController.deleteUser)
+
+
+
 router.route('/:id/videos').post(verifyToken.verifyToken,userController.uploadVideo)
 router.route('/:id/videos').get(userController.getUsersVideos)
 

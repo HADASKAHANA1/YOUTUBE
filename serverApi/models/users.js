@@ -43,7 +43,19 @@ function usernamePasswordAreExist(username,password){
 
 }
 
-function editUser(){
+function editUser(idUser, newUsername, newPassword, newProfilePicture){
+    for (const i in users) {
+        if (users[i].id==idUser)
+        {
+            users[i].password=newPassword;
+            users[i].profilePicture=newProfilePicture;
+            users[i].username=newUsername;
+            return 1;
+        }
+    }
+    return 0;
+
+
 
 }
 
@@ -52,8 +64,10 @@ function deleteUserById(id){
         if (users[i].id==id)
         {
            users.splice(users[i],1)
+           return 1;
         }
      }
+     return 0;
 }
 
 function getUsersVideo(id){
