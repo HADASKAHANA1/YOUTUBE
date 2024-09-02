@@ -12,8 +12,22 @@ function getUserByUsernameAndPassword(username,password){
 }
 
 function createUser(username,password,profilePicture){
-    const newUser = {id: users[users.length-1].id+1, username: username, password: password,profilePicture: profilePicture,videos:[]}
-    users.push(newUser)
+    if(!getUserByUserName(username)){
+        const newUser = {id: users[users.length-1].id+1, username: username, password: password,profilePicture: profilePicture,videos:[]}
+        users.push(newUser)
+        return 1
+    }
+    return 0
+  
+}
+function getUserByUserName(username){
+    for (const i in users) {
+       if (users[i].username==username)
+       {
+        return users[i]
+       }
+    }
+    return null
 }
 
 function getUserById(id){
@@ -27,14 +41,9 @@ function getUserById(id){
 }
 
 function usernamePasswordAreExist(username,password){
-    console.log(getUsers());
-    console.log(username,password);
     for (const i in users) {
-        console.log(users[i].password,password)
-        console.log(users[i].username,username)
-
+    
         if(users[i].username==username && users[i].password==password){
-        //    console.log(users[i])
             return users[i]
         }
     }
@@ -80,7 +89,6 @@ function getUsersVideo(id){
             }
         }
      }
-     console.log("vi , " ,  videos)
      return videos
 }
 

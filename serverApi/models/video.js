@@ -51,14 +51,10 @@ function addComment(videoId, user, text) {
 }
 function editComment(videoId,commentId,newComment)
 {
-    console.log("1")
     for ( const video of videos){
         if(video.id==parseInt(videoId)){
-            console.log("3")
             for(const comment of video.comments){
-                console.log(comment.id,commentId)
                 if(parseInt(comment.id)==parseInt(commentId)){
-                    console.log("5")
                     comment.text=newComment
                     return 1
                 }
@@ -113,7 +109,7 @@ function getCombinedVideoList() {
 function createVideo(title,url,thumbnail,description,uploadBy,idUser){
     const videoid =parseInt(videos[videos.length-1].id) 
     const newVideo = {id: videoid+1, title : title, url: url, thumbnail: thumbnail, 
-        description: description, uploadedBy: uploadBy,idUser: idUser, comments: [], likes: [] ,
+        description: description, uploadedBy: uploadBy,authorId: idUser, comments: [], likes: [] ,
         views: Math.floor(Math.random() * (1000000000 - 0 + 1)) + 0}
 
     videos.push(newVideo)

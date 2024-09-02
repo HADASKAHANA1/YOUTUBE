@@ -34,6 +34,7 @@ const getVideoById  = async (req, res) => {
   try {
 
     const video = videoModel.getVideoById(req.params.id)
+    console.log(video)
 
 
     res.status(200).json({ video: video, message: 'bring vidoe seccess' });

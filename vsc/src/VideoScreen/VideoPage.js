@@ -43,6 +43,7 @@ function VideoPage() {
       });
       if (!res.ok) throw new Error('Failed to fetch video');
       const { video } = await res.json();
+      console.log(video.authorId)
       authorId = await video.authorId;
       setCurrentVideo(video);
   
@@ -59,6 +60,7 @@ function VideoPage() {
 
   const fetchAuthor = async (authorId) => {
     try {
+      console.log(authorId)
       const res = await fetch(`http://localhost:8000/api/users/${authorId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },

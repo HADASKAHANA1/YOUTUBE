@@ -74,12 +74,15 @@ function Signup() {
         },
       body: JSON.stringify(formData),
     });
+    const resbody = await res.json();
+
     if (res.ok){
       setRegistrationSuccess(true);
       navigate('/login'); // Link back to the login screen
     }
-    if(res.status===500){
-      //TODO: check user not exist
+    if(!res.ok){
+      alert(resbody.error)
+
     }
   } catch (error) {
     console.error('Error during registration:', error);
