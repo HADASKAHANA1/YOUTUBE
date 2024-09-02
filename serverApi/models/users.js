@@ -129,7 +129,9 @@ function addComment(videoId,user, comment){
 function editComment(videoId,commentId, newComment){
     return videoModel.editComment(videoId,commentId,newComment)
 }
-
+function deleteComment(videoId,commentId){
+    return videoModel.deleteComment(videoId,commentId)
+}
 
 export default {
     getUserById,
@@ -144,5 +146,6 @@ export default {
     editVideo,
     addComment,
     usernamePasswordAreExist,
-    editComment
+    editComment,
+    deleteComment
 }

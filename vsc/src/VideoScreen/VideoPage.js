@@ -205,9 +205,28 @@ function VideoPage() {
     }
   };
 
-  const handleDeleteComment = (commentIndex) => {
+  const handleDeleteComment = async (commentIndex) => {
     if (window.confirm('Are you sure you want to delete this comment?')) {
-      deleteComment(id, commentIndex);
+      try {
+        const res = await fetch(`http://localhost:8000/api/users/${currentUser.id}/videos/${currentVideo.id}/comment`, {
+         method: 'delete',
+         headers: {
+        'Content-Type': 'application/json',
+         Authorization: localStorage.getItem('token'),
+   },
+   body: JSON.stringify({ commentId: commentIndex }),
+  });
+  
+  if (!res.ok) {
+   throw new Error('Failed to delete comment');
+  }
+  fetchVideo();
+  
+  
+  } catch (error) {
+  console.error('Error deletes comment:', error);
+  return
+  } 
     }
   };
 

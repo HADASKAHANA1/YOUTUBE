@@ -69,7 +69,22 @@ function editComment(videoId,commentId,newComment)
 
     
 }
+function deleteComment(videoId,commentId)
+{
+    for ( const video of videos){
+        if(video.id==parseInt(videoId)){
+            for(const j in video.comments){
+                if(parseInt(video.comments[j].id)==parseInt(commentId)){
+                    video.comments.splice(j,1)
+                    return 1
+                }
+            }
+        }
+    }
+    return 0
 
+    
+}
 
 
 function getCombinedVideoList() {
@@ -153,5 +168,6 @@ export default {
     editVideo,
     addComment,
     getVideos,
-    editComment
+    editComment,
+    deleteComment
 }

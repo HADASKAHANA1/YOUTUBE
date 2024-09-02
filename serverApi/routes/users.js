@@ -26,6 +26,7 @@ router.route('/:id/videos/:pid').put(verifyToken.verifyToken,userController.edit
 
 router.route('/:id/videos/:pid/comment').post(verifyToken.verifyToken,userController.addComment)
 router.route('/:id/videos/:pid/comment').put(verifyToken.verifyToken,userController.editComment)
+router.route('/:id/videos/:pid/comment').delete(verifyToken.verifyToken,userController.deleteComment)
 
 
 router.route('/logout/:id').get(verifyToken.verifyToken,userController.logout)

@@ -220,7 +220,22 @@ const createUser  = async (req, res) => {
     }
     
   }
-  
+  const deleteComment = async(req,res)=>{
+    try{
+      
+      const ret = usersModel.deleteComment(req.params.pid,req.body.commentId);
+        
+        if(!ret){
+          return res.status(400).json({ error: 'video isnot exist' });
+
+        }
+        return   res.status(200).json({ message: 'delete comment success'})
+
+    }catch(error){
+      return  res.status(500).json({ error: 'Failed in delete comment' });
+    }
+    
+  }
   
   
 
@@ -238,5 +253,6 @@ export default {
     editUser,
     deleteUser,
     addComment,
-    editComment
+    editComment,
+    deleteComment
 }
