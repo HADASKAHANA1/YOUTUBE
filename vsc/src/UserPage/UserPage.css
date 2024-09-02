@@ -15,6 +15,10 @@
   color: white;
 }
 
+.videos-section .dark-theme {
+  background-color: #333;
+  color: white;
+}
 
 .user-page-header {
   display: flex;

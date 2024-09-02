@@ -1,15 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, useParams, Link ,useLocation } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './EditVideo.css';
 
 function EditVideo() {
   const { id } = useParams();
-  const {  currentUser, darkMode } = useContext(UserContext);
+  const { currentUser, darkMode , currentVideo} = useContext(UserContext);
   const navigate = useNavigate();
-  const location = useLocation();
-  const { currentVideo } = location.state || {};
-
+  console.log(currentVideo)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -31,6 +29,18 @@ function EditVideo() {
     }
   }, [currentVideo]);
 
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+
+    if (currentVideo && currentUser.username !== currentVideo.uploadedBy) {
+      alert("You do not have permission to edit this video.");
+      navigate('/');
+    }
+  }, [currentUser, currentVideo, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -50,7 +60,7 @@ function EditVideo() {
     }
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = {};
 
@@ -77,44 +87,33 @@ function EditVideo() {
 
     setErrors({});
     try {
-      // Send the FormData to the server
-      const userid = currentUser.id
-      const videoid = currentVideo.id
-      const path = `http://localhost:8000/api/users/${userid}/videos/${videoid}`
+      const userid = currentUser.id;
+      const videoid = currentVideo.id;
+      const path = `http://localhost:8000/api/users/${userid}/videos/${videoid}`;
 
       let res = await fetch(path, {
-      method: 'put',
-      'headers': {
+        method: 'PUT',
+        headers: {
           Authorization: localStorage.getItem("token"),
           'Content-Type': 'application/json',
         },
-      body: JSON.stringify({newtitle:formData.title, newurl:formData.videoFile, newthumbnail:formData.thumbnail, newdescription:formData.description}),
-    });
-     if (res.ok){
-    
-  
-      navigate(`/videos/${id}`);
+        body: JSON.stringify({
+          newtitle: formData.title,
+          newurl: formData.videoFile,
+          newthumbnail: formData.thumbnail,
+          newdescription: formData.description
+        }),
+      });
 
+      if (res.ok) {
+        navigate(`/videos/${id}`);
+      } else {
+        alert("Cannot edit video");
+      }
+    } catch (error) {
+      console.error('Error during edit video:', error);
     }
-    else{
-      alert("cannot edit video") 
-    }
-  } catch (error) {
-    console.error('Error during edit video:', error);
-  }
-    navigate('/');
   };
-    
-  
-
-  if (!currentUser) {
-    navigate('/login');
-  }
-
-  if (currentUser.username !== currentVideo.uploadedBy) {
-    alert("You do not have permission to edit this video.");
-    navigate('/');
-  }
 
   return (
     <div className={`edit-video-container ${darkMode ? 'dark-theme' : ''}`}>

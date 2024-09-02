@@ -5,14 +5,13 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id } = useParams();
-  const { darkMode, currentUser  } = useContext(UserContext);
+  const {setCurrentVideo, darkMode, currentUser, currentVideo  } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editedComment, setEditedComment] = useState('');
   const videoId = parseInt(id);
-  const [currentVideo, setCurrentVideo] = useState(null);
   const [otherVideos, setOtherVideos] = useState([]);
   const [onTheSideVideos, setOnTheSideVideos] = useState([]);
   const [author, setAuthor] = useState(null);
@@ -300,8 +299,8 @@ return
 
           {currentUser && currentUser.username === currentVideo.uploadedBy && (
             <div className="edit-delete-buttons">
-<Link to={{ pathname: `/edit/${videoId}`, state: { currentVideo } }} className="edit-button">Edit Video</Link>
-<button onClick={handleDelete} className="delete-button">Delete Video</button>
+  <Link to={`/edit/${videoId}`} className="edit-button">Edit Video</Link>
+  <button onClick={handleDelete} className="delete-button">Delete Video</button>
             </div>
           )}
 
