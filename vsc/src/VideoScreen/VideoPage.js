@@ -5,7 +5,7 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id } = useParams();
-  const { videos, deleteVideo, darkMode, currentUser, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
+  const { darkMode, currentUser  } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
@@ -256,11 +256,7 @@ console.error('Error like video:', error);
 return
 } 
 
-    // if (currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
-    //   unlikeVideo(id);
-    // } else {
-    //   likeVideo(id);
-    // }
+
   };
 
   if (!currentVideo) {
@@ -304,8 +300,8 @@ return
 
           {currentUser && currentUser.username === currentVideo.uploadedBy && (
             <div className="edit-delete-buttons">
-              <Link to={`/edit/${videoId}`} className="edit-button">Edit Video</Link>
-              <button onClick={handleDelete} className="delete-button">Delete Video</button>
+<Link to={{ pathname: `/edit/${videoId}`, state: { currentVideo } }} className="edit-button">Edit Video</Link>
+<button onClick={handleDelete} className="delete-button">Delete Video</button>
             </div>
           )}
 

@@ -1,13 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link ,useLocation } from 'react-router-dom';
 import { UserContext } from '../Users/UserContext';
 import './EditVideo.css';
 
 function EditVideo() {
   const { id } = useParams();
-  const { videos, editVideo, currentUser, darkMode } = useContext(UserContext);
+  const {  currentUser, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
-  const currentVideo = videos.find((vid) => Number(vid.id) == id);
+  const location = useLocation();
+  const { currentVideo } = location.state || {};
+
 
   const [formData, setFormData] = useState({
     title: '',
@@ -89,17 +91,8 @@ function EditVideo() {
       body: JSON.stringify({newtitle:formData.title, newurl:formData.videoFile, newthumbnail:formData.thumbnail, newdescription:formData.description}),
     });
      if (res.ok){
-      const updatedVideo = {
-        id: currentVideo.id,
-        title: formData.title,
-        thumbnail: formData.thumbnail,
-        url: formData.videoFile,
-        description: formData.description,
-        uploadedBy: currentVideo.uploadedBy,
-        likes: currentVideo.likes,  // שמירה על הלייקים הקיימים
-      };
+    
   
-      editVideo(updatedVideo);
       navigate(`/videos/${id}`);
 
     }
@@ -108,7 +101,6 @@ function EditVideo() {
     }
   } catch (error) {
     console.error('Error during edit video:', error);
-    // Handle registration errors
   }
     navigate('/');
   };
@@ -117,13 +109,11 @@ function EditVideo() {
 
   if (!currentUser) {
     navigate('/login');
-    //return null;
   }
 
   if (currentUser.username !== currentVideo.uploadedBy) {
     alert("You do not have permission to edit this video.");
     navigate('/');
-   // return null;
   }
 
   return (

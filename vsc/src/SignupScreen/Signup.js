@@ -4,8 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Signup.css';
 
 function Signup() {
-  //const [imageSrc, setImageSrc] = useState('');
-  const { addUser, darkMode } = useContext(UserContext);
+  const {  darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -51,19 +50,7 @@ function Signup() {
     }
 
     setErrors({});
-    //  // Create a FormData object
-    // const formDataToSend = new FormData();
-
-    // formDataToSend.append('username', formData.username);
-    // formDataToSend.append('password', formData.password);
-    
-    // // Append the file if it exists
-    // if (formData.profilePicture) {
-    //   const file = document.querySelector('input[type="file"]').files[0];
-    //   formDataToSend.append('profilePicture', file);
-    // }
-    //setFormData({username:formData.username})
-    console.log(formData)
+  
     
     try {
       // Send the FormData to the server
@@ -88,20 +75,15 @@ function Signup() {
     console.error('Error during registration:', error);
     // Handle registration errors
   }
-   // addUser({ ...formData });
-   // setRegistrationSuccess(true);
-    //navigate('/login'); // Link back to the login screen
+
   };
-  // useEffect(() => {
-  //   console.log('imageSrc: ', imageSrc);
-  // }, [imageSrc]); // Only re-run the effect if count changes
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     console.log('event.target.files[0]: ', event.target.files[0]);
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      // setImageSrc(e.target.result);
       setFormData((prevFormData)=>{
         let temp = {...prevFormData}
         temp.profilePicture=e.target.result
@@ -113,12 +95,7 @@ function Signup() {
       reader.readAsDataURL(file);
     }
   };
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData({ ...formData, profilePicture: URL.createObjectURL(file) });
-    }
-  };
+
 
   // CSS class for dark mode
   const themeClass = darkMode ? 'dark-theme' : '';

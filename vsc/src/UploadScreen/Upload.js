@@ -4,7 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Upload.css';
 
 function Upload() {
-  const { addVideo, currentUser, darkMode } = useContext(UserContext); // צוריך לוודא שהתומך גם במצב חושך
+  const { currentUser, darkMode } = useContext(UserContext); // צוריך לוודא שהתומך גם במצב חושך
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -74,17 +74,8 @@ function Upload() {
         },
       body: JSON.stringify({title:formData.title, url:formData.videoFile, thumbnail:formData.thumbnail, description:formData.description}),
     });
-     if (res.ok){
-    //  addVideo()
-    //   const newVideo = {
-    //     title: formData.title,
-    //     thumbnail: formData.thumbnail,
-    //     url: formData.videoFile,
-    //     description: formData.description
-    //   };
-    //   addVideo(newVideo, currentUser); // Pass currentUser as uploader
-    }
-    if(res.status===500){
+     
+    if(!res.ok){
       alert("cannot upload video") 
     }
   } catch (error) {

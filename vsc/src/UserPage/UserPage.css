@@ -6,6 +6,16 @@
   min-height: 100vh;
 }
 
+.user-page-container .dark-theme {
+  background-color: #333;
+  color: white;
+}
+.user-page-main .dark-theme {
+  background-color: #333;
+  color: white;
+}
+
+
 .user-page-header {
   display: flex;
   align-items: center;

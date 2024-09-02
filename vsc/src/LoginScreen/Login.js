@@ -4,7 +4,7 @@ import { UserContext } from '../Users/UserContext';
 import './Login.css';
 
 function Login() {
-  const { users, login, darkMode } = useContext(UserContext);
+  const { login, darkMode } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -58,7 +58,6 @@ function Login() {
        localStorage.setItem("userId", resBody.user.id);
        localStorage.setItem("user",resBody.user)
 
-       console.log('user: ', resBody.user);
 
        setLoginError('');
        login(resBody.user);
@@ -70,15 +69,7 @@ function Login() {
     console.error('Error during login:', error);
   }
 
-    // const user = users.find(user => user.username === formData.username && user.password === formData.password);
-
-    // if (user) {
-    //   setLoginError('');
-    //   login(formData.username);
-    //   navigate('/');
-    // } else {
-    //   setLoginError('Invalid username or password');
-    // }
+ 
   };
 
   return (

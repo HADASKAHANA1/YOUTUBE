@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useContext } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import './UserPage.css';
+import { UserContext } from '../Users/UserContext.js';
+
 
 function UserPage() {
+  const { darkMode  } = useContext(UserContext);
   const { id } = useParams();
   const [userPage, setUserPage] = useState(null);
   const [userVideos, setUserVideos] = useState([]);
@@ -52,7 +55,7 @@ function UserPage() {
   };
 
   return (
-    <div className="user-page-container">
+    <div className= {`user-page-container ${darkMode ? 'dark-theme' : ''}`}>
       <header className="user-page-header">
         <Link to="/" className="logo" onClick={handleLogoClick}>
           <img
@@ -61,7 +64,7 @@ function UserPage() {
           />
         </Link>
       </header>
-      <main className="user-page-main">
+      <main className= {`user-page-main ${darkMode ? 'dark-theme' : ''}`}>
         {/* אזור פרטי המשתמש */}
         {userPage && (
           <div className="user-info-centered">

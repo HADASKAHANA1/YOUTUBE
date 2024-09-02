@@ -6,7 +6,7 @@ import './HomePage.css';
 
 function HomePage() {
 
-  const { currentUser, logout, videos, darkMode, toggleDarkMode, setVideos } = useContext(UserContext);
+  const { currentUser, logout, darkMode, toggleDarkMode } = useContext(UserContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredVideos, setFilteredVideos] = useState([]);
   const navigate = useNavigate();
@@ -60,7 +60,6 @@ function HomePage() {
 
           setFilteredVideos(resbody.videos);
           setHomePageVideos(resbody.videos);
-          setVideos(resbody.videos);
           
       } catch (err) {
           console.log(err);
@@ -89,7 +88,6 @@ function HomePage() {
 
   const handleUploadClick = () => {
     if (currentUser) {
-   //if (localStorage.getItem("userId")){
     navigate('/upload');
 
    } else {
