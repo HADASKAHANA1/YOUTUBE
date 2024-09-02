@@ -43,9 +43,28 @@ const getVideoById  = async (req, res) => {
   }
 };
 
+const likeDisLike  = async (req, res) => {
+       
+  try {
+
+    const ret = videoModel.likeDisLike(req.body.username,req.params.id)
+    if(!ret){
+      return res.status(500).json({ error: 'video is not exist' });
+
+    }
+
+
+    res.status(200).json({  message: 'like / dislike is done' });
+  } catch (error) {
+    res.status(500).json({ error: 'video is not exist' });
+  }
+};
+
+
 
   export default{
     getVideos,
     getPopularVideos,
-    getVideoById
+    getVideoById,
+  likeDisLike
   }

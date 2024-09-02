@@ -43,7 +43,6 @@ function VideoPage() {
       });
       if (!res.ok) throw new Error('Failed to fetch video');
       const { video } = await res.json();
-      console.log(video.authorId)
       authorId = await video.authorId;
       setCurrentVideo(video);
   
@@ -60,7 +59,6 @@ function VideoPage() {
 
   const fetchAuthor = async (authorId) => {
     try {
-      console.log(authorId)
       const res = await fetch(`http://localhost:8000/api/users/${authorId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
@@ -232,17 +230,37 @@ function VideoPage() {
     }
   };
 
-  const handleLike = () => {
+  const handleLike = async() => {
     if (!currentUser) {
       alert('You must be logged in to like a video.');
       return;
     }
+    try {
+      const res = await fetch(`http://localhost:8000/api/videos/${currentVideo.id}/like`, {
+       method: 'post',
+       headers: {
+      'Content-Type': 'application/json',
+       Authorization: localStorage.getItem('token'),
+ },
+ body: JSON.stringify({ username: currentUser.username }),
+});
 
-    if (currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
-      unlikeVideo(id);
-    } else {
-      likeVideo(id);
-    }
+if (!res.ok) {
+ throw new Error('Failed to like');
+}
+fetchVideo();
+
+
+} catch (error) {
+console.error('Error like video:', error);
+return
+} 
+
+    // if (currentVideo.likes && currentVideo.likes.includes(currentUser.username)) {
+    //   unlikeVideo(id);
+    // } else {
+    //   likeVideo(id);
+    // }
   };
 
   if (!currentVideo) {

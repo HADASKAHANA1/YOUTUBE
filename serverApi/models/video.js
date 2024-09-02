@@ -153,6 +153,23 @@ function editVideo(newTitle,videoId,newThumbnail, newVideo, newDescription){
 function getVideos(){
     return videos;
 }
+function likeDisLike(username,idVideo){
+    for(const video of videos){
+        console.log(video.id,idVideo)
+        if(parseInt(video.id)==parseInt(idVideo)){
+
+            for(const j in video.likes){
+                if(video.likes[j] == username){
+                    video.likes.splice(j,1)
+                    return 1
+                }
+            }
+            video.likes.push(username)
+            return 1
+        }
+    }
+    return 0
+}
 
 
 
@@ -165,5 +182,6 @@ export default {
     addComment,
     getVideos,
     editComment,
-    deleteComment
+    deleteComment,
+    likeDisLike
 }
