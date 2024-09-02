@@ -188,7 +188,6 @@ const createUser  = async (req, res) => {
   }
   const addComment = async(req,res)=>{
     try{
-      console.log("id: ",req.params.pid,"user: ",req.body.user,"text: ",req.body.text)
 
         const ret = usersModel.addComment(req.params.pid,req.body.user,req.body.text);
         
@@ -203,6 +202,25 @@ const createUser  = async (req, res) => {
     }
     
   }
+
+  const editComment = async(req,res)=>{
+    try{
+      
+      const ret = usersModel.editComment(req.params.pid,req.body.commentId,req.body.text);
+      console.log(ret)
+        
+        if(!ret){
+          return res.status(400).json({ error: 'video isnot exist' });
+
+        }
+        return   res.status(200).json({ message: 'edit comment success'})
+
+    }catch(error){
+      return  res.status(500).json({ error: 'Failed in edit comment' });
+    }
+    
+  }
+  
   
   
 
@@ -219,5 +237,6 @@ export default {
     getUsersVideos,
     editUser,
     deleteUser,
-    addComment
+    addComment,
+    editComment
 }

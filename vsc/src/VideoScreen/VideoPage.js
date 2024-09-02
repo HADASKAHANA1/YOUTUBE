@@ -171,14 +171,35 @@ function VideoPage() {
   };
 
 
-  const handleEditComment = (index, text) => {
+  const handleEditComment =(index, text) => {
     setEditingCommentIndex(index);
     setEditedComment(text);
+    
+   
   };
 
-  const handleSaveEditComment = (index) => {
+  const handleSaveEditComment = async(index) => {
     if (editedComment.trim()) {
-      editComment(id, index, editedComment);
+      try {
+        const res = await fetch(`http://localhost:8000/api/users/${currentUser.id}/videos/${currentVideo.id}/comment`, {
+         method: 'put',
+         headers: {
+        'Content-Type': 'application/json',
+         Authorization: localStorage.getItem('token'),
+   },
+   body: JSON.stringify({ text: editedComment, commentId: index }),
+  });
+  
+  if (!res.ok) {
+   throw new Error('Failed to edit comment');
+  }
+  fetchVideo();
+  
+  
+  } catch (error) {
+  console.error('Error edit comment:', error);
+  return
+  } 
       setEditingCommentIndex(null);
       setEditedComment('');
     }

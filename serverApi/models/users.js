@@ -124,11 +124,10 @@ function editVideo(userId, videoId,newTitle,newVideo,newThumbnail, newDescriptio
     return videoModel.editVideo(newTitle,videoId,newThumbnail,newVideo,newDescription)
 }
 function addComment(videoId,user, comment){
-    console.log("vidoe: ",videoId, "user: ",user, "comment: ",comment)
    return videoModel.addComment(videoId,user,comment)
 }
-function editComment(videoId,userId, newComment){
-
+function editComment(videoId,commentId, newComment){
+    return videoModel.editComment(videoId,commentId,newComment)
 }
 
 
@@ -144,5 +143,6 @@ export default {
     deleteVideo,
     editVideo,
     addComment,
-    usernamePasswordAreExist
+    usernamePasswordAreExist,
+    editComment
 }

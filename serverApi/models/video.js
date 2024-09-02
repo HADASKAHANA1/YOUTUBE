@@ -38,7 +38,7 @@ function addComment(videoId, user, text) {
             // חישוב commentid: אם המערך ריק, התחל ב-1, אחרת הוסף 1 ל-id של התגובה האחרונה
             const commentid = curvideo.comments.length > 0 
                 ? curvideo.comments[curvideo.comments.length - 1].id + 1 
-                : 1;
+                : 0;
             
 
             // הוסף את התגובה למערך
@@ -49,6 +49,27 @@ function addComment(videoId, user, text) {
     }
     return 0; // לא נמצא וידאו מתאים
 }
+function editComment(videoId,commentId,newComment)
+{
+    console.log("1")
+    for ( const video of videos){
+        if(video.id==parseInt(videoId)){
+            console.log("3")
+            for(const comment of video.comments){
+                console.log(comment.id,commentId)
+                if(parseInt(comment.id)==parseInt(commentId)){
+                    console.log("5")
+                    comment.text=newComment
+                    return 1
+                }
+            }
+        }
+    }
+    return 0
+
+    
+}
+
 
 
 function getCombinedVideoList() {
@@ -117,19 +138,7 @@ function editVideo(newTitle,videoId,newThumbnail, newVideo, newDescription){
      return 0
 }
 
-function editComment(videoId, userId, newComment)
-{
-    for (const i in videos) {
-        if (videos[i].id==videoId)
-        {
-            for (const j in videos[i].comments)
-            {
 
-            }
-        }
-     }
-
-}
 function getVideos(){
     return videos;
 }
@@ -143,5 +152,6 @@ export default {
     deleteVideo,
     editVideo,
     addComment,
-    getVideos
+    getVideos,
+    editComment
 }
