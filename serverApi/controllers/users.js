@@ -176,16 +176,34 @@ const createUser  = async (req, res) => {
 
         const ret = usersModel.deleteUserById(req.params.id);
         if(!ret){
-          res.status(400).json({ error: 'user isnot exist' });
+          return res.status(400).json({ error: 'user isnot exist' });
 
         }
-        res.status(200).json({ message: 'delete user success'})
+        return res.status(200).json({ message: 'delete user success'})
 
     }catch(error){
         res.status(500).json({ error: 'Failed in delete user' });
     }
     
   }
+  const addComment = async(req,res)=>{
+    try{
+      console.log("id: ",req.params.pid,"user: ",req.body.user,"text: ",req.body.text)
+
+        const ret = usersModel.addComment(req.params.pid,req.body.user,req.body.text);
+        
+        if(!ret){
+          return res.status(400).json({ error: 'video isnot exist' });
+
+        }
+        return   res.status(200).json({ message: 'add comment success'})
+
+    }catch(error){
+      return  res.status(500).json({ error: 'Failed in add comment' });
+    }
+    
+  }
+  
   
 
 
@@ -200,5 +218,6 @@ export default {
     editVideo,
     getUsersVideos,
     editUser,
-    deleteUser
+    deleteUser,
+    addComment
 }

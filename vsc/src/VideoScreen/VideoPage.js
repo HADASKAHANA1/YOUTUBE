@@ -5,7 +5,7 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id } = useParams();
-  const { videos, deleteVideo, darkMode, currentUser, addComment, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
+  const { videos, deleteVideo, darkMode, currentUser, deleteComment, editComment, likeVideo, unlikeVideo } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
@@ -19,66 +19,69 @@ function VideoPage() {
   let authorId;
   const [authorProfile , setAuthorProfile] = useState(null)
 
+  const fetchVideos = async () => {
+    try {
+      const res = await fetch('http://localhost:8000/api/videos/allVideos', {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error('Failed to fetch videos');
+      const { videos } = await res.json();
+      setOtherVideos(videos);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to fetch videos");
+    }
+  };
+
+  const fetchVideo = async () => {
+    try {
+
+      const res = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error('Failed to fetch video');
+      const { video } = await res.json();
+      authorId = await video.authorId;
+      setCurrentVideo(video);
+  
+      // Call fetchAuthor after setting the authorId
+
+      fetchAuthor(authorId);
+      
+    } catch (err) {
+      console.error('Error fetching video:', err);
+      alert("Failed to fetch video");
+    }
+  };
+  
+
+  const fetchAuthor = async (authorId) => {
+    try {
+      const res = await fetch(`http://localhost:8000/api/users/${authorId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      if (!res.ok) throw new Error('Failed to fetch user');
+      const { user } = await res.json();
+      setAuthor(user);
+     
+      setAuthorProfile(user.profilePicture)
+    } catch (err) {
+      console.error('Error fetching user:', err);
+      alert("Failed to fetch user");
+    }
+  };
+
   // Fetch all videos and the current video
   useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const res = await fetch('http://localhost:8000/api/videos/allVideos', {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) throw new Error('Failed to fetch videos');
-        const { videos } = await res.json();
-        setOtherVideos(videos);
-      } catch (err) {
-        console.error(err);
-        alert("Failed to fetch videos");
-      }
-    };
-
-    const fetchVideo = async () => {
-      try {
-
-        const res = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) throw new Error('Failed to fetch video');
-        const { video } = await res.json();
-        authorId = await video.authorId;
-        setCurrentVideo(video);
     
-        // Call fetchAuthor after setting the authorId
-
-        fetchAuthor(authorId);
-        
-      } catch (err) {
-        console.error('Error fetching video:', err);
-        alert("Failed to fetch video");
-      }
-    };
-    
-
-    const fetchAuthor = async (authorId) => {
-      try {
-        const res = await fetch(`http://localhost:8000/api/users/${authorId}`, {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-        if (!res.ok) throw new Error('Failed to fetch user');
-        const { user } = await res.json();
-        setAuthor(user);
-       
-        setAuthorProfile(user.profilePicture)
-      } catch (err) {
-        console.error('Error fetching user:', err);
-        alert("Failed to fetch user");
-      }
-    };
     
 
     fetchVideos();
     fetchVideo();
+
   }, [videoId]);
 
   // Update `onTheSideVideos` whenever `currentVideo` or `otherVideos` changes
@@ -135,17 +138,38 @@ function VideoPage() {
     }
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = async() => {
     if (!currentUser) {
       alert('You must be logged in to comment.');
       return;
     }
 
     if (newComment.trim()) {
-      addComment(id, { text: newComment, user: currentUser.username });
-      setNewComment('');
+
+      try {
+           const res = await fetch(`http://localhost:8000/api/users/${currentUser.id}/videos/${currentVideo.id}/comment`, {
+            method: 'POST',
+            headers: {
+           'Content-Type': 'application/json',
+            Authorization: localStorage.getItem('token'),
+      },
+      body: JSON.stringify({ text: newComment, user: currentUser.username }),
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to add comment');
+    }
+    setNewComment('');
+    fetchVideo();
+
+   
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    return
+  }   
     }
   };
+
 
   const handleEditComment = (index, text) => {
     setEditingCommentIndex(index);

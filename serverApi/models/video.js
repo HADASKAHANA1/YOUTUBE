@@ -1,7 +1,7 @@
 
 
 const videos = [  { id: 1, title: 'Video 1', url: '/videos/video1.mp4', thumbnail: '/thumbnails/1.png', description: 'Description for Video 1', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:0},
-{ id: 2, title: 'Video 2', url: '/videos/video2.mp4', thumbnail: '/thumbnails/2.png', description: 'Description for Video 2', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:892},
+{ id: 2, title: 'Video 2', url: '/videos/video2.mp4', thumbnail: '/thumbnails/2.png', description: 'Description for Video 2', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [{"id":0,"user": "Alice","text": "Great video!"}], likes: [] ,views:892},
 { id: 3, title: 'Video 3', url: '/videos/video3.mp4', thumbnail: '/thumbnails/3.png', description: 'Description for Video 3', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:46},
 { id: 4, title: 'Video 4', url: '/videos/video4.mp4', thumbnail: '/thumbnails/4.png', description: 'Description for Video 4', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:998},
 { id: 5, title: 'Video 5', url: '/videos/video5.mp4', thumbnail: '/thumbnails/5.png', description: 'Description for Video 5', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:34},
@@ -21,6 +21,34 @@ const videos = [  { id: 1, title: 'Video 1', url: '/videos/video1.mp4', thumbnai
 { id: 19, title: 'פתחנו מסעדה בשמיים וכולם מוזמנים למטוס ולטעום', url: '/videos/misada.mp4', thumbnail: '/thumbnails/מסעדהבשמיים.png', description: 'Description for Video 19', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:1610},
 { id: 20, title: 'מילקי צהריים טובים_ - פס קול', url: '/videos/kol.mp4', thumbnail: '/thumbnails/צהריםטוביםמילקי.png', description: 'Description for Video 20', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:187},
 ]
+
+
+
+
+function addComment(videoId, user, text) {
+    for (const i in videos) {
+        if (videos[i].id == videoId) {
+            var curvideo = videos[i];
+
+            // ודא שהמערך comments קיים, ואם לא - צור אותו
+            if (!curvideo.comments) {
+                curvideo.comments = [];
+            }
+
+            // חישוב commentid: אם המערך ריק, התחל ב-1, אחרת הוסף 1 ל-id של התגובה האחרונה
+            const commentid = curvideo.comments.length > 0 
+                ? curvideo.comments[curvideo.comments.length - 1].id + 1 
+                : 1;
+            
+
+            // הוסף את התגובה למערך
+            curvideo.comments.push({ id: commentid, user: user, text: text });
+
+            return 1; // הצלחה
+        }
+    }
+    return 0; // לא נמצא וידאו מתאים
+}
 
 
 function getCombinedVideoList() {
@@ -88,15 +116,7 @@ function editVideo(newTitle,videoId,newThumbnail, newVideo, newDescription){
      }
      return 0
 }
-function addComment(videoId, userId, comment)
-{
-    for (const i in videos) {
-        if (videos[i].id==videoId)
-        {
-            videos[i].comments.push({userId,comment} )
-        }
-     }
-}
+
 function editComment(videoId, userId, newComment)
 {
     for (const i in videos) {

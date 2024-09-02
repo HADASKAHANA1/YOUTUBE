@@ -123,8 +123,9 @@ function editVideo(userId, videoId,newTitle,newVideo,newThumbnail, newDescriptio
 {
     return videoModel.editVideo(newTitle,videoId,newThumbnail,newVideo,newDescription)
 }
-function addComment(videoId,userId, comment){
-    videoModel.addComment(videoId,userId,comment)
+function addComment(videoId,user, comment){
+    console.log("vidoe: ",videoId, "user: ",user, "comment: ",comment)
+   return videoModel.addComment(videoId,user,comment)
 }
 function editComment(videoId,userId, newComment){
 
