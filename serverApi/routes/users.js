@@ -3,6 +3,17 @@ import express from 'express'
 import verifyToken from "../auth/authMiddleware.js"
 // Use a library to perform the cryptographic operations
 import jwt from "jsonwebtoken"
+import multer from 'multer'
+const storage = multer.diskStorage({
+  destination: function (req, file,cb){
+    cb(null,'./public/uploads');
+  },
+  filename: function (req,file,cb){
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage });
 
 
 const router = express.Router()
@@ -17,7 +28,11 @@ router.route('/:id').delete(verifyToken.verifyToken,userController.deleteUser)
 
 
 
-router.route('/:id/videos').post(verifyToken.verifyToken,userController.uploadVideo)
+router.route('/:id/videos').post(verifyToken.verifyToken,upload.fields([
+    { name: 'videoFile', maxCount: 1 }, // העלאת קובץ וידאו
+    { name: 'thumbnail', maxCount: 1 } // העלאת תמונה ממוזערת
+  ]),userController.uploadVideo)
+
 router.route('/:id/videos').get(userController.getUsersVideos)
 
 

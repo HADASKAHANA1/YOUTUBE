@@ -22,7 +22,7 @@ function HomePage() {
         let res = await fetch(path, {
           method: 'get',
           'headers': {
-               Authorization: localStorage.getItem("token"),
+            Authorization: localStorage.getItem("token"),
               'Content-Type': 'application/json',
             },
         });
@@ -39,6 +39,35 @@ function HomePage() {
 
       }
   }
+  const refreshPage = () => {
+    window.location.reload();
+};
+   const handleDeleteUser = async() =>{
+    const userid = currentUser.id
+      const path=  `http://localhost:8000/api/users/${userid}`
+      try{
+        let res = await fetch(path, {
+          method: 'delete',
+          'headers': {
+            Authorization: localStorage.getItem("token"),
+              'Content-Type': 'application/json',
+            },
+        });
+        if(res.ok){
+          logout()
+          refreshPage();
+        }
+        if(!res.ok){
+          alert("cannot delete user")
+        }
+
+       
+
+      }catch(error){
+        console.error('Error during logout:', error);
+      }
+  }
+  
 
   
 
@@ -94,6 +123,9 @@ function HomePage() {
       alert('You must be logged in to upload a video.');
     }
   };
+  const handleEditUser = async()=>{
+    navigate(`/editUser/${currentUser.id}`)
+  }
 
   const themeClass = darkMode ? 'dark-theme' : '';
 
@@ -140,7 +172,19 @@ function HomePage() {
             <i className="bi bi-box-arrow-in-left"></i> Logout
           </button>
         )}
+
+        {currentUser && (
+          <button className="btn" onClick={handleDeleteUser}>
+            <i className="bi bi-box-arrow-in-left"></i> delete user
+          </button>
+        )}
         
+        {currentUser && (
+          <button className="btn" onClick={handleEditUser}>
+            <i className="bi bi-box-arrow-in-left"></i> update user
+          </button>
+        )}
+
       </div>
 
       <div className="search-bar">

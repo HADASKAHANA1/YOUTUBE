@@ -1,0 +1,147 @@
+/* EditUser.css */
+
+/* Light mode */
+.signup-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+  }
+  
+  .signup-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+  }
+  
+  .logo {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .logo img {
+    width: 150px;
+  }
+  
+  .required-fields {
+    color: #888;
+    font-size: 0.9rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn:hover {
+    background-color: #cc0000;
+  }
+  
+  .link-button {
+    color: #ff0000;
+    text-decoration: none;
+  }
+  
+  .link-button:hover {
+    text-decoration: underline;
+  }
+  
+  .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    background-color: #ffebee;
+    padding: 0.5rem;
+    border: 1px solid #ffcdd2;
+    border-radius: 5px;
+  }
+  
+  .registration-success {
+    color: green;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    background-color: #e8f5e9;
+    padding: 0.5rem;
+    border: 1px solid #c8e6c9;
+    border-radius: 5px;
+  }
+  
+  .preview-image {
+    width: 100%;
+    margin-top: 0.5rem;
+    border-radius: 5px;
+  }
+  
+  /* Dark mode */
+  .signup-container.dark-theme {
+    background-color: #333;
+    color: #ccc; /* Text color in dark mode */
+  }
+  
+  .signup-box.dark-theme {
+    background: #444;
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
+  }
+  
+  .required-fields.dark-theme {
+    color: #888;
+  }
+  
+  .form-control.dark-theme {
+    background-color: #555;
+    color: #ccc;
+  }
+  
+  .btn.dark-theme {
+    background-color: #ff4444;
+    color: #fff;
+  }
+  
+  .btn.dark-theme:hover {
+    background-color: #cc4444;
+  }
+  
+  .link-button.dark-theme {
+    color: #ff4444;
+  }
+  
+  .link-button.dark-theme:hover {
+    text-decoration: underline;
+  }
+  
+  .error.dark-theme {
+    color: #ffb3b3;
+    background-color: #441111;
+    border: 1px solid #ffeeee;
+  }
+  
+  .registration-success.dark-theme {
+    color: #a5d6a7;
+    background-color: #1b5e20;
+    border: 1px solid #4caf50;
+  }

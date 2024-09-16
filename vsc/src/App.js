@@ -10,6 +10,7 @@ import VideoPage from './VideoScreen/VideoPage';
 import EditVideo from './EditVideo/EditVideo'; // Import the EditVideo component
 import ScrollToTop from './ScrollToTop';
 import UserPage from './UserPage/UserPage';
+import EditUser from './editUser/EditUser';
 function App() {
   return (
     <UserContextProvider>
@@ -23,6 +24,7 @@ function App() {
           <Route path="/videos/:id" element={<VideoPage />} />
           <Route path="/UserPage/:id" element={<UserPage />} />
           <Route path="/edit/:id" element={<EditVideo />} /> {/* Route for editing video */}
+          <Route path="/editUser/:id" element={<EditUser />}/>
         </Routes>
       </Router>
     </UserContextProvider>

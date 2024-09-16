@@ -1,11 +1,16 @@
+import usersService from '../services/users.js'
+
 import usersModel from '../models/users.js'
+
+
+
 
 const createUser  = async (req, res) => {
 
        
     try {
        
-      const ret = usersModel.createUser(req.body.username, req.body.password,req.body.profilePicture);
+      const ret =await usersService.createUser(req.body.username, req.body.password,req.body.profilePicture);
   
       if(!ret){
         return res.status(409).json({ error: 'user already exist' });
@@ -19,16 +24,17 @@ const createUser  = async (req, res) => {
   const getUsers  = async (req, res) => {
        
     try {
-      const users = usersModel.getUsers();
+      const users = await usersService.getUsers();
   
-      res.status(200).json({ users: users, message: 'User created successfully' });
+      res.status(200).json({ users: users, message: 'User  successfully' });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create user' });
+      res.status(500).json({ error: 'Failed to  user' });
     }
   };
   const getUserById = async (req, res) =>{
     try{
-        const user = usersModel.getUserById(req.params.id)
+        const user = await usersService.getUserById(req.params.id)
+        console.log("req.params.id: ",req.params.id)
         
         res.status(200).json({user:user, message: 'User received successfully' });
 
@@ -52,7 +58,7 @@ const createUser  = async (req, res) => {
 
   const logout = async (req,res) => {
     try{
-        const user = usersModel.getUserById(req.params.id)
+        const user = usersService.getUserById(req.params.id)
         if(user){
             res.status(200).json({ message: 'user is exist' });
         }
@@ -66,7 +72,23 @@ const createUser  = async (req, res) => {
   }
   const uploadVideo = async(req,res)=>{
     try{
-        const newVideo = usersModel.addVideo(req.params.id,req.body.title,req.body.url,req.body.thumbnail,req.body.description)
+
+
+
+
+      const { title, description } = req.body;
+      console.log("req.body.videoFile: ",req.body.videoFile)
+
+      
+      // קבלת הקבצים
+      const videoFile = req.files.videoFile[0]; // הסרטון שהועלה
+      const thumbnail = req.files.thumbnail[0]; // התמונה שהועלתה
+      const videoUrl = `http://localhost:8000/uploads/${videoFile.filename}`;
+      const imageUrl = `http://localhost:8000/uploads/${thumbnail.filename}`;
+      console.log(description)
+
+
+        const newVideo = await usersService.addVideo(req.params.id,title,videoUrl,imageUrl,description)
     
         if(newVideo){
             res.status(200).json({video: newVideo, message: 'success to upload video' });
@@ -82,8 +104,7 @@ const createUser  = async (req, res) => {
   }
   const deleteVideo = async(req,res)=>{
     try{
-        const ret = usersModel.deleteVideo(req.params.id,req.params.pid)
-        console.log("ret: ",ret)
+        const ret = await usersService.deleteVideo(req.params.id,req.params.pid)
       
 
         if(ret ==1){
@@ -97,7 +118,6 @@ const createUser  = async (req, res) => {
             res.status(404).json({ error: 'video is not exist' });
         }
         if(ret==400){
-          console.log("ret: 400")
 
         
           res.status(400).json({ error: 'user is not exist' });
@@ -111,8 +131,8 @@ const createUser  = async (req, res) => {
 
   const editVideo = async(req,res)=>{
     try{
-        const ret = usersModel.editVideo(req.params.id, req.params.pid, req.body.newtitle,req.body.newurl, req.body.newthumbnail,  req.body.newdescription)
-      
+        const ret = await usersService.editVideo(req.params.id, req.params.pid, req.body.newtitle,req.body.newurl, req.body.newthumbnail,  req.body.newdescription)
+        console.log(ret)
         if(ret){
 
             res.status(200).json({ message: 'success to edit video' });
@@ -130,10 +150,10 @@ const createUser  = async (req, res) => {
   }
   const getUsersVideos = async(req,res)=>{
     try{
-      console.log("req.params.id ", req.params.id)
 
 
-        const userVideos = usersModel.getUsersVideo(req.params.id);
+        const userVideos = await usersService.getUsersVideo(req.params.id);
+        console.log(userVideos)
 
         res.status(200).json({ videos : userVideos, message: 'user videos' });
         
@@ -147,12 +167,12 @@ const createUser  = async (req, res) => {
   const editUser = async(req,res)=>{
     try{
 
-        const ret = usersModel.editUser(req.params.id);
+        const ret = await usersService.editUser(req.params.id,req.body.username,req.body.password,req.body.profilePicture);
         if(!ret){
           res.status(400).json({ error: 'user isnot exist' });
-
+            return;
         }
-        res.status(200).json({ message: 'edit user success'})
+        res.status(200).json({user: ret, message: 'edit user success'})
 
     }catch(error){
         res.status(500).json({ error: 'Failed in edit user' });
@@ -163,7 +183,8 @@ const createUser  = async (req, res) => {
   const deleteUser = async(req,res)=>{
     try{
 
-        const ret = usersModel.deleteUserById(req.params.id);
+        const ret = await usersService.deleteUserById(req.params.id);
+        console.log("usercontrolerdeleteuser: ",req.params.id)
         if(!ret){
           return res.status(400).json({ error: 'user isnot exist' });
 
@@ -178,7 +199,7 @@ const createUser  = async (req, res) => {
   const addComment = async(req,res)=>{
     try{
 
-        const ret = usersModel.addComment(req.params.pid,req.body.user,req.body.text);
+        const ret = await usersService.addComment(req.params.pid,req.body.user,req.body.text);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -195,8 +216,7 @@ const createUser  = async (req, res) => {
   const editComment = async(req,res)=>{
     try{
       
-      const ret = usersModel.editComment(req.params.pid,req.body.commentId,req.body.text);
-      console.log(ret)
+      const ret = await usersService.editComment(req.params.pid,req.body.commentId,req.body.text);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -212,7 +232,7 @@ const createUser  = async (req, res) => {
   const deleteComment = async(req,res)=>{
     try{
       
-      const ret = usersModel.deleteComment(req.params.pid,req.body.commentId);
+      const ret = await usersService.deleteComment(req.params.pid,req.body.commentId);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -243,5 +263,6 @@ export default {
     deleteUser,
     addComment,
     editComment,
-    deleteComment
+    deleteComment,
+    
 }
