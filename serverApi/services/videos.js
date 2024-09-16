@@ -59,31 +59,36 @@ const getVideoById = async(id)=>{
 }
 
 const editVideo = async (videoId, newTitle, newThumbnail, newVideo, newDescription) => {
-    try {
-      // חיפוש ועדכון הווידאו במונגו לפי ה-id שלו
-      const updatedVideo = await Video.findOneAndUpdate(
-        { id: videoId }, // חיפוש הווידאו לפי מזהה
-        {
-          title: newTitle,
-          description: newDescription,
-          thumbnail: newThumbnail,
-          url: newVideo
-        },
-        { new: true } // מחזיר את האובייקט המעודכן לאחר השינוי
-      );
-  
-      if (updatedVideo) {
-        console.log("Video updated successfully:", updatedVideo);
-        return 1; // מצא ועדכן
-      } else {
-        console.log("Video not found");
-        return 0; // לא מצא
-      }
-    } catch (err) {
-      console.error("Error updating video:", err);
-      return 0; // במקרה של שגיאה
+  try {
+    // הכנת אובייקט עם השדות שנרצה לעדכן
+    const updateFields = {};
+
+    // עדכון השדות שנשלחו בלבד
+    if (newTitle) updateFields.title = newTitle;
+    if (newDescription) updateFields.description = newDescription;
+    if (newThumbnail) updateFields.thumbnail = newThumbnail;
+    if (newVideo) updateFields.url = newVideo;
+
+    // חיפוש ועדכון הווידאו במונגו לפי ה-id שלו
+    const updatedVideo = await Video.findOneAndUpdate(
+      { id: videoId }, // חיפוש הווידאו לפי מזהה
+      updateFields,    // השדות שרוצים לעדכן
+      { new: true }    // מחזיר את האובייקט המעודכן לאחר השינוי
+    );
+
+    if (updatedVideo) {
+      console.log("Video updated successfully:", updatedVideo);
+      return 1; // מצא ועדכן
+    } else {
+      console.log("Video not found");
+      return 0; // לא מצא
     }
-  };
+  } catch (err) {
+    console.error("Error updating video:", err);
+    return 0; // במקרה של שגיאה
+  }
+};
+
   const deleteVideo = async (id) => {
     try {
       // חיפוש הווידאו לפי מזהה

@@ -77,7 +77,6 @@ const createUser  = async (req, res) => {
 
 
       const { title, description } = req.body;
-      console.log("req.body.videoFile: ",req.body.videoFile)
 
       
       // קבלת הקבצים
@@ -85,7 +84,6 @@ const createUser  = async (req, res) => {
       const thumbnail = req.files.thumbnail[0]; // התמונה שהועלתה
       const videoUrl = `http://localhost:8000/uploads/${videoFile.filename}`;
       const imageUrl = `http://localhost:8000/uploads/${thumbnail.filename}`;
-      console.log(description)
 
 
         const newVideo = await usersService.addVideo(req.params.id,title,videoUrl,imageUrl,description)
@@ -131,7 +129,33 @@ const createUser  = async (req, res) => {
 
   const editVideo = async(req,res)=>{
     try{
-        const ret = await usersService.editVideo(req.params.id, req.params.pid, req.body.newtitle,req.body.newurl, req.body.newthumbnail,  req.body.newdescription)
+      
+      const { title, description } = req.body;
+
+      let videoUrl, imageUrl;
+
+       // בדיקה אם הסרטון הועלה
+    if (req.files && req.files.videoFile) {
+      const videoFile = req.files.videoFile[0];
+      videoUrl = `http://localhost:8000/uploads/${videoFile.filename}`;
+    }
+
+    // בדיקה אם התמונה הועלתה
+    if (req.files && req.files.thumbnail) {
+      const thumbnail = req.files.thumbnail[0];
+      imageUrl = `http://localhost:8000/uploads/${thumbnail.filename}`;
+    }
+
+    // שליחת הערכים לקובץ ה-service
+    const ret = await usersService.editVideo(
+      req.params.id,
+      req.params.pid,
+      title,
+      videoUrl,   // ישמש רק אם הועלה סרטון
+      imageUrl,   // ישמש רק אם הועלתה תמונה
+      description
+    );
+
         console.log(ret)
         if(ret){
 
