@@ -7,7 +7,7 @@ const defaultUser = {
     username: "Sinai Cohen",
     password: '12345ee!',
     profilePicture: '/thumbnails/4.png',
-    videos: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    videos: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 };
 
 const defaultVideos = [  { id: 1, title: 'Video 1', url: '/videos/video1.mp4', thumbnail: '/thumbnails/1.png', description: 'Description for Video 1', uploadedBy: 'Sinai Cohen',authorId: 0, comments: [], likes: [] ,views:0},

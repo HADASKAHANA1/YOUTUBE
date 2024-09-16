@@ -83,11 +83,11 @@ function Signup() {
   };
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      profilePicture: file
-    }));
+     const file = event.target.files[0];
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    profilePicture: file
+  }));
   };
 
 
@@ -146,7 +146,7 @@ function Signup() {
             <input id="file-upload" type="file" name="fileUpload" className="form-control" accept='image/png, image/jpeg' onChange={handleFileUpload} />
             {errors.profilePicture && <p className="error">{errors.profilePicture}</p>}
             {formData.profilePicture && (
-              <img src={formData.profilePicture } alt="Profile Preview" className="preview-image" />
+              <img src={URL.createObjectURL(formData.profilePicture) } alt="Profile Preview" className="preview-image" />
             )}
           </div>
           <button type="submit" className="btn">Sign Up</button>

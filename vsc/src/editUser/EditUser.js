@@ -69,7 +69,6 @@ function EditUser() {
     try {
            // יצירת אובייקט FormData
     const formDataToSend = new FormData();
-    formDataToSend.append('username', formData.username);
     formDataToSend.append('password', formData.password);
     formDataToSend.append('profilePicture', formData.profilePicture);
        
@@ -138,6 +137,7 @@ function EditUser() {
               name="username"
               value={formData.username}
               onChange={handleChange}
+              disabled
             />
             {errors.username && <p className="error">{errors.username}</p>}
           </div>

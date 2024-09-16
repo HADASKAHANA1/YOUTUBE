@@ -4,9 +4,10 @@ import videoService from '../services/videos.js'
 
 
 
-const  getUserByUserName = async(username)=>{
+const getUserByUserName = async(username)=>{
     try {
-        const user = await User.findOne({ username: username}); // חיפוש לפי שם משתמש 
+        // Find user by username
+        const user = await User.findOne({ username: username}); 
     
         if (!user) {
           return null;
@@ -18,22 +19,29 @@ const  getUserByUserName = async(username)=>{
       }
 }
 
-const createUser = async( username,password,profilePicture)=>{
-    const lastUser = await User.findOne().sort({ createdAt: -1 }); // מסדר לפי createdAt מהחדש לישן
-
-    const userId = lastUser.id+1
+const createUser = async(username, password, profilePicture)=>{
+    const lastUser = await User.findOne().sort({ createdAt: -1 }); // Sort by createdAt from newest to oldest
+    let userId;
+  
+    if(!lastUser){
+    userId = 0
+  }
+  else{
+     userId = lastUser.id+1
+  }
     if(!(await getUserByUserName(username))){
-        const newUser = new User( {id: userId, username: username, password: password,profilePicture: profilePicture,videos:[]})
-        await newUser.save() 
+        // Create and save a new user
+        const newUser = new User({id: userId, username: username, password: password, profilePicture: profilePicture, videos: []});
+        await newUser.save();
         return 1;
     }
     return 0
-  
-};
+}
 
 const usernamePasswordAreExist = async(username, password) =>{
     try {
-      const user = await User.findOne({ username: username, password: password }); // חיפוש לפי שם משתמש וסיסמה
+      // Check if a user exists with the given username and password
+      const user = await User.findOne({ username: username, password: password });
   
       if (!user) {
         console.log('User not found or password incorrect');
@@ -44,213 +52,197 @@ const usernamePasswordAreExist = async(username, password) =>{
     } catch (err) {
       console.error('Error finding user:', err);
     }
-  }
- const getUserById = async(id)=>{
+}
+
+const getUserById = async(id)=>{
     try {
-        console.log("id: ",id)
-        const userId = parseInt(id)
-        const user = await User.findOne({ id:userId }); // חיפוש לפי מזהה
-        console.log("l",user)
+        // Find user by ID
+        const userId = parseInt(id);
+        const user = await User.findOne({ id: userId });
         if (!user) {
-          console.log('User not found ');
           return null;
         }
     
         return user
-      } catch (err) {
+    } catch (err) {
         console.error('Error finding user:', err);
-      }
     }
+}
 
-    const addVideo = async (idUser, title, url, thumbnail, description) => {
-        try {
-          // חיפוש המשתמש לפי ID
-          const user = await getUserById(idUser);
+const addVideo = async (idUser, title, url, thumbnail, description) => {
+    try {
+        // Find the user by ID and add a new video
+        const user = await getUserById(idUser);
       
-          if (!user) {
+        if (!user) {
             console.error("User not found");
             return null;
-          }
+        }
       
-          // יצירת וידאו חדש עם הפרטים
-          const newVideo = await videoService.createVideo(
+        // Create a new video
+        const newVideo = await videoService.createVideo(
             title,
             url,
             thumbnail,
             description,
             user.username,
             idUser
-          );
+        );
       
-          // הוספת מזהה הוידאו החדש לרשימת הוידאו של המשתמש
-          user.videos.push(newVideo.id);
-          await user.save(); // שמירת המשתמש עם העדכון החדש
+        // Add the new video's ID to the user's video list
+        user.videos.push(newVideo.id);
+        await user.save();
       
-          return newVideo;
-        } catch (err) {
-          console.error("Error adding video:", err);
-        }
-      };
-      
-const editVideo =async(userId, videoId,newTitle,newVideo,newThumbnail, newDescription)=>
-      {
-          return await videoService.editVideo(videoId,newTitle,newThumbnail,newVideo,newDescription)
-      }
+        return newVideo;
+    } catch (err) {
+        console.error("Error adding video:", err);
+    }
+}
+
+const editVideo = async(videoId, newTitle, newVideo, newThumbnail, newDescription) => {
+    // Edit the details of an existing video
+    return await videoService.editVideo(videoId, newTitle, newThumbnail, newVideo, newDescription);
+}
 
 const deleteVideo = async (userId, videoId) => {
-        try {
-          // חיפוש המשתמש לפי מזהה
-          const user = await User.findOne({ id: userId });
-          
-          if (!user) {
+    try {
+        // Find the user by ID
+        const user = await User.findOne({ id: userId });
+        
+        if (!user) {
             console.log("User not found");
-            return 400; // המשתמש לא קיים
-          }
-      
-         
-      
-          // מחיקת הווידאו ממסד הנתונים
-          const ret = await videoService.deleteVideo(videoId)
-          if(ret==1){
-            // הסרת מזהה הווידאו מרשימת הווידאוים של המשתמש
-          user.videos = user.videos.filter(video => video !== videoId);
-          await user.save();
-      
-          console.log("Video deleted successfully");
-          return 1; // מחיקה הצליחה
-
-          }
-          return ret
-          
-        } catch (err) {
-          console.error("Error deleting video:", err);
-          return 500; // שגיאה במהלך מחיקה
+            return 400; // User not found
         }
-      };
-
-      const addComment = async(videoId,user, comment)=>{
-        return await videoService.addComment(videoId,user,comment)
-     }
-     const editComment = async (videoId,commentId, newComment)=>{
-        return await videoService.editComment(videoId,commentId,newComment)
-    }
-    const deleteComment = async(videoId,commentId)=>{
-        return await videoService.deleteComment(videoId,commentId)
-    }
-    const  getUsers = async()=> {
-        try {
-            const users = await User.find(); // שולף את כל המשתמשים
-            return users;
-        } catch (error) {
-            console.error('שגיאה בלקיחת משתמשים:', error);
-            return 0
+    
+        // Delete the video from the database
+        const ret = await videoService.deleteVideo(videoId);
+        if(ret == 1){
+            // Remove the video's ID from the user's video list
+            user.videos = user.videos.filter(video => video !== videoId);
+            await user.save();
+      
+            console.log("Video deleted successfully");
+            return 1; // Deletion successful
         }
+        return ret;
+    } catch (err) {
+        console.error("Error deleting video:", err);
+        return 500; // Error during deletion
     }
-    async function editUser(idUser, newUsername, newPassword, newProfilePicture) {
-      try {
-        // מציאת המשתמש הנוכחי
+}
+
+const addComment = async(videoId, user, comment) => {
+    // Add a comment to a video
+    return await videoService.addComment(videoId, user, comment);
+}
+
+const editComment = async(videoId, commentId, newComment) => {
+    // Edit an existing comment
+    return await videoService.editComment(videoId, commentId, newComment);
+}
+
+const deleteComment = async(videoId, commentId) => {
+    // Delete a comment from a video
+    return await videoService.deleteComment(videoId, commentId);
+}
+
+const getUsers = async() => {
+    try {
+        // Fetch all users
+        const users = await User.find();
+        return users;
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return null;
+    }
+}
+
+async function editUser(idUser, newPassword, newProfilePicture) {
+    try {
+     
+        // Find the user and update their details
         const currentUser = await User.findOne({ id: idUser });
         if (!currentUser) {
-          console.error("המשתמש לא נמצא");
-          return null;  // משתמש לא נמצא
+            console.error("User not found");
+            return null;
         }
     
-        // אם המשתמש מנסה לעדכן את שם המשתמש, יש לבדוק אם שם המשתמש החדש כבר קיים
-        if (newUsername && newUsername !== currentUser.username) {
-          const existingUser = await User.findOne({ username: newUsername });
-          if (existingUser) {
-            console.error("שם המשתמש כבר קיים");
-            return null;  // מחזיר שגיאה ייחודית למקרה ששם המשתמש כבר קיים
-          }
-        }
-    
-        // הכנת אובייקט עם השדות שנרצה לעדכן
+        // Prepare fields to update
         const updateFields = {};
-    
-        // עדכון השדות שנשלחו בלבד
-        if (newUsername) updateFields.username = newUsername;
         if (newPassword) updateFields.password = newPassword;
         if (newProfilePicture) updateFields.profilePicture = newProfilePicture;
     
-        // חיפוש ועדכון המשתמש במונגו לפי ה-id שלו
+        // Update the user in MongoDB
         const updatedUser = await User.findOneAndUpdate(
-          { id: idUser }, // חיפוש המשתמש לפי מזהה
-          updateFields,    // השדות שרוצים לעדכן
-          { new: true }    // מחזיר את האובייקט המעודכן לאחר השינוי
+            { id: idUser }, // Find user by ID
+            updateFields,   // Fields to update
+            { new: true }   // Return the updated object
         );
     
-        if (updatedUser) {
-          return updatedUser;  // מחזיר את האובייקט המעודכן
-        } else {
-          return null;  // לא נוצרו שינויים
-        }
-      } catch (error) {
-        console.error('שגיאה בעדכון משתמש:', error);
-        return null;  // מחזיר null במקרה של שגיאה
-      }
+        return updatedUser ? updatedUser : null; // Return updated user or null
+    } catch (error) {
+        console.error('Error updating user:', error);
+        return null; // Return null in case of an error
     }
-    
-    const deleteUserById = async (id) => {
-        try {
-            const userid = parseInt(id)
-            const user = await User.findOne({ id: userid });
-            
-            if (!user) {
-                console.log('משתמש לא jjנמצא');
-                return 0; // מחזיר 0 במקרה שהמשתמש לא נמצא
-            }
-    
-            if (user.videos && user.videos.length > 0) {
-                // מחיקת כל הסרטונים הקשורים למשתמש
-                for (const videoId of user.videos) {
-                    await videoService.deleteVideo(videoId); // הוספת await כדי להמתין לכל מחיקה
-                }
-            }
-            videoService.updateCommments(user.username)
-            videoService.updateLikes(user.username);
-    
-            // מחיקת המשתמש
-            const result = await User.deleteOne({ id: id });
-    
-            return result.deletedCount > 0 ? 1 : 0;
-        } catch (error) {
-            console.error('שגיאה במחיקת משתמש:', error);
-            return 0; // מחזיר 0 במקרה של שגיאה
-        }
-    };
-    
+}
 
-    const getUsersVideo = async (id) => {
-        try {
-            // שלוף את המשתמש לפי מזהה
-            const user = await User.findOne({id:id})
-    
-            if (!user) {
-                console.error('משתמש לא נמצא');
-                return []; // החזר מערך ריק אם המשתמש לא נמצא
+const deleteUserById = async (id) => {
+    try {
+        // Find and delete the user by ID
+        const userid = parseInt(id);
+        const user = await User.findOne({ id: userid });
+        
+        if (!user) {
+            console.log('User not found');
+            return 0; // Return 0 if user is not found
+        }
+
+        if (user.videos && user.videos.length > 0) {
+            // Delete all videos associated with the user
+            for (const videoId of user.videos) {
+                console.log(videoId);
+                await videoService.deleteVideo(videoId); // Await each deletion
             }
-            // צור מערך חדש לאחסון סרטונים
+        }
+        videoService.updateCommments(user.username);
+        videoService.updateLikes(user.username);
+
+        // Delete the user
+        const result = await User.deleteOne({ id: id });
+    
+        return result.deletedCount > 0 ? 1 : 0;
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        return 0; // Return 0 in case of an error
+    }
+}
+
+const getUsersVideo = async (id) => {
+    try {
+        // Fetch the user's videos by ID
+        const user = await User.findOne({id:id});
+    
+        if (!user) {
+            console.error('User not found');
+            return []; // Return an empty array if user is not found
+        }
+        
+        // Create an array to store videos
         const videos = [];
-
-        // עבור על כל מזהי הסרטונים של המשתמש
         for (const videoId of user.videos) {
-            const video = await videoService.getVideoById(videoId); // קבל את פרטי הסרטון
+            const video = await videoService.getVideoById(videoId); // Get video details
             if (video) {
-                videos.push(video); // הוסף את הסרטון למערך
+                videos.push(video); // Add video to the array
             }
         }
     
-            // החזר את הסרטונים של המשתמש
-            return videos;
-        } catch (error) {
-            console.error('שגיאה בלקיחת סרטונים של משתמש:', error);
-            return []; // החזר מערך ריק במקרה של שגיאה
-        }
-    };
-    
-    
-    
-      
+        return videos; // Return the user's videos
+    } catch (error) {
+        console.error('Error fetching user videos:', error);
+        return []; // Return an empty array in case of an error
+    }
+}
+
 export default {
     createUser,
     usernamePasswordAreExist,

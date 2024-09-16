@@ -1,13 +1,13 @@
 import Video from "../models/video.js"
 
-
+// Creates a new video and saves it to the database
 const createVideo = async (title, url, thumbnail, description, uploadBy, idUser) => {
     try {
-      // יצירת מזהה ייחודי חדש עבור הווידאו
-      const latestVideo = await Video.findOne().sort({ id: -1 }).exec(); // חיפוש הסרטון האחרון שנוצר
-      const videoid = latestVideo ? parseInt(latestVideo.id) + 1 : 1; // קביעת מזהה חדש
+      // Generate a new unique ID for the video
+      const latestVideo = await Video.findOne().sort({ id: -1 }).exec(); // Find the latest video
+      const videoid = latestVideo ? parseInt(latestVideo.id) + 1 : 1; // Set new ID
   
-      // יצירת אובייקט וידאו חדש
+      // Create a new video object
       const video = new Video({
         id: videoid,
         title: title,
@@ -18,257 +18,255 @@ const createVideo = async (title, url, thumbnail, description, uploadBy, idUser)
         authorId: idUser,
         comments: [],
         likes: [],
-        views: Math.floor(Math.random() * (1000000000 - 0 + 1)) + 0 // יצירת מספר צפיות אקראי
+        views: Math.floor(Math.random() * (1000000000 - 0 + 1)) + 0 // Generate random view count
       });
   
-      // שמירת הסרטון החדש ב-MongoDB
+      // Save the new video to MongoDB
       await video.save();
-      return video
+      return video;
     } catch (err) {
       console.error("Error creating video:", err);
     }
-  };
-  
+};
 
+// Retrieves a combined list of 10 most viewed videos and 10 random videos
 const getCombinedVideoList = async () => {
     try {
-     
-      
-      // מציאת 10 הסרטונים הנצפים ביותר
+      // Find the top 10 most viewed videos
       const topViewedVideos = await Video.find().sort({ views: -1 }).limit(10);
       
-      
-      // מציאת 10 סרטונים אקראיים מתוך הסרטונים שנותרו
+      // Find 10 random videos from the remaining ones
       const remainingVideos = await Video.find({ _id: { $nin: topViewedVideos.map(video => video._id) } });
       const shuffled = remainingVideos.sort(() => 0.5 - Math.random());
       const randomVideos = shuffled.slice(0, 10);
       
-      // שילוב שתי הרשימות וסידורן באקראי
+      // Return a shuffled combination of both lists
       return [...topViewedVideos, ...randomVideos].sort(() => 0.5 - Math.random());
     } catch (error) {
       console.error('Error adding default videos:', error);
     }
-  }
+};
 
-const getVideos=async()=>{
-    const videos = await Video.find()
-    return videos
-}
-const getVideoById = async(id)=>{
-    return await Video.findOne({id:id})
-}
+// Retrieves all videos from the database
+const getVideos = async () => {
+    const videos = await Video.find();
+    return videos;
+};
 
+// Retrieves a video by its ID
+const getVideoById = async (id) => {
+    return await Video.findOne({ id: id });
+};
+
+// Edits video information such as title, description, thumbnail, and URL
 const editVideo = async (videoId, newTitle, newThumbnail, newVideo, newDescription) => {
   try {
-    // הכנת אובייקט עם השדות שנרצה לעדכן
+    // Prepare fields to update
     const updateFields = {};
 
-    // עדכון השדות שנשלחו בלבד
+    // Update only the provided fields
     if (newTitle) updateFields.title = newTitle;
     if (newDescription) updateFields.description = newDescription;
     if (newThumbnail) updateFields.thumbnail = newThumbnail;
     if (newVideo) updateFields.url = newVideo;
 
-    // חיפוש ועדכון הווידאו במונגו לפי ה-id שלו
+    // Find and update the video by its ID
     const updatedVideo = await Video.findOneAndUpdate(
-      { id: videoId }, // חיפוש הווידאו לפי מזהה
-      updateFields,    // השדות שרוצים לעדכן
-      { new: true }    // מחזיר את האובייקט המעודכן לאחר השינוי
+      { id: videoId }, // Find by ID
+      updateFields,    // Fields to update
+      { new: true }    // Return the updated object
     );
-
+    
+    
     if (updatedVideo) {
-      console.log("Video updated successfully:", updatedVideo);
-      return 1; // מצא ועדכן
+      return 1; // Video found and updated
     } else {
-      console.log("Video not found");
-      return 0; // לא מצא
+      return 404; // Video not found
     }
   } catch (err) {
     console.error("Error updating video:", err);
-    return 0; // במקרה של שגיאה
+    return 0; // Error occurred
   }
 };
 
-  const deleteVideo = async (id) => {
-    try {
-      // חיפוש הווידאו לפי מזהה
-      const video = await Video.findOne({ id: id });
-      
-      if (!video) {
-        console.log("Video not found");
-        return 404; // הווידאו לא קיים
-      }
-  
-      // מחיקת הווידאו ממסד הנתונים
-      await Video.deleteOne({ id: id });
-  
-      console.log("Video deleted successfully");
-      return 1; // מחיקה הצליחה
-    } catch (err) {
-      console.error("Error deleting video:", err);
-      return 500; // שגיאה במהלך מחיקה
+// Deletes a video by its ID
+const deleteVideo = async (id) => {
+  try {
+    // Find the video by its ID
+    const video = await Video.findOne({ id: id });
+    console.log(id);
+    
+    if (!video) {
+      return 404; // Video doesn't exist
     }
-  };
 
-  const updateCommments = async(username) => {
-         // מחיקת התגובות של המשתמש מכל הסרטונים
-         await Video.updateMany(
-            { "comments.user": username }, // חיפוש סרטונים עם תגובות של המשתמש
-            { $pull: { comments: { user: username } } } // הסרת התגובות של המשתמש
-        );
+    // Delete the video from the database
+    await Video.deleteOne({ id: id });
+
+    console.log("Video deleted successfully");
+    return 1; // Deletion successful
+  } catch (err) {
+    console.error("Error deleting video:", err);
+    return 500; // Error during deletion
   }
+};
 
-  const addComment = async (videoId, user, text) => {
-    try {
-      // חפש את הווידאו לפי מזהה
-      const video = await Video.findOne({ id: videoId });
-      
-      if (!video) {
-        console.log("Video not found");
-        return 0; // לא נמצא וידאו מתאים
-      }
-  
-      // חישוב commentid: אם המערך ריק, התחל ב-0, אחרת הוסף 1 ל-id של התגובה האחרונה
-      const commentId = video.comments.length > 0 
-        ? video.comments[video.comments.length - 1].id + 1 
-        : 0;
-  
-      // הוסף את התגובה החדשה למערך
-      video.comments.push({ id: commentId, user: user, text: text });
-  
-      // שמור את הווידאו המעודכן
-      await video.save();
-  
-      console.log("Comment added successfully");
-      return 1; // הצלחה
-    } catch (err) {
-      console.error("Error adding comment:", err);
-      return 500; // שגיאה במהלך הוספה
-    }
-  };
+// Removes all comments by a specific username from all videos
+const updateCommments = async (username) => {
+  await Video.updateMany(
+    { "comments.user": username }, // Find videos with comments by the user
+    { $pull: { comments: { user: username } } } // Remove user's comments
+  );
+};
 
-  const editComment = async (videoId, commentId, newComment) => {
-    try {
-      // מצא את הווידאו עם התגובה הנכונה
-      const video = await Video.findOne({ id: parseInt(videoId) });
-      
-      if (!video) {
-        console.log("Video not found");
-        return 0; // לא נמצא וידאו מתאים
-      }
-  
-      // מצא את התגובה המתאימה לפי commentId
-      const comment = video.comments.find(c => parseInt(c.id) === parseInt(commentId));
-      
-      if (!comment) {
-        console.log("Comment not found");
-        return 0; // לא נמצאה תגובה מתאימה
-      }
-  
-      // עדכן את הטקסט של התגובה
-      comment.text = newComment;
-  
-      // שמור את הווידאו המעודכן במסד הנתונים
-      await video.save();
-  
-      console.log("Comment updated successfully");
-      return 1; // הצלחה
-    } catch (err) {
-      console.error("Error updating comment:", err);
-      return 500; // שגיאה במהלך העדכון
+// Adds a comment to a video
+const addComment = async (videoId, user, text) => {
+  try {
+    // Find the video by its ID
+    const video = await Video.findOne({ id: videoId });
+    
+    if (!video) {
+      console.log("Video not found");
+      return 0; // No video found
     }
-  };
-  
-  const deleteComment = async (videoId, commentId) => {
-    try {
-      // מצא את הווידאו עם התגובה המתאימה
-      const video = await Video.findOne({ id: parseInt(videoId) });
-  
-      if (!video) {
-        console.log("Video not found");
-        return 0; // לא נמצא וידאו מתאים
-      }
-  
-      // מצא את האינדקס של התגובה המתאימה
-      const commentIndex = video.comments.findIndex(c => parseInt(c.id) === parseInt(commentId));
-  
-      if (commentIndex === -1) {
-        console.log("Comment not found");
-        return 0; // לא נמצאה תגובה מתאימה
-      }
-  
-      // מחק את התגובה מהמערך
-      video.comments.splice(commentIndex, 1);
-  
-      // שמור את השינויים במסד הנתונים
-      await video.save();
-  
-      console.log("Comment deleted successfully");
-      return 1; // הצלחה
-    } catch (err) {
-      console.error("Error deleting comment:", err);
-      return 500; // שגיאה במהלך המחיקה
-    }
-  };
 
-  const likeDislike = async (username, idVideo) => {
-    try {
-      // מצא את הווידאו לפי idVideo
-      const video = await Video.findOne({ id: parseInt(idVideo) });
-  
-      if (!video) {
-        console.log("Video not found");
-        return 0; // לא נמצא וידאו מתאים
-      }
-  
-      // בדוק אם המשתמש כבר אוהב את הווידאו
-      const likeIndex = video.likes.indexOf(username);
-  
-      if (likeIndex !== -1) {
-        // המשתמש כבר אוהב את הווידאו - הסר אותו מרשימת הלייקים
-        video.likes.splice(likeIndex, 1);
-      } else {
-        // המשתמש לא אוהב את הווידאו - הוסף אותו לרשימת הלייקים
-        video.likes.push(username);
-      }
-  
-      // שמור את השינויים במסד הנתונים
-      await video.save();
-  
-      console.log("Like/Dislike updated successfully");
-      return 1; // הצלחה
-    } catch (err) {
-      console.error("Error updating like/dislike:", err);
-      return 500; // שגיאה במהלך העדכון
-    }
-  };
-  
-  const updateLikes = async(username) =>{
-             // מחיקת התגובות של המשתמש מכל הסרטונים
-             await Video.updateMany(
-                { "likes": username}, // חיפוש סרטונים עם תגובות של המשתמש
-                { $pull: { likes: username } } // הסרת התגובות של המשתמש
-            );
+    // Calculate commentId
+    const commentId = video.comments.length > 0 
+      ? video.comments[video.comments.length - 1].id + 1 
+      : 0;
 
+    // Add the new comment
+    video.comments.push({ id: commentId, user: user, text: text });
+
+    // Save the updated video
+    await video.save();
+
+    console.log("Comment added successfully");
+    return 1; // Success
+  } catch (err) {
+    console.error("Error adding comment:", err);
+    return 500; // Error occurred
   }
-  
-  
-  
+};
 
+// Edits an existing comment on a video
+const editComment = async (videoId, commentId, newComment) => {
+  try {
+    // Find the video
+    const video = await Video.findOne({ id: parseInt(videoId) });
+    
+    if (!video) {
+      console.log("Video not found");
+      return 0; // Video not found
+    }
 
+    // Find the specific comment
+    const comment = video.comments.find(c => parseInt(c.id) === parseInt(commentId));
+    
+    if (!comment) {
+      console.log("Comment not found");
+      return 0; // Comment not found
+    }
 
+    // Update the comment text
+    comment.text = newComment;
+
+    // Save the updated video
+    await video.save();
+
+    console.log("Comment updated successfully");
+    return 1; // Success
+  } catch (err) {
+    console.error("Error updating comment:", err);
+    return 500; // Error occurred
+  }
+};
+
+// Deletes a comment from a video by comment ID
+const deleteComment = async (videoId, commentId) => {
+  try {
+    // Find the video
+    const video = await Video.findOne({ id: parseInt(videoId) });
+
+    if (!video) {
+      console.log("Video not found");
+      return 0; // Video not found
+    }
+
+    // Find the comment by index
+    const commentIndex = video.comments.findIndex(c => parseInt(c.id) === parseInt(commentId));
+
+    if (commentIndex === -1) {
+      console.log("Comment not found");
+      return 0; // Comment not found
+    }
+
+    // Remove the comment
+    video.comments.splice(commentIndex, 1);
+
+    // Save the updated video
+    await video.save();
+
+    console.log("Comment deleted successfully");
+    return 1; // Success
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    return 500; // Error occurred
+  }
+};
+
+// Toggles like or dislike on a video for a user
+const likeDislike = async (username, idVideo) => {
+  try {
+    // Find the video by its ID
+    const video = await Video.findOne({ id: parseInt(idVideo) });
+
+    if (!video) {
+      console.log("Video not found");
+      return 0; // Video not found
+    }
+
+    // Check if the user already likes the video
+    const likeIndex = video.likes.indexOf(username);
+
+    if (likeIndex !== -1) {
+      // User already likes the video, remove them from likes
+      video.likes.splice(likeIndex, 1);
+    } else {
+      // User doesn't like the video, add them to likes
+      video.likes.push(username);
+    }
+
+    // Save the updated video
+    await video.save();
+
+    console.log("Like/Dislike updated successfully");
+    return 1; // Success
+  } catch (err) {
+    console.error("Error updating like/dislike:", err);
+    return 500; // Error occurred
+  }
+};
+
+// Removes a user's likes from all videos
+const updateLikes = async (username) => {
+  await Video.updateMany(
+    { "likes": username }, // Find videos with likes by the user
+    { $pull: { likes: username } } // Remove user's likes
+  );
+};
 
 export default {
-    createVideo,
-    getCombinedVideoList,
-    getVideos,
-    getVideoById,
-    editVideo,
-    deleteVideo,
-    addComment,
-    deleteComment,
-    editComment,
-    likeDislike,
-    updateCommments,
-    updateLikes
-}
+  createVideo,
+  getCombinedVideoList,
+  getVideos,
+  getVideoById,
+  editVideo,
+  deleteVideo,
+  addComment,
+  deleteComment,
+  editComment,
+  likeDislike,
+  updateCommments,
+  updateLikes
+};

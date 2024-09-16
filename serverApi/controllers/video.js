@@ -51,7 +51,7 @@ const likeDisLike  = async (req, res) => {
 
     const ret = await videoService.likeDislike(req.body.username,req.params.id)
     if(!ret){
-      return res.status(500).json({ error: 'video is not exist' });
+      return res.status(409).json({ error: 'video is not exist' });
 
     }
 
