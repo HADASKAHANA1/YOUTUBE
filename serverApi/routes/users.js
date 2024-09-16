@@ -19,11 +19,11 @@ const upload = multer({ storage });
 const router = express.Router()
 
 
-router.route('/').post(userController.createUser)
+router.route('/').post(upload.single('profilePicture'),userController.createUser)
 router.route('/').get(userController.getUsers)
 
 router.route('/:id').get(userController.getUserById)
-router.route('/:id').put(verifyToken.verifyToken,userController.editUser)
+router.route('/:id').put(verifyToken.verifyToken,upload.single('profilePicture'),userController.editUser)
 router.route('/:id').delete(verifyToken.verifyToken,userController.deleteUser)
 
 

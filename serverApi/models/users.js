@@ -14,7 +14,6 @@ const User = new schema({
   username: {
     type: String,
     required: true,
-    // trim: true // מסיר רווחים מיותרים בתחילת ובסוף השם
   },
   password: {
     type: String,

@@ -67,16 +67,20 @@ function EditUser() {
     setErrors({});
   
     try {
+           // יצירת אובייקט FormData
+    const formDataToSend = new FormData();
+    formDataToSend.append('username', formData.username);
+    formDataToSend.append('password', formData.password);
+    formDataToSend.append('profilePicture', formData.profilePicture);
        
       // Send the FormData to the server
       let res = await fetch(`http://localhost:8000/api/users/${userid}`, {
       method: 'PUT',
       'headers': {
-          'Content-Type': 'application/json',
           Authorization: localStorage.getItem("token"),
 
         },
-      body: JSON.stringify({username :formData.username, password:formData.password,profilePicture:formData.profilePicture}),
+      body: formDataToSend
     });
     const resbody = await res.json();
 

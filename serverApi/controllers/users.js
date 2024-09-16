@@ -9,8 +9,11 @@ const createUser  = async (req, res) => {
 
        
     try {
-       
-      const ret =await usersService.createUser(req.body.username, req.body.password,req.body.profilePicture);
+      const { username, password } = req.body;
+      const profilePictureUrl = `http://localhost:8000/uploads/${req.file.filename}`; // כתובת התמונה שהועלת
+
+      
+      const ret =await usersService.createUser(username,password,profilePictureUrl);
   
       if(!ret){
         return res.status(409).json({ error: 'user already exist' });
@@ -190,8 +193,25 @@ const createUser  = async (req, res) => {
   
   const editUser = async(req,res)=>{
     try{
+      const { username, password } = req.body;
+      let profilePictureUrl;
 
-        const ret = await usersService.editUser(req.params.id,req.body.username,req.body.password,req.body.profilePicture);
+      const userid = parseInt(req.params.id);
+      
+      
+      // חפש את המשתמש הקיים
+      const existingUser = await usersService.getUserById(userid)
+      
+      if (!existingUser) {
+        return res.status(400).json({ error: 'User does not exist' });
+      }
+
+      if (req.file) {
+        const profilePicture = req.file;
+        profilePictureUrl = `http://localhost:8000/uploads/${profilePicture.filename}`;
+      }
+
+        const ret = await usersService.editUser(req.params.id,username,password,profilePictureUrl);
         if(!ret){
           res.status(400).json({ error: 'user isnot exist' });
             return;

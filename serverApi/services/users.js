@@ -2,7 +2,6 @@ import User from "../models/users.js"
 import { v4 as uuidv4 } from 'uuid'
 import videoService from '../services/videos.js'
 
-const defaultUser = [{id: '0', username: "Sinai Cohen", password: '12345ee!', profilePicture:'/thumbnails/4.png', videos: [1,2,3,4,5,6,7,8,9,10]}]
 
 
 const  getUserByUserName = async(username)=>{
@@ -25,9 +24,8 @@ const createUser = async( username,password,profilePicture)=>{
     const userId = lastUser.id+1
     if(!(await getUserByUserName(username))){
         const newUser = new User( {id: userId, username: username, password: password,profilePicture: profilePicture,videos:[]})
-
-
-        return await newUser.save()
+        await newUser.save() 
+        return 1;
     }
     return 0
   
@@ -149,42 +147,49 @@ const deleteVideo = async (userId, videoId) => {
         }
     }
     async function editUser(idUser, newUsername, newPassword, newProfilePicture) {
-        try {
-            // מציאת המשתמש הנוכחי
+      try {
+        // מציאת המשתמש הנוכחי
         const currentUser = await User.findOne({ id: idUser });
         if (!currentUser) {
-            console.error("המשתמש לא נמצא");
-            return 0;
+          console.error("המשתמש לא נמצא");
+          return null;  // משתמש לא נמצא
         }
-
-        // אם המשתמש מנסה לעדכן את שם המשתמש, יש לבדוק אם שם המשתמש החדש כבר קיים
-        if (newUsername !== currentUser.username) {
-            const existingUser = await User.findOne({ username: newUsername });
-            if (existingUser) {
-                console.error("שם המשתמש כבר קיים");
-                return null;  // מחזיר שגיאה ייחודית למקרה ששם המשתמש כבר קיים
-            }
-        }
-            const result = await User.updateOne(
-                { id: idUser },
-                {
-                    $set: {
-                        username: newUsername,
-                        password: newPassword,
-                        profilePicture: newProfilePicture
-                    }
-                }
-            );
     
-            if (result.modifiedCount > 0 ){
-                return await await User.findOne({ id: idUser });
-            }
-        } catch (error) {
-            console.error('שגיאה בעדכון משתמש:', error);
-            return null
+        // אם המשתמש מנסה לעדכן את שם המשתמש, יש לבדוק אם שם המשתמש החדש כבר קיים
+        if (newUsername && newUsername !== currentUser.username) {
+          const existingUser = await User.findOne({ username: newUsername });
+          if (existingUser) {
+            console.error("שם המשתמש כבר קיים");
+            return null;  // מחזיר שגיאה ייחודית למקרה ששם המשתמש כבר קיים
+          }
         }
+    
+        // הכנת אובייקט עם השדות שנרצה לעדכן
+        const updateFields = {};
+    
+        // עדכון השדות שנשלחו בלבד
+        if (newUsername) updateFields.username = newUsername;
+        if (newPassword) updateFields.password = newPassword;
+        if (newProfilePicture) updateFields.profilePicture = newProfilePicture;
+    
+        // חיפוש ועדכון המשתמש במונגו לפי ה-id שלו
+        const updatedUser = await User.findOneAndUpdate(
+          { id: idUser }, // חיפוש המשתמש לפי מזהה
+          updateFields,    // השדות שרוצים לעדכן
+          { new: true }    // מחזיר את האובייקט המעודכן לאחר השינוי
+        );
+    
+        if (updatedUser) {
+          return updatedUser;  // מחזיר את האובייקט המעודכן
+        } else {
+          return null;  // לא נוצרו שינויים
+        }
+      } catch (error) {
+        console.error('שגיאה בעדכון משתמש:', error);
+        return null;  // מחזיר null במקרה של שגיאה
+      }
     }
-
+    
     const deleteUserById = async (id) => {
         try {
             const userid = parseInt(id)
