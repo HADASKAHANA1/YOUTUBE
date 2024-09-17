@@ -6,11 +6,14 @@ import cors from 'cors'
 // import bodyParser from 'body-parser'
 import http from 'http'
 import mongoose from 'mongoose'
+import customENV from 'custom-env'
 
-const mongoURI = 'mongodb://localhost:27017/youtube'; 
+customENV.env('local','./config')
+console.log(process.env.mongoURI)
+
 
 // הגדרת חיבור Mongoose ל-MongoDB
-mongoose.connect(mongoURI, {
+mongoose.connect(process.env.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
@@ -37,7 +40,7 @@ server.use("/api/videos",videoRouter)
 
 const server2 = http.createServer(server)
 
-server2.listen(8000,()=>{
-    console.log("listening port 8000");
+server2.listen(process.env.PORT,()=>{
+    console.log("listening port ",process.env.PORT);
 })
 
