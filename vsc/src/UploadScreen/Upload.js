@@ -24,14 +24,14 @@ function Upload() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, thumbnail: URL.createObjectURL(file) });
+      setFormData({ ...formData, thumbnail: file });
     }
   };
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, videoFile: URL.createObjectURL(file) });
+      setFormData({ ...formData, videoFile: file });
     }
   };
 
@@ -61,6 +61,13 @@ function Upload() {
     }
 
     setErrors({});
+
+    const data = new FormData();
+    data.append('title', formData.title); // הוספת שדות טקסט
+    data.append('description', formData.description);
+    data.append('videoFile', formData.videoFile); // הוספת הקובץ (הסרטון)
+    data.append('thumbnail', formData.thumbnail); // הוספת הקובץ (התמונה)
+
     try {
       // Send the FormData to the server
       const userid = currentUser.id
@@ -70,9 +77,8 @@ function Upload() {
       method: 'POST',
       'headers': {
           Authorization: localStorage.getItem("token"),
-          'Content-Type': 'application/json',
         },
-      body: JSON.stringify({title:formData.title, url:formData.videoFile, thumbnail:formData.thumbnail, description:formData.description}),
+      body: data,
     });
      
     if(!res.ok){
@@ -112,7 +118,7 @@ function Upload() {
             <input type="file" className={`form-control ${darkMode ? 'dark-theme' : ''}`} onChange={handleImageChange} />
             {errors.thumbnail && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.thumbnail}</p>}
             {formData.thumbnail && (
-              <img src={formData.thumbnail} alt="Thumbnail Preview" className="preview-image" />
+              <img src={URL.createObjectURL(formData.thumbnail)} alt="Thumbnail Preview" className="preview-image" />
             )}
           </div>
           <div className="form-group">

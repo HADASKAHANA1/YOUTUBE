@@ -53,13 +53,17 @@ function Signup() {
   
     
     try {
+       // יצירת אובייקט FormData
+    const formDataToSend = new FormData();
+    formDataToSend.append('username', formData.username);
+    formDataToSend.append('password', formData.password);
+    formDataToSend.append('profilePicture', formData.profilePicture);
+
       // Send the FormData to the server
       let res = await fetch('http://localhost:8000/api/users', {
       method: 'POST',
-      'headers': {
-          'Content-Type': 'application/json',
-        },
-      body: JSON.stringify(formData),
+      
+      body:formDataToSend
     });
     const resbody = await res.json();
 
@@ -79,21 +83,11 @@ function Signup() {
   };
 
   const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    console.log('event.target.files[0]: ', event.target.files[0]);
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      setFormData((prevFormData)=>{
-        let temp = {...prevFormData}
-        temp.profilePicture=e.target.result
-        return temp
-      })
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+     const file = event.target.files[0];
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    profilePicture: file
+  }));
   };
 
 
@@ -152,7 +146,7 @@ function Signup() {
             <input id="file-upload" type="file" name="fileUpload" className="form-control" accept='image/png, image/jpeg' onChange={handleFileUpload} />
             {errors.profilePicture && <p className="error">{errors.profilePicture}</p>}
             {formData.profilePicture && (
-              <img src={formData.profilePicture } alt="Profile Preview" className="preview-image" />
+              <img src={URL.createObjectURL(formData.profilePicture) } alt="Profile Preview" className="preview-image" />
             )}
           </div>
           <button type="submit" className="btn">Sign Up</button>

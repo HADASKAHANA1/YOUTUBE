@@ -1,11 +1,19 @@
+import usersService from '../services/users.js'
+
 import usersModel from '../models/users.js'
+
+
+
 
 const createUser  = async (req, res) => {
 
        
     try {
-       
-      const ret = usersModel.createUser(req.body.username, req.body.password,req.body.profilePicture);
+      const { username, password } = req.body;
+      const profilePictureUrl = `http://localhost:8000/uploads/${req.file.filename}`; 
+
+      
+      const ret =await usersService.createUser(username,password,profilePictureUrl);
   
       if(!ret){
         return res.status(409).json({ error: 'user already exist' });
@@ -19,42 +27,45 @@ const createUser  = async (req, res) => {
   const getUsers  = async (req, res) => {
        
     try {
-      const users = usersModel.getUsers();
+      const users = await usersService.getUsers();
   
-      res.status(200).json({ users: users, message: 'User created successfully' });
+      res.status(200).json({ users: users, message: 'Users recieved successfully' });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create user' });
+      res.status(500).json({ error: 'Failed to bring users' });
     }
   };
   const getUserById = async (req, res) =>{
     try{
-        const user = usersModel.getUserById(req.params.id)
-        
+        const user = await usersService.getUserById(req.params.id)
+        if(!user){
+          res.status(409).json({error : 'user not found' });
+
+        }
         res.status(200).json({user:user, message: 'User received successfully' });
 
     } catch (error){
         res.status(500).json({ error: 'Failed to get user' });
     }
   }
-  const login = async (req,res) => {
-    try{
-        const user = usersModel.usernamePasswordAreExist(req.body.username,req.body.password)
-        if(user){
-            res.status(200).json({ message: 'UserName and password are valid' });
-        }
-        else{
-            res.status(401).json({ error: 'Invalid username and/or password' });
-        }
-    } catch (error){
-        res.status(500).json({ error: 'Failed to get user' });
-    }
-  }
+  // const login = async (req,res) => {
+  //   try{
+  //       const user = usersModel.usernamePasswordAreExist(req.body.username,req.body.password)
+  //       if(user){
+  //           res.status(200).json({ message: 'UserName and password are valid' });
+  //       }
+  //       else{
+  //           res.status(401).json({ error: 'Invalid username and/or password' });
+  //       }
+  //   } catch (error){
+  //       res.status(500).json({ error: 'Failed to get user' });
+  //   }
+  // }
 
   const logout = async (req,res) => {
     try{
-        const user = usersModel.getUserById(req.params.id)
+        const user = usersService.getUserById(req.params.id)
         if(user){
-            res.status(200).json({ message: 'user is exist' });
+            res.status(200).json({ message: 'user logged out' });
         }
         else{
             res.status(401).json({ error: 'user isnt exist' });
@@ -66,13 +77,24 @@ const createUser  = async (req, res) => {
   }
   const uploadVideo = async(req,res)=>{
     try{
-        const newVideo = usersModel.addVideo(req.params.id,req.body.title,req.body.url,req.body.thumbnail,req.body.description)
+
+      const { title, description } = req.body;
+
+      
+      // קבלת הקבצים
+      const videoFile = req.files.videoFile[0]; // הסרטון שהועלה
+      const thumbnail = req.files.thumbnail[0]; // התמונה שהועלתה
+      const videoUrl = `http://localhost:8000/uploads/${videoFile.filename}`;
+      const imageUrl = `http://localhost:8000/uploads/${thumbnail.filename}`;
+
+
+        const newVideo = await usersService.addVideo(req.params.id,title,videoUrl,imageUrl,description)
     
         if(newVideo){
             res.status(200).json({video: newVideo, message: 'success to upload video' });
         }
         else{
-            res.status(400).json({ error: 'fail to upload video' });
+            res.status(404).json({ error: 'user is not exist' });
         }
 
     }catch(error){
@@ -82,8 +104,7 @@ const createUser  = async (req, res) => {
   }
   const deleteVideo = async(req,res)=>{
     try{
-        const ret = usersModel.deleteVideo(req.params.id,req.params.pid)
-        console.log("ret: ",ret)
+        const ret = await usersService.deleteVideo(req.params.id,req.params.pid)
       
 
         if(ret ==1){
@@ -91,13 +112,11 @@ const createUser  = async (req, res) => {
             res.status(200).json({ message: 'success to delete video' });
         }
         if(ret==404){
-          console.log("ret: 404")
 
         
             res.status(404).json({ error: 'video is not exist' });
         }
         if(ret==400){
-          console.log("ret: 400")
 
         
           res.status(400).json({ error: 'user is not exist' });
@@ -111,16 +130,38 @@ const createUser  = async (req, res) => {
 
   const editVideo = async(req,res)=>{
     try{
-        const ret = usersModel.editVideo(req.params.id, req.params.pid, req.body.newtitle,req.body.newurl, req.body.newthumbnail,  req.body.newdescription)
       
-        if(ret){
+      const { title, description } = req.body;
+
+      let videoUrl, imageUrl;
+
+       // בדיקה אם הסרטון הועלה
+    if (req.files && req.files.videoFile) {
+      const videoFile = req.files.videoFile[0];
+      videoUrl = `http://localhost:8000/uploads/${videoFile.filename}`;
+    }
+
+    if (req.files && req.files.thumbnail) {
+      const thumbnail = req.files.thumbnail[0];
+      imageUrl = `http://localhost:8000/uploads/${thumbnail.filename}`;
+    }
+
+    const ret = await usersService.editVideo(
+      req.params.pid,
+      title,
+      videoUrl,   
+      imageUrl,   
+      description
+    );
+
+        if(ret==1){
 
             res.status(200).json({ message: 'success to edit video' });
         }
         
         else{
         
-          res.status(400).json({ error: 'video is not exist' });
+          res.status(404).json({ error: 'video is not exist' });
       }
 
     }catch(error){
@@ -130,12 +171,17 @@ const createUser  = async (req, res) => {
   }
   const getUsersVideos = async(req,res)=>{
     try{
-      console.log("req.params.id ", req.params.id)
 
 
-        const userVideos = usersModel.getUsersVideo(req.params.id);
+        const userVideos = await usersService.getUsersVideo(req.params.id);
+        if(userVideos){
+          res.status(200).json({ videos : userVideos, message: 'user videos' });
 
-        res.status(200).json({ videos : userVideos, message: 'user videos' });
+        }
+        else{
+          res.status(400).json({  error: 'user not found' });
+
+        }
         
 
     }catch(error){
@@ -146,13 +192,21 @@ const createUser  = async (req, res) => {
   
   const editUser = async(req,res)=>{
     try{
+      const { password } = req.body;
+      let profilePictureUrl;
 
-        const ret = usersModel.editUser(req.params.id);
+
+      if (req.file) {
+        const profilePicture = req.file;
+        profilePictureUrl = `http://localhost:8000/uploads/${profilePicture.filename}`;
+      }
+
+        const ret = await usersService.editUser(req.params.id,password,profilePictureUrl);
         if(!ret){
           res.status(400).json({ error: 'user isnot exist' });
-
+            return;
         }
-        res.status(200).json({ message: 'edit user success'})
+        res.status(200).json({user: ret, message: 'edit user success'})
 
     }catch(error){
         res.status(500).json({ error: 'Failed in edit user' });
@@ -163,7 +217,7 @@ const createUser  = async (req, res) => {
   const deleteUser = async(req,res)=>{
     try{
 
-        const ret = usersModel.deleteUserById(req.params.id);
+        const ret = await usersService.deleteUserById(req.params.id);
         if(!ret){
           return res.status(400).json({ error: 'user isnot exist' });
 
@@ -178,7 +232,7 @@ const createUser  = async (req, res) => {
   const addComment = async(req,res)=>{
     try{
 
-        const ret = usersModel.addComment(req.params.pid,req.body.user,req.body.text);
+        const ret = await usersService.addComment(req.params.pid,req.body.user,req.body.text);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -195,8 +249,7 @@ const createUser  = async (req, res) => {
   const editComment = async(req,res)=>{
     try{
       
-      const ret = usersModel.editComment(req.params.pid,req.body.commentId,req.body.text);
-      console.log(ret)
+      const ret = await usersService.editComment(req.params.pid,req.body.commentId,req.body.text);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -212,7 +265,7 @@ const createUser  = async (req, res) => {
   const deleteComment = async(req,res)=>{
     try{
       
-      const ret = usersModel.deleteComment(req.params.pid,req.body.commentId);
+      const ret = await usersService.deleteComment(req.params.pid,req.body.commentId);
         
         if(!ret){
           return res.status(400).json({ error: 'video isnot exist' });
@@ -233,7 +286,6 @@ export default {
     createUser,
     getUsers,
     getUserById,
-    login,
     logout,
     uploadVideo,
     deleteVideo,
@@ -243,5 +295,6 @@ export default {
     deleteUser,
     addComment,
     editComment,
-    deleteComment
+    deleteComment,
+    
 }

@@ -1,3 +1,4 @@
+import videoService from '../services/videos.js'
 import videoModel from '../models/video.js'
 
 
@@ -5,7 +6,8 @@ const getVideos  = async (req, res) => {
        
     try {
 
-      const videos = videoModel.getVideos()
+      const videos = await videoService.getVideos();
+
 
 
   
@@ -20,7 +22,7 @@ const getPopularVideos  = async (req, res) => {
        
   try {
 
-    const videos = videoModel.getCombinedVideoList()
+    const videos =await videoService.getCombinedVideoList()
 
 
     res.status(200).json({ videos: videos, message: '20 vidoes seccess' });
@@ -33,7 +35,8 @@ const getVideoById  = async (req, res) => {
        
   try {
 
-    const video = videoModel.getVideoById(req.params.id)
+    const video = await videoService.getVideoById(req.params.id)
+    console.log(req.params.id)
 
 
     res.status(200).json({ video: video, message: 'bring vidoe seccess' });
@@ -46,9 +49,9 @@ const likeDisLike  = async (req, res) => {
        
   try {
 
-    const ret = videoModel.likeDisLike(req.body.username,req.params.id)
+    const ret = await videoService.likeDislike(req.body.username,req.params.id)
     if(!ret){
-      return res.status(500).json({ error: 'video is not exist' });
+      return res.status(409).json({ error: 'video is not exist' });
 
     }
 

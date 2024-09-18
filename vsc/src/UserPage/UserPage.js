@@ -11,6 +11,7 @@ function UserPage() {
   const [userVideos, setUserVideos] = useState([]);
   const userId = parseInt(id);
   const navigate = useNavigate();
+  console.log("thid: ",userId)
 
   useEffect(() => {
     const fetchUser = async () => {

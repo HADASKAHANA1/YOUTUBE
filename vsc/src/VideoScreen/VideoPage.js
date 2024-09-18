@@ -26,6 +26,7 @@ function VideoPage() {
       });
       if (!res.ok) throw new Error('Failed to fetch videos');
       const { videos } = await res.json();
+      console.log("videos: ",videos)
       setOtherVideos(videos);
     } catch (err) {
       console.error(err);
@@ -42,8 +43,9 @@ function VideoPage() {
       });
       if (!res.ok) throw new Error('Failed to fetch video');
       const { video } = await res.json();
-      authorId = await video.authorId;
+      authorId = video.authorId;
       setCurrentVideo(video);
+      console.log("authorId: ",video)
   
       // Call fetchAuthor after setting the authorId
 

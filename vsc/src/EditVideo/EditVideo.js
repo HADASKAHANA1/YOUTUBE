@@ -49,14 +49,14 @@ function EditVideo() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, thumbnail: URL.createObjectURL(file) });
+      setFormData({ ...formData, thumbnail: file });
     }
   };
 
   const handleVideoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData({ ...formData, videoFile: URL.createObjectURL(file) });
+      setFormData({ ...formData, videoFile: file});
     }
   };
 
@@ -87,6 +87,13 @@ function EditVideo() {
 
     setErrors({});
     try {
+      const data = new FormData();
+      data.append('title', formData.title); // הוספת שדות טקסט
+      data.append('description', formData.description);
+      data.append('videoFile', formData.videoFile); // הוספת הקובץ (הסרטון)
+      data.append('thumbnail', formData.thumbnail); // הוספת הקובץ (התמונה)
+
+  
       const userid = currentUser.id;
       const videoid = currentVideo.id;
       const path = `http://localhost:8000/api/users/${userid}/videos/${videoid}`;
@@ -95,14 +102,8 @@ function EditVideo() {
         method: 'PUT',
         headers: {
           Authorization: localStorage.getItem("token"),
-          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          newtitle: formData.title,
-          newurl: formData.videoFile,
-          newthumbnail: formData.thumbnail,
-          newdescription: formData.description
-        }),
+        body: data,
       });
 
       if (res.ok) {
@@ -141,8 +142,12 @@ function EditVideo() {
             <input type="file" className={`form-control ${darkMode ? 'dark-theme' : ''}`} onChange={handleImageChange} />
             {errors.thumbnail && <p className={`error ${darkMode ? 'dark-theme' : ''}`}>{errors.thumbnail}</p>}
             {formData.thumbnail && (
-              <img src={formData.thumbnail} alt="Thumbnail Preview" className="preview-image" />
-            )}
+  typeof formData.thumbnail === 'string' ? (
+    <img src={formData.thumbnail} alt="Thumbnail Preview" className="preview-image" />
+  ) : (
+    <img src={URL.createObjectURL(formData.thumbnail)} alt="Thumbnail Preview" className="preview-image" />
+  )
+)}
           </div>
           <div className="form-group">
             <label>Video File</label>
