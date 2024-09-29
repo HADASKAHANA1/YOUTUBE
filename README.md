@@ -39,7 +39,7 @@ After cloning the repository, navigate to the project directory and run the foll
 7. Run the Server
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
 
-8. Run the Project
+8. open new terminal. Run the Project
 
     a. Run the following commands in the terminal: 
 
