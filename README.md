@@ -7,7 +7,9 @@ Hodaya Ben Yashar
 Ester Hadas Yanir (Itzhaki)
 
 ## instruction:
-1. Clone the Repository
+1. install mongodb
+  
+2. Clone the Repository
 
 To clone this repository to your local machine, follow these steps:
 
@@ -25,16 +27,14 @@ To clone this repository to your local machine, follow these steps:
      cd serverApi
 
 
-2. Install Dependencies
+3. Install Dependencies
 After cloning the repository, navigate to the project directory and run the following command in the terminal to install all the necessary dependencies: npm install
 
-3. install mongo: npm install mongoose
+4. install mongo: npm install mongoose
 
-4. Initialize the app using the command : node addDefaultData.js
+5. Initialize the app using the command : node addDefaultData.js
 
-5. npm install uuid
-
-6. uploud mongodb
+6. npm install uuid
 
 7. Run the Server
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
@@ -42,8 +42,6 @@ Before running the React project, you need to start the server that connects to 
 8. open new terminal. Run the Project
 
     a. Run the following commands in the terminal: 
-
-     cd ..
      
      cd vsc
 
