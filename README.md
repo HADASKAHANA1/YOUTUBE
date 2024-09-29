@@ -30,13 +30,16 @@ After cloning the repository, navigate to the project directory and run the foll
 
 3. install mongo: npm install mongoose
 
-
 4. Initialize the app using the command : node addDefaultData.js
 
-5. Run the Server
+5. npm install uuid
+
+6. uploud mongodb
+
+7. Run the Server
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
 
-6. Run the Project
+8. Run the Project
 
     a. Run the following commands in the terminal: 
 
