@@ -20,7 +20,7 @@ const getUserByUserName = async(username)=>{
 }
 
 const createUser = async(username, password, profilePicture)=>{
-    const lastUser = await User.findOne().sort({ createdAt: -1 }); // Sort by createdAt from newest to oldest
+    const lastUser = await User.findOne().sort({ _id: -1 }); // Sort by createdAt from newest to oldest
     let userId;
   
     if(!lastUser){
