@@ -28,12 +28,15 @@ To clone this repository to your local machine, follow these steps:
 2. Install Dependencies
 After cloning the repository, navigate to the project directory and run the following command in the terminal to install all the necessary dependencies: npm install
 
-3. Initialize the app using the command : node addDefaultData.js
+3. install mongo: npm install mongoose
 
-4. Run the Server
+
+4. Initialize the app using the command : node addDefaultData.js
+
+5. Run the Server
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
 
-5. Run the Project
+6. Run the Project
 
     a. Run the following commands in the terminal: 
 
