@@ -37,14 +37,18 @@ After cloning the repository, navigate to the project directory and run the foll
 6. npm install uuid
 
 7. run the following commans:
+   
    cd public
+   
    mkdir uploads
+   
    cd ..
+   
 
-8. Run the Server
+9. Run the Server
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
 
-9. open new terminal. Run the Project
+10. open new terminal. Run the Project
 
     a. Run the following commands in the terminal: 
      
