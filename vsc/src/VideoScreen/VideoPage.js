@@ -5,14 +5,13 @@ import './VideoPage.css';
 
 function VideoPage() {
   const { id , userid } = useParams();
-  const userId = parseInt(userid);
   const {setCurrentVideo, darkMode, currentUser, currentVideo  } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
   const [newComment, setNewComment] = useState('');
   const [editingCommentIndex, setEditingCommentIndex] = useState(null);
   const [editedComment, setEditedComment] = useState('');
-  const videoId = parseInt(id);
+  const videoId = id;
   const [otherVideos, setOtherVideos] = useState([]);
   const [onTheSideVideos, setOnTheSideVideos] = useState([]);
   const [author, setAuthor] = useState(null);
@@ -39,7 +38,7 @@ function VideoPage() {
   const fetchVideo = async () => {
     try {
 
-      const res = await fetch(`http://localhost:8000/api/users/${userId}/videos/${videoId}`, {
+      const res = await fetch(`http://localhost:8000/api/users/${userid}/videos/${videoId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

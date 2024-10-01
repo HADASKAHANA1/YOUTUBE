@@ -4,52 +4,62 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <map>         // הוספת הכותרת למפה
-#include <vector>      // הוספת הכותרת לווקטור
+#include <map>
+#include <set>
 
 // מפה למיפוי משתמשים לסרטונים
-std::map<std::string, std::vector<std::string>> user_video_map;
+std::map<std::string, std::set<std::string>> user_video_map;
 
 void handle_client(int client_sock) {
     char buffer[4096];
     while (true) {
-        // קבלת נתונים מהלקוח
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
        
         if (read_bytes == 0) {
-            // החיבור נסגר על ידי הלקוח
             std::cout << "Client disconnected" << std::endl;
             break;
         } else if (read_bytes < 0) {
-            // שגיאה בקבלת נתונים
             perror("Error reading from client");
             break;
         } else {
-            // הצגת הנתונים שהתקבלו מהלקוח
-            buffer[read_bytes] = '\0';  // סגירת המחרוזת
-            std::string user_id = buffer;  // מזהה המשתמש
+            buffer[read_bytes] = '\0';
+            std::string data = buffer;
 
-                // בדיקה אם המשתמש כבר קיים במפה, ואם לא, הוספה שלו עם וקטור ריק
-        if (user_video_map.find(user_id) == user_video_map.end()) {
-            user_video_map[user_id] = std::vector<std::string>(); // הוספת משתמש חדש עם רשימת סרטונים ריקה
-            std::cout << "User " << user_id << " added to map with an empty video list." << std::endl;
-        } else {
-            std::cout << "User " << user_id << " already exists in the map." << std::endl;
-        }
+            // בדיקה אם מדובר בקריאת Login או קריאת צפייה בסרטון
+            if (data.find(",") == std::string::npos) {
+                // קריאת Login - מזהה משתמש בלבד
+                std::string user_id = data;
+                std::cout << "User " << user_id << " logged in." << std::endl;
 
-            std::cout << "Received: " << buffer << std::endl;
+                // יצירת thread או הכנה אחרת עבור המשתמש (אם יש צורך)
+                if (user_video_map.find(user_id) == user_video_map.end()) {
+                    user_video_map[user_id] = std::set<std::string>();
+                    std::cout << "User " << user_id << " added to the map." << std::endl;
+                }
 
-            // שליחת נתונים חזרה ללקוח (echo)
-            int sent_bytes = send(client_sock, buffer, read_bytes, 0);
-            if (sent_bytes < 0) {
-                perror("Error sending to client");
-                break;
+            } else {
+                // קריאת צפייה בסרטון - מזהה משתמש וסרטון
+                std::string user_id, video_id;
+                size_t pos = data.find(",");
+                user_id = data.substr(0, pos);
+                video_id = data.substr(pos + 1);
+
+                // עדכון הצפייה בסרטון
+                if (user_video_map.find(user_id) == user_video_map.end()) {
+                    user_video_map[user_id] = std::set<std::string>();  // יצירת רשימה עבור המשתמש אם אין
+                }
+                user_video_map[user_id].insert(video_id);  // הוספת הסרטון לסט של המשתמש
+                std::cout << "User " << user_id << " watched video " << video_id << "." << std::endl;
             }
+
+            // שליחת אישור שהבקשה התקבלה
+            std::string response = "Request processed for user.";
+            send(client_sock, response.c_str(), response.length(), 0);
         }
     }
 
-    // סגירת הסוקט אחרי שהשיחה עם הלקוח הסתיימה
+    // סגירת החיבור
     close(client_sock);
 }
 

@@ -13,7 +13,7 @@ function HomePage() {
   const [ homePagevideos , setHomePageVideos] = useState([]);
   let userid;
   if (currentUser) {
-    userid = currentUser.id;
+    userid = currentUser._id;
   } else{
     userid = -1;
   }
@@ -211,7 +211,7 @@ function HomePage() {
       <div className="video-grid">
         {filteredVideos.map((video) => (
           <div key={video.id} className="video-item">
-            <Link to={`/${userid}/videos/${video.id}`}>
+            <Link to={`/${userid}/videos/${video._id}`}>
               <img src={video.thumbnail} alt={video.title} className="video-thumbnail" />
               <h3>{video.title}</h3>
             </Link>

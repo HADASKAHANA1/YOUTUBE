@@ -301,16 +301,30 @@ const createUser  = async (req, res) => {
 
       const video = await usersService.getVideoById(req.params.pid)
       console.log(req.params.id)
-  
-  
+
+      if(video){
+        let sockets = jwtProvider.userThreads
+        const socket = sockets.get(req.params.id.toString())
+       // console.log("socket: ",sockets.keys)
+       if (socket) {
+          // אם הסוקט קיים, שולחים את המידע לשרת
+          const userId = req.params.id; // מזהה המשתמש
+          const videoId = req.params.pid; // מזהה הוידאו
+
+          // שליחת המידע לשרת TCP
+          socket.write(JSON.stringify({ userId, videoId }));
+
+          console.log(`Sent to server: User ID: ${userId}, Video ID: ${videoId}`);
+      } else {
+          console.log(`Socket not found for user ID: ${req.params.id}`);
+      }
+    }
       res.status(200).json({ video: video, message: 'bring vidoe seccess' });
     } catch (error) {
       res.status(500).json({video:null, error: 'video is not exist' });
     }
   }
   
-  
-
 
 export default {
     createUser,
