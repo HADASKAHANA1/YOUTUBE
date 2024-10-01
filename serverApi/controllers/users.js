@@ -76,7 +76,7 @@ const createUser  = async (req, res) => {
           if (socket) {
             socket.end(() => {
             console.log(`Disconnected user ${user.id}`);
-            sockets.delete(user.id); // הסר את הסוקט מהמפה
+            sockets.delete(user._id.toString); // הסר את הסוקט מהמפה
         });
     } else {
         console.log(`No connection found for user ${user.id}`);
