@@ -2,6 +2,9 @@ import usersService from '../services/users.js'
 
 import usersModel from '../models/users.js'
 
+import net from 'net'
+import jwtProvider from '../auth/jwtProvider.js'
+
 
 
 
@@ -63,8 +66,22 @@ const createUser  = async (req, res) => {
 
   const logout = async (req,res) => {
     try{
-        const user = usersService.getUserById(req.params.id)
+
+      
+        const user = await usersService.getUserById(req.params.id)
         if(user){
+          let sockets = jwtProvider.userThreads
+          const socket = sockets.get(user._id.toString())
+         // console.log("socket: ",sockets.keys)
+          if (socket) {
+            socket.end(() => {
+            console.log(`Disconnected user ${user.id}`);
+            sockets.delete(user.id); // הסר את הסוקט מהמפה
+        });
+    } else {
+        console.log(`No connection found for user ${user.id}`);
+    }
+
             res.status(200).json({ message: 'user logged out' });
         }
         else{
