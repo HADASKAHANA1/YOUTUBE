@@ -136,6 +136,11 @@ const addComment = async(videoId, user, comment) => {
     return await videoService.addComment(videoId, user, comment);
 }
 
+
+const getVideoById = async(videoId) => {
+    return await videoService.getVideoById(videoId);
+}
+
 const editComment = async(videoId, commentId, newComment) => {
     // Edit an existing comment
     return await videoService.editComment(videoId, commentId, newComment);
@@ -256,5 +261,6 @@ export default {
     getUsers,
     editUser,
     deleteUserById,
-    getUsersVideo
+    getUsersVideo,
+    getVideoById
 }

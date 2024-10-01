@@ -293,7 +293,20 @@ const createUser  = async (req, res) => {
     }catch(error){
       return  res.status(500).json({ error: 'Failed in delete comment' });
     }
-    
+  
+  }
+
+  const getVideoById = async(req, res)=>{
+    try {
+
+      const video = await usersService.getVideoById(req.params.pid)
+      console.log(req.params.id)
+  
+  
+      res.status(200).json({ video: video, message: 'bring vidoe seccess' });
+    } catch (error) {
+      res.status(500).json({video:null, error: 'video is not exist' });
+    }
   }
   
   
@@ -313,5 +326,5 @@ export default {
     addComment,
     editComment,
     deleteComment,
-    
+    getVideoById  
 }

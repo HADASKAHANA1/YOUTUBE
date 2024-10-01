@@ -9,7 +9,6 @@ const router = express.Router()
 
 router.route('/allVideos').get(videoController.getVideos)
 router.route('/').get(videoController.getPopularVideos)
-router.route('/:id').get(videoController.getVideoById)
 router.route('/:id/like').post(verifyToken.verifyToken,videoController.likeDisLike)
 
 

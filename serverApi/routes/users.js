@@ -25,7 +25,7 @@ router.route('/').get(userController.getUsers)
 router.route('/:id').get(userController.getUserById)
 router.route('/:id').put(verifyToken.verifyToken,upload.single('profilePicture'),userController.editUser)
 router.route('/:id').delete(verifyToken.verifyToken,userController.deleteUser)
-
+router.route('/:id/videos/:pid').get(userController.getVideoById)
 
 
 router.route('/:id/videos').post(verifyToken.verifyToken,upload.fields([

@@ -4,7 +4,8 @@ import { UserContext } from '../Users/UserContext';
 import './VideoPage.css';
 
 function VideoPage() {
-  const { id } = useParams();
+  const { id , userid } = useParams();
+  const userId = parseInt(userid);
   const {setCurrentVideo, darkMode, currentUser, currentVideo  } = useContext(UserContext);
   const videoRef = useRef(null);
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function VideoPage() {
   const [author, setAuthor] = useState(null);
   let authorId;
   const [authorProfile , setAuthorProfile] = useState(null)
+
 
   const fetchVideos = async () => {
     try {
@@ -37,7 +39,7 @@ function VideoPage() {
   const fetchVideo = async () => {
     try {
 
-      const res = await fetch(`http://localhost:8000/api/videos/${videoId}`, {
+      const res = await fetch(`http://localhost:8000/api/users/${userId}/videos/${videoId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

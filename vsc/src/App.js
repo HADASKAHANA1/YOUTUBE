@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/upload" element={<Upload />} />
-          <Route path="/videos/:id" element={<VideoPage />} />
+          <Route path="/:userid/videos/:id" element={<VideoPage />} />
           <Route path="/UserPage/:id" element={<UserPage />} />
           <Route path="/edit/:id" element={<EditVideo />} /> {/* Route for editing video */}
           <Route path="/editUser/:id" element={<EditUser />}/>
