@@ -45,11 +45,8 @@ function VideoPage() {
       if (!res.ok) throw new Error('Failed to fetch video');
       const { video } = await res.json();
       authorId = video.authorId;
-      setCurrentVideo(video);
-      console.log("authorId: ",video)
-  
+      setCurrentVideo(video);  
       // Call fetchAuthor after setting the authorId
-
       fetchAuthor(authorId);
       
     } catch (err) {

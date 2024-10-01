@@ -28,12 +28,11 @@ void print_user_video_map() {
     }
 }
 
-// פונקציה לחישוב סרטונים מומלצים על סמך היסטוריית צפיות
 std::vector<std::string> get_recommendations(const std::string& user_id) {
     std::set<std::string> watched_videos = user_video_map[user_id];
-    std::map<std::string, int> recommendation_count;
+    std::set<std::string> recommended_videos; // סט חדש להמלצות
 
-    // לולאת קביעת המלצות
+    // לולאת קביעת המלצות על בסיס משתמשים שצפו באותם סרטונים
     for (const auto& video : watched_videos) {
         for (const auto& pair : user_video_map) {
             const std::string& other_user = pair.first;
@@ -41,30 +40,19 @@ std::vector<std::string> get_recommendations(const std::string& user_id) {
 
             // אם משתמשים אחרים צפו גם בסרטון זה
             if (other_user != user_id && other_watched.count(video) > 0) {
+                // הוספת כל הסרטונים שצפה בהם המשתמש האחר
                 for (const auto& rec_video : other_watched) {
-                    if (watched_videos.count(rec_video) == 0) { // אם הסרטון לא נצפה על ידי המשתמש
-                        recommendation_count[rec_video]++;
-                    }
+                    // הוספת הסרטון להמלצות (גם אם המשתמש כבר צפה בו)
+                    recommended_videos.insert(rec_video); 
                 }
             }
         }
     }
 
-    // הוספת המלצות מבוססות על מספר הצפיות
-    std::vector<std::pair<std::string, int>> recommendations(recommendation_count.begin(), recommendation_count.end());
-    std::sort(recommendations.begin(), recommendations.end(), [](const auto& a, const auto& b) {
-        return a.second > b.second; // סדר לפי מספר צפיות
-    });
-
-    // בניית רשימת ההמלצות
-    std::vector<std::string> result;
-    for (const auto& rec : recommendations) {
-        if (result.size() >= 10) break; // החזרת עד 10 המלצות
-        result.push_back(rec.first);
-    }
-
-    return result;
+    // המרת הסט לרשימה והחזרת התוצאה
+    return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());
 }
+
 
 void handle_client(int client_sock) {
     char buffer[4096];
@@ -82,6 +70,8 @@ void handle_client(int client_sock) {
             buffer[read_bytes] = '\0';
             std::string data = buffer;
 
+            std::cout << "Received data: [" << data << "]" << std::endl;
+
             // בדיקה אם מדובר בקריאת Login או קריאת צפייה בסרטון או בקשה להמלצות
             if (data.find(",") == std::string::npos) {
                 // קריאת Login - מזהה משתמש בלבד
@@ -94,10 +84,30 @@ void handle_client(int client_sock) {
                     std::cout << "User " << user_id << " added to the map." << std::endl;
                 }
 
+                // שליחת אישור בפורמט JSON
+                std::string response = "{\"status\": \"User logged in successfully.\"}";
+                send(client_sock, response.c_str(), response.length(), 0);
+
             } else if (data.find("get_recommendations") != std::string::npos) {
                 // בקשה להמלצות
                 std::string user_id = data.substr(data.find(",") + 1);
                 std::vector<std::string> recommendations = get_recommendations(user_id);
+
+
+// הדפסת ההמלצות
+std::cout << "Recommended videos for user " << user_id << ":" << std::endl;
+for (const auto& video_id : recommendations) {
+    std::cout << " - " << video_id << std::endl;
+}
+
+
+
+                if (recommendations.empty()) {
+                    std::string response = "{\"recommended_videos\": []}"; // מקרה שאין המלצות
+                    send(client_sock, response.c_str(), response.length(), 0);
+                    return;
+                }
+
 
                 // בניית תגובה בפורמט JSON-like
                 std::string response = "{\"recommended_videos\": [";
@@ -108,7 +118,6 @@ void handle_client(int client_sock) {
                     }
                 }
                 response += "]}";
-
                 // שליחת התגובה ללקוח
                 send(client_sock, response.c_str(), response.length(), 0);
                 
@@ -119,7 +128,10 @@ void handle_client(int client_sock) {
                 size_t pos2 = data.find(",", pos1 + 1);
                 user_id = data.substr(0, pos1);
                 video_id = data.substr(pos1 + 1, pos2 - pos1 - 1);
-                int views_count = std::stoi(data.substr(pos2 + 1));
+              
+                std::string views_string = data.substr(pos2 + 9);
+                std::string views_string2 = views_string.substr(0, views_string.size() - 1);
+                int views_count = std::stoi(views_string2);
 
                 // עדכון הצפייה בסרטון
                 if (user_video_map.find(user_id) == user_video_map.end()) {
@@ -130,8 +142,8 @@ void handle_client(int client_sock) {
                 // עדכון מספר הצפיות בסרטון
                 video_view_map[video_id] += views_count; // הוספת מספר הצפיות שנשלח מהקליינט
 
-                // שליחת אישור שהבקשה התקבלה
-                std::string response = "Request processed for user.";
+                // שליחת אישור שהבקשה התקבלה בפורמט JSON
+                std::string response = "{\"status\": \"Request processed for user.\"}";
                 send(client_sock, response.c_str(), response.length(), 0);
             }
         }

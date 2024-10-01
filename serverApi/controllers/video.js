@@ -15,6 +15,7 @@ const getVideos  = async (req, res) => {
     }
   };
 
+
   const getRecVideos = async (req, res) => {
     try {
       const userid = req.params.id;
@@ -26,30 +27,41 @@ const getVideos  = async (req, res) => {
       const message = `get_recommendations,${userid}`;
       socket.write(message);
   
-      // המתנה לתשובה מהשרת
-      socket.once('data', async (data) => {
+      // מתן טיפול רק פעם אחת לתגובה מהשרת
+      socket.on('data', async (data) => {
         const response = data.toString();
-  
+        
         // המרת התשובה לאובייקט JSON
-        const recommendations = JSON.parse(response);
+        let recommendations;
+        try {
+          recommendations = JSON.parse(response);
+        } catch (error) {
+          console.error("Failed to parse JSON:", error);
+          return res.status(500).json({ error: 'Invalid response from server' });
+        }
   
         // יצירת רשימה של הסרטונים על פי ה-IDs המתקבלים
         const videoIds = recommendations.recommended_videos;
-        const recVideos = [];
-        if (videoIds.length === 0) {
+  
+        // בדוק אם videoIds מוגדר, הוא מערך ומכיל ערכים
+        if (!Array.isArray(videoIds) || videoIds.length === 0) {
           // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
           const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
-          return res.status(200).json(allVideos); // מחזיר את כל הסרטונים
+          return res.status(200).json({videos: allVideos}); // מחזיר את כל הסרטונים
         }
-
+  
+        const recVideos = [];
         for (const videoId of videoIds) {
           // קריאה לפונקציה getVideoById עבור כל מזהה סרטון
+          console.log("נננ");
+
+
           const video = await videoService.getVideoById(videoId);
           recVideos.push(video);
         }
-  
+        console.log(recVideos);
         // שליחת ההמלצות ללקוח
-        res.status(200).json(recVideos);
+        res.status(200).json({videos: recVideos});
       });
   
     } catch (error) {
@@ -57,10 +69,8 @@ const getVideos  = async (req, res) => {
       res.status(500).json({ error: 'An error occurred' });
     }
   };
+
   
-
-
-
 const getPopularVideos  = async (req, res) => {
        
   try {

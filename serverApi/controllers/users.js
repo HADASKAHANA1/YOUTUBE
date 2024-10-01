@@ -41,7 +41,7 @@ const createUser  = async (req, res) => {
     try{
         const user = await usersService.getUserById(req.params.id)
         if(!user){
-          res.status(409).json({error : 'user not found' });
+          return res.status(409).json({error : 'user not found' });
 
         }
         res.status(200).json({user:user, message: 'User received successfully' });
@@ -310,8 +310,8 @@ const createUser  = async (req, res) => {
           // אם הסוקט קיים, שולחים את המידע לשרת
           const userId = req.params.id; // מזהה המשתמש
           const videoId = req.params.pid; // מזהה הוידאו
-          const views = video.views;//מספר צפיות
-
+          const views = parseInt(video.views);//מספר צפיות
+          console.log(views);
           // שליחת המידע לשרת TCP
           socket.write(JSON.stringify({ userId, videoId, views}));
 

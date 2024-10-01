@@ -10,7 +10,7 @@ const router = express.Router()
 router.route('/allVideos').get(videoController.getVideos)
 router.route('/').get(videoController.getPopularVideos)
 router.route('/:id/like').post(verifyToken.verifyToken,videoController.likeDisLike)
-router.route('/;id/recVideos').get(videoController.getRecVideos)
+router.route('/:id/recVideos').get(videoController.getRecVideos)
 
 
 
