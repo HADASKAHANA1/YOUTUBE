@@ -21,7 +21,7 @@ function VideoPage() {
 
   const fetchVideos = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/videos/allVideos', {
+      const res = await fetch(`http://localhost:8000/api/videos/${userid}/recVideos`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

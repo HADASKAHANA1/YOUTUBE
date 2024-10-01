@@ -310,9 +310,10 @@ const createUser  = async (req, res) => {
           // אם הסוקט קיים, שולחים את המידע לשרת
           const userId = req.params.id; // מזהה המשתמש
           const videoId = req.params.pid; // מזהה הוידאו
+          const views = video.views;//מספר צפיות
 
           // שליחת המידע לשרת TCP
-          socket.write(JSON.stringify({ userId, videoId }));
+          socket.write(JSON.stringify({ userId, videoId, views}));
 
           console.log(`Sent to server: User ID: ${userId}, Video ID: ${videoId}`);
       } else {
