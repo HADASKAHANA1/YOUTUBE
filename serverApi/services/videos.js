@@ -55,7 +55,7 @@ const getVideos = async () => {
 
 // Retrieves a video by its ID
 const getVideoById = async (id) => {
-    return await Video.findOne({ id: id });
+    return await Video.findOne({ _id: id });
 };
 
 // Edits video information such as title, description, thumbnail, and URL

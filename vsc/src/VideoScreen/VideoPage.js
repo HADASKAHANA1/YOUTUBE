@@ -343,7 +343,7 @@ return
 
         <div className={`video-list ${darkMode ? 'dark-theme' : ''}`}>
           {onTheSideVideos.map((vid) => (
-            <Link key={vid.id} to={`/videos/${vid.id}`} className="video-item-link">
+            <Link key={vid.id} to={`/${userid}/videos/${vid._id}`} className="video-item-link">
               <div className="video-item">
                 <img src={vid.thumbnail} alt={vid.title} className="video-thumbnail" />
                 <h3>{vid.title}</h3>

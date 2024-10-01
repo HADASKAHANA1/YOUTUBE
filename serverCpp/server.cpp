@@ -10,6 +10,21 @@
 // מפה למיפוי משתמשים לסרטונים
 std::map<std::string, std::set<std::string>> user_video_map;
 
+
+// פונקציה להדפסת כל המידע על המשתמשים והוידאוים שלהם
+void print_user_video_map() {
+    for (const auto& pair : user_video_map) {
+        const std::string& user_id = pair.first; // מזהה המשתמש
+        const std::set<std::string>& video_ids = pair.second; // הוידאוים של המשתמש
+
+        // הדפסת מידע על המשתמש
+        std::cout << "User " << user_id << " has watched the following videos:" << std::endl;
+        for (const auto& video_id : video_ids) {
+            std::cout << " - " << video_id << std::endl; // הדפסת מזהה הוידאו
+        }
+    }
+}
+
 void handle_client(int client_sock) {
     char buffer[4096];
     while (true) {
@@ -50,7 +65,6 @@ void handle_client(int client_sock) {
                     user_video_map[user_id] = std::set<std::string>();  // יצירת רשימה עבור המשתמש אם אין
                 }
                 user_video_map[user_id].insert(video_id);  // הוספת הסרטון לסט של המשתמש
-                std::cout << "User " << user_id << " watched video " << video_id << "." << std::endl;
             }
 
             // שליחת אישור שהבקשה התקבלה
@@ -114,6 +128,7 @@ int main() {
         std::thread client_thread(handle_client, client_sock);
         client_thread.detach();  // לאפשר ל-thread לפעול בצורה עצמאית
     }
+
 
     // סגירת הסוקט של השרת
     close(sock);
