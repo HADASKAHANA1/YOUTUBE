@@ -29,8 +29,9 @@ void print_user_video_map() {
 }
 
 std::vector<std::string> get_recommendations(const std::string& user_id) {
+
     std::set<std::string> watched_videos = user_video_map[user_id];
-    std::set<std::string> recommended_videos; // סט חדש להמלצות
+    /*std::set<std::string> recommended_videos; // סט חדש להמלצות
 
     // לולאת קביעת המלצות על בסיס משתמשים שצפו באותם סרטונים
     for (const auto& video : watched_videos) {
@@ -47,19 +48,28 @@ std::vector<std::string> get_recommendations(const std::string& user_id) {
                 }
             }
         }
-    }
+    }*/
 
     // המרת הסט לרשימה והחזרת התוצאה
-    return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());
-}
+    //return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());
 
+    // לולאת for להדפסת הסרטונים
+    for (const auto& video_id : watched_videos) {
+        std::cout << " - " << video_id << std::endl; // הדפסת מזהה הסרטון
+    }
+    return std::vector<std::string>(watched_videos.begin(), watched_videos.end());
+
+}
 
 void handle_client(int client_sock) {
     char buffer[4096];
+    bool response_sent = false; // דגל לבדיקת שליחת תגובה
+
     while (true) {
+         response_sent = false; // דגל לבדיקת שליחת תגובה
         int expected_data_len = sizeof(buffer);
         int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
-       
+
         if (read_bytes == 0) {
             std::cout << "Client disconnected" << std::endl;
             break;
@@ -73,20 +83,34 @@ void handle_client(int client_sock) {
             std::cout << "Received data: [" << data << "]" << std::endl;
 
             // בדיקה אם מדובר בקריאת Login או קריאת צפייה בסרטון או בקשה להמלצות
-            if (data.find(",") == std::string::npos) {
-                // קריאת Login - מזהה משתמש בלבד
-                std::string user_id = data;
-                std::cout << "User " << user_id << " logged in." << std::endl;
+            if (data.find(":") != std::string::npos) {
+                // קריאת צפייה בסרטון - מזהה משתמש, סרטון ומספר צפיות
+                std::string user_id, video_id;
+                size_t pos1 = data.find(":");
+                size_t pos2 = data.find(":", pos1 + 1);
+                size_t pos3 = data.find(":", pos2 + 1);
 
-                // יצירת thread או הכנה אחרת עבור המשתמש (אם יש צורך)
+                user_id = data.substr(pos1 + 1, pos2 - pos1 - 1);
+                video_id = data.substr(pos2 + 1, pos3 - pos2 - 1);
+                int views_count = std::stoi(data.substr(pos3 + 1));
+
+                std::cout << "User ID: " << user_id << std::endl;
+                std::cout << "Video ID: " << video_id << std::endl;
+                std::cout << "Views Count: " << views_count << std::endl;
+
+                // עדכון הצפייה בסרטון
                 if (user_video_map.find(user_id) == user_video_map.end()) {
-                    user_video_map[user_id] = std::set<std::string>();
-                    std::cout << "User " << user_id << " added to the map." << std::endl;
+                    user_video_map[user_id] = std::set<std::string>();  // יצירת רשימה עבור המשתמש אם אין
                 }
+                user_video_map[user_id].insert(video_id);  // הוספת הסרטון לסט של המשתמש
+                video_view_map[video_id] += views_count; // הוספת מספר הצפיות שנשלח מהקליינט
 
-                // שליחת אישור בפורמט JSON
-                std::string response = "{\"status\": \"User logged in successfully.\"}";
-                send(client_sock, response.c_str(), response.length(), 0);
+                // שליחת אישור שהבקשה התקבלה בפורמט JSON
+                if (!response_sent) {
+                    std::string response = "{\"status\": \"Request processed for user.\"}";
+                    send(client_sock, response.c_str(), response.length(), 0);
+                    response_sent = true; // קובעים שהתגובה נשלחה
+                }
 
             } else if (data.find("get_recommendations") != std::string::npos) {
                 // בקשה להמלצות
@@ -94,57 +118,47 @@ void handle_client(int client_sock) {
                 std::vector<std::string> recommendations = get_recommendations(user_id);
 
 
-// הדפסת ההמלצות
-std::cout << "Recommended videos for user " << user_id << ":" << std::endl;
-for (const auto& video_id : recommendations) {
-    std::cout << " - " << video_id << std::endl;
-}
+                if (!response_sent) { // בדוק אם התגובה נשלחה
 
+                   // if (recommendations.empty()) {
 
+                   //     std::string response = "recommended_videos: []"; // מקרה שאין המלצות
+                  //      send(client_sock, response.c_str(), response.length(), 0);
+                  //  } else {
+                       
+                        // בניית תגובה בפורמט טקסטואלי
+                        std::string response = "recommended_videos:";
+                        for (size_t i = 0; i < recommendations.size(); ++i) {
+                            response += recommendations[i];
+                            if (i < recommendations.size() - 1) {
+                                response += ",";
+                            }
+                        }
+                        
+std::cout << response << std::endl;
 
-                if (recommendations.empty()) {
-                    std::string response = "{\"recommended_videos\": []}"; // מקרה שאין המלצות
-                    send(client_sock, response.c_str(), response.length(), 0);
-                    return;
+                        // שליחת התגובה ללקוח
+                        send(client_sock, response.c_str(), response.length(), 0);
+                   // }
+                    response_sent = true; // קובעים שהתגובה נשלחה
                 }
 
-
-                // בניית תגובה בפורמט JSON-like
-                std::string response = "{\"recommended_videos\": [";
-                for (size_t i = 0; i < recommendations.size(); ++i) {
-                    response += "\"" + recommendations[i] + "\"";
-                    if (i < recommendations.size() - 1) {
-                        response += ", ";
-                    }
-                }
-                response += "]}";
-                // שליחת התגובה ללקוח
-                send(client_sock, response.c_str(), response.length(), 0);
-                
             } else {
-                // קריאת צפייה בסרטון - מזהה משתמש, סרטון ומספר צפיות
-                std::string user_id, video_id;
-                size_t pos1 = data.find(",");
-                size_t pos2 = data.find(",", pos1 + 1);
-                user_id = data.substr(0, pos1);
-                video_id = data.substr(pos1 + 1, pos2 - pos1 - 1);
-              
-                std::string views_string = data.substr(pos2 + 9);
-                std::string views_string2 = views_string.substr(0, views_string.size() - 1);
-                int views_count = std::stoi(views_string2);
+                // קריאת Login - מזהה משתמש בלבד
+                std::string user_id = data;
+                std::cout << "User " << user_id << " logged in." << std::endl;
 
-                // עדכון הצפייה בסרטון
+                // יצירת thread או הכנה אחרת עבור המשתמש (אם יש צורך)
                 if (user_video_map.find(user_id) == user_video_map.end()) {
-                    user_video_map[user_id] = std::set<std::string>();  // יצירת רשימה עבור המשתמש אם אין
+                    user_video_map[user_id] = std::set<std::string>();
                 }
-                user_video_map[user_id].insert(video_id);  // הוספת הסרטון לסט של המשתמש
 
-                // עדכון מספר הצפיות בסרטון
-                video_view_map[video_id] += views_count; // הוספת מספר הצפיות שנשלח מהקליינט
-
-                // שליחת אישור שהבקשה התקבלה בפורמט JSON
-                std::string response = "{\"status\": \"Request processed for user.\"}";
-                send(client_sock, response.c_str(), response.length(), 0);
+                // שליחת אישור בפורמט JSON
+                if (!response_sent) {
+                    std::string response = "{\"status\": \"User logged in successfully.\"}";
+                    send(client_sock, response.c_str(), response.length(), 0);
+                    response_sent = true; // קובעים שהתגובה נשלחה
+                }
             }
         }
     }
@@ -152,6 +166,7 @@ for (const auto& video_id : recommendations) {
     // סגירת החיבור
     close(client_sock);
 }
+
 
 int main() {
     const int server_port = 5555;

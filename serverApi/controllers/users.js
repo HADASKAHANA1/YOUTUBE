@@ -296,36 +296,33 @@ const createUser  = async (req, res) => {
   
   }
 
-  const getVideoById = async(req, res)=>{
-    try {
+const getVideoById = async (req, res) => {
+  try {
+      const video = await usersService.getVideoById(req.params.pid);
 
-      const video = await usersService.getVideoById(req.params.pid)
-      console.log(req.params.id)
+      if (video) {
+          let sockets = jwtProvider.userThreads;
+          const socket = sockets.get(req.params.id.toString());
 
-      if(video){
-        let sockets = jwtProvider.userThreads
-        const socket = sockets.get(req.params.id.toString())
-       // console.log("socket: ",sockets.keys)
-       if (socket) {
-          // אם הסוקט קיים, שולחים את המידע לשרת
-          const userId = req.params.id; // מזהה המשתמש
-          const videoId = req.params.pid; // מזהה הוידאו
-          const views = parseInt(video.views);//מספר צפיות
-          console.log(views);
-          // שליחת המידע לשרת TCP
-          socket.write(JSON.stringify({ userId, videoId, views}));
+          if (socket) {
+              // אם הסוקט קיים, שולחים את המידע לשרת
+              const userId = req.params.id; // מזהה המשתמש
+              const videoId = req.params.pid; // מזהה הוידאו
+              const views = parseInt(video.views); // מספר צפיות
 
-          console.log(`Sent to server: User ID: ${userId}, Video ID: ${videoId}`);
-      } else {
-          console.log(`Socket not found for user ID: ${req.params.id}`);
+              // שליחת המידע לשרת בפורמט המתאים, בלי פסיקים
+              const message = `view:${userId}:${videoId}:${views}`;
+              socket.write(message);            
+          } else {
+              console.log(`Socket not found for user ID: ${req.params.id}`);
+          }
       }
-    }
-      res.status(200).json({ video: video, message: 'bring vidoe seccess' });
-    } catch (error) {
-      res.status(500).json({video:null, error: 'video is not exist' });
-    }
+      res.status(200).json({ video: video, message: 'bring video success' });
+  } catch (error) {
+      res.status(500).json({ video: null, error: 'video does not exist' });
   }
-  
+};
+
 
 export default {
     createUser,

@@ -23,53 +23,51 @@ const getVideos  = async (req, res) => {
       let sockets = jwtProvider.userThreads;
       const socket = sockets.get(userid.toString());
   
-      // שליחת ההודעה לשרת דרך הסוקט
-      const message = `get_recommendations,${userid}`;
-      socket.write(message);
+      if (socket) {
+        // שליחת ההודעה לשרת דרך הסוקט
+        const message = `get_recommendations,${userid}`;
+        socket.write(message);
   
-      // מתן טיפול רק פעם אחת לתגובה מהשרת
-      socket.on('data', async (data) => {
-        const response = data.toString();
-        
-        // המרת התשובה לאובייקט JSON
-        let recommendations;
-        try {
-          recommendations = JSON.parse(response);
-        } catch (error) {
-          console.error("Failed to parse JSON:", error);
-          return res.status(500).json({ error: 'Invalid response from server' });
-        }
+        // מתן טיפול רק פעם אחת לתגובה מהשרת
+        socket.on('data', async (data) => {
+          const response = data.toString();
   
-        // יצירת רשימה של הסרטונים על פי ה-IDs המתקבלים
-        const videoIds = recommendations.recommended_videos;
-  
-        // בדוק אם videoIds מוגדר, הוא מערך ומכיל ערכים
-        if (!Array.isArray(videoIds) || videoIds.length === 0) {
-          // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
-          const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
-          return res.status(200).json({videos: allVideos}); // מחזיר את כל הסרטונים
-        }
-  
-        const recVideos = [];
-        for (const videoId of videoIds) {
-          // קריאה לפונקציה getVideoById עבור כל מזהה סרטון
-          console.log("נננ");
 
-
-          const video = await videoService.getVideoById(videoId);
-          recVideos.push(video);
-        }
-        console.log(recVideos);
-        // שליחת ההמלצות ללקוח
-        res.status(200).json({videos: recVideos});
-      });
+          // פענוח התגובה
+          if (response.startsWith("recommended_videos:")) {
+            const recommendationsString = response.split(":")[1]; // לקבל את המידע אחרי "recommended_videos:"
+            const videoIds = recommendationsString.split(","); // לפצל את המידע לפי פסיקים
   
+            // בדוק אם videoIds מוגדר, הוא מערך ומכיל ערכים
+            if (!Array.isArray(videoIds) || videoIds.length === 0) {
+              // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
+              const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
+              return res.status(200).json({ videos: allVideos }); // מחזיר את כל הסרטונים
+            }
+  
+            console.log(videoIds);
+            const recVideos = [];
+            for (const videoId of videoIds) {
+              // קריאה לפונקציה getVideoById עבור כל מזהה סרטון
+              const video = await videoService.getVideoById(videoId);
+              recVideos.push(video);
+            }
+            console.log(recVideos);
+            // שליחת ההמלצות ללקוח
+            return res.status(200).json({ videos: recVideos });
+          } else {
+            console.error("Invalid response format");
+            return res.status(500).json({ error: 'Invalid response from server' });
+          }
+        });
+      }
     } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   };
-
+  
+  
   
 const getPopularVideos  = async (req, res) => {
        

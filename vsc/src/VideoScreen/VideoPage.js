@@ -75,12 +75,10 @@ function VideoPage() {
 
   // Fetch all videos and the current video
   useEffect(() => {
-    
-    
 
-    fetchVideos();
     fetchVideo();
-
+    fetchVideos();
+    
   }, [videoId]);
 
   // Update `onTheSideVideos` whenever `currentVideo` or `otherVideos` changes
