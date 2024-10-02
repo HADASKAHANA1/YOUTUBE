@@ -16,6 +16,9 @@ const getVideos  = async (req, res) => {
   };
 
 
+
+
+
   const getRecVideos = async (req, res) => {
     try {
       const userid = req.params.id;
@@ -29,21 +32,13 @@ const getVideos  = async (req, res) => {
         socket.write(message);
   
         // מתן טיפול רק פעם אחת לתגובה מהשרת
-        socket.on('data', async (data) => {
+        const responseHandler = async (data) => {
           const response = data.toString();
   
-
-          // פענוח התגובה
+          // פענוק התגובה
           if (response.startsWith("recommended_videos:")) {
             const recommendationsString = response.split(":")[1]; // לקבל את המידע אחרי "recommended_videos:"
             const videoIds = recommendationsString.split(","); // לפצל את המידע לפי פסיקים
-  
-            // בדוק אם videoIds מוגדר, הוא מערך ומכיל ערכים
-            if (!Array.isArray(videoIds) || videoIds.length === 0) {
-              // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
-              const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
-              return res.status(200).json({ videos: allVideos }); // מחזיר את כל הסרטונים
-            }
   
             console.log(videoIds);
             const recVideos = [];
@@ -52,20 +47,30 @@ const getVideos  = async (req, res) => {
               const video = await videoService.getVideoById(videoId);
               recVideos.push(video);
             }
-            console.log(recVideos);
             // שליחת ההמלצות ללקוח
-            return res.status(200).json({ videos: recVideos });
+            res.status(200).json({ videos: recVideos });
+            socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
+          } else if (response.startsWith("empty")) {
+            // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
+            const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
+            res.status(200).json({ videos: allVideos }); // מחזיר את כל הסרטונים
+            socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
           } else {
             console.error("Invalid response format");
-            return res.status(500).json({ error: 'Invalid response from server' });
+            res.status(500).json({ error: 'Invalid response from server' });
+            socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
           }
-        });
+        };
+  
+        // מוסיף את המאזין רק פעם אחת
+        socket.on('data', responseHandler);
       }
     } catch (error) {
       console.error('Error:', error);
       res.status(500).json({ error: 'An error occurred' });
     }
   };
+  
   
   
   
