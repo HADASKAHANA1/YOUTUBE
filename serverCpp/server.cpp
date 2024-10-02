@@ -31,7 +31,7 @@ void print_user_video_map() {
 std::vector<std::string> get_recommendations(const std::string& user_id) {
 
     std::set<std::string> watched_videos = user_video_map[user_id];
-    /*std::set<std::string> recommended_videos; // סט חדש להמלצות
+    std::set<std::string> recommended_videos; // סט חדש להמלצות
 
     // לולאת קביעת המלצות על בסיס משתמשים שצפו באותם סרטונים
     for (const auto& video : watched_videos) {
@@ -48,16 +48,11 @@ std::vector<std::string> get_recommendations(const std::string& user_id) {
                 }
             }
         }
-    }*/
-
-    // המרת הסט לרשימה והחזרת התוצאה
-    //return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());
-
-    // לולאת for להדפסת הסרטונים
-    for (const auto& video_id : watched_videos) {
-        std::cout << " - " << video_id << std::endl; // הדפסת מזהה הסרטון
     }
-    return std::vector<std::string>(watched_videos.begin(), watched_videos.end());
+
+     //המרת הסט לרשימה והחזרת התוצאה
+    return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());
+
 
 }
 
