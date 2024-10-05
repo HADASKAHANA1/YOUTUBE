@@ -60,8 +60,13 @@ const getVideos  = async (req, res) => {
             socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
           } else if (response.startsWith("empty")) {
             // אם אין סרטונים מומלצים, קרא לפונקציה getVideos
-            const allVideos = await videoService.getVideos(); // הנחתי שהפונקציה getVideos מחזירה את כל הסרטונים
-            res.status(200).json({ videos: allVideos }); // מחזיר את כל הסרטונים
+            let recVideos = [];
+            recVideos = await videoService.completeVideoList(recVideos);
+            // מחיקת הסרטון עם המזהה pid מהרשימה
+            recVideos = recVideos.filter(video => video._id.toString() !== pid.toString());
+
+
+            res.status(200).json({ videos: recVideos }); // מחזיר את כל הסרטונים
             socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
           } else {
             console.error("Invalid response format");
@@ -72,6 +77,15 @@ const getVideos  = async (req, res) => {
   
         // מוסיף את המאזין רק פעם אחת
         socket.on('data', responseHandler);
+      }
+      if (parseInt(req.params.id) == -1){
+      
+        let recVideos = [];
+        recVideos = await videoService.completeVideoList(recVideos);
+        // מחיקת הסרטון עם המזהה pid מהרשימה
+        recVideos = recVideos.filter(video => video._id.toString() !== pid.toString());
+
+        res.status(200).json({ videos: recVideos }); // מחזיר את כל הסרטונים
       }
     } catch (error) {
       console.error('Error:', error);

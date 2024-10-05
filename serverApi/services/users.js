@@ -235,7 +235,7 @@ const getUsersVideo = async (id) => {
         // Create an array to store videos
         const videos = [];
         for (const videoId of user.videos) {
-            const video = await videoService.getVideoById(videoId); // Get video details
+            const video = await videoService.getVideoBy_Id(videoId); // Get video details
             if (video) {
                 videos.push(video); // Add video to the array
             }
@@ -247,6 +247,8 @@ const getUsersVideo = async (id) => {
         return []; // Return an empty array in case of an error
     }
 }
+
+
 
 export default {
     createUser,
@@ -262,5 +264,6 @@ export default {
     editUser,
     deleteUserById,
     getUsersVideo,
-    getVideoById
+    getVideoById,
+   
 }

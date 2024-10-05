@@ -279,6 +279,10 @@ const completeVideoList = async (videoList) => {
     return videoList; // Return the original list in case of error
   }
 };
+// Retrieves a video by its ID
+const getVideoBy_Id = async (id) => {
+  return await Video.findOne({ id: id });
+};
 
 
 export default {
@@ -294,5 +298,6 @@ export default {
   likeDislike,
   updateCommments,
   updateLikes,
-  completeVideoList
+  completeVideoList,
+  getVideoBy_Id
 };

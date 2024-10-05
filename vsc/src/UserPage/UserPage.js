@@ -5,13 +5,13 @@ import { UserContext } from '../Users/UserContext.js';
 
 
 function UserPage() {
-  const { darkMode  } = useContext(UserContext);
+  const { darkMode , currentUser } = useContext(UserContext);
   const { id } = useParams();
   const [userPage, setUserPage] = useState(null);
   const [userVideos, setUserVideos] = useState([]);
   const userId = parseInt(id);
   const navigate = useNavigate();
-  console.log("thid: ",userId)
+  console.log("thid: ",userId);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -85,7 +85,7 @@ function UserPage() {
             {userVideos.length ? (
               userVideos.map((video) => (
                 <div key={video.id} className="video-item">
-                  <Link to={`/videos/${video.id}`}>
+                  <Link to={`/${currentUser._id}/videos/${video._id}`}>
                   <img
                     src={video.thumbnail}
                     alt={video.title}
