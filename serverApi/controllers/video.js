@@ -38,8 +38,7 @@ const getVideos  = async (req, res) => {
           if (response.startsWith("recommended_videos:")) {
             const recommendationsString = response.split(":")[1]; // לקבל את המידע אחרי "recommended_videos:"
             const videoIds = recommendationsString.split(","); // לפצל את המידע לפי פסיקים
-  
-            const recVideos = [];
+            let recVideos = [];
             for (const videoId of videoIds) {
               // קריאה לפונקציה getVideoById עבור כל מזהה סרטון
               const video = await videoService.getVideoById(videoId);
@@ -48,7 +47,7 @@ const getVideos  = async (req, res) => {
 
             
           recVideos = await videoService.completeVideoList(recVideos);
-          console.log(recVideos);
+ 
           // מחיקת הסרטון עם המזהה pid מהרשימה
           recVideos = recVideos.filter(video => video._id.toString() !== pid.toString());
           // אם יש יותר מ-10 סרטונים, נבחר את עשרת הסרטונים עם הכי הרבה צפיות

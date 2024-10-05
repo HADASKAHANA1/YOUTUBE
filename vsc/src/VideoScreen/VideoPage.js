@@ -21,7 +21,7 @@ function VideoPage() {
 
   const fetchVideos = async () => {
     try {
-      const res = await fetch(`http://localhost:8000/api/videos/${userid}/recVideos`, {
+      const res = await fetch(`http://localhost:8000/api/videos/${userid}/recVideos/${videoId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
@@ -48,6 +48,8 @@ function VideoPage() {
       setCurrentVideo(video);  
       // Call fetchAuthor after setting the authorId
       fetchAuthor(authorId);
+      fetchVideos();
+
       
     } catch (err) {
       console.error('Error fetching video:', err);
@@ -77,11 +79,10 @@ function VideoPage() {
   useEffect(() => {
 
     fetchVideo();
-    fetchVideos();
     
   }, [videoId]);
 
-  // Update `onTheSideVideos` whenever `currentVideo` or `otherVideos` changes
+  // Update onTheSideVideos whenever currentVideo or otherVideos changes
   useEffect(() => {
     if (currentVideo && otherVideos.length) {
       setOnTheSideVideos(otherVideos.filter((vid) => vid.id !== videoId));

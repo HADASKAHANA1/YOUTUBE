@@ -256,6 +256,31 @@ const updateLikes = async (username) => {
   );
 };
 
+// Completes the video list to 7 videos by adding random videos not in the given list
+const completeVideoList = async (videoList) => {
+  try {
+    // Check if the number of videos in the list is less than 7
+    if (videoList.length < 7) {
+      // Find the IDs of videos already in the list
+      const existingVideoIds = videoList.map(video => video._id);
+
+      // Get random videos that are not in the list
+      const remainingVideos = await Video.find({ _id: { $nin: existingVideoIds } });
+      const shuffledVideos = remainingVideos.sort(() => 0.5 - Math.random());
+      const additionalVideos = shuffledVideos.slice(0, 7 - videoList.length);
+
+      // Add the additional videos to the original list
+      videoList = [...videoList, ...additionalVideos];
+    }
+
+    return videoList;
+  } catch (error) {
+    console.error('Error completing video list:', error);
+    return videoList; // Return the original list in case of error
+  }
+};
+
+
 export default {
   createVideo,
   getCombinedVideoList,
@@ -268,5 +293,6 @@ export default {
   editComment,
   likeDislike,
   updateCommments,
-  updateLikes
+  updateLikes,
+  completeVideoList
 };
