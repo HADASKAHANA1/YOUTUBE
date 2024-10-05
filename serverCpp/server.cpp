@@ -14,6 +14,13 @@ std::map<std::string, std::set<std::string>> user_video_map;
 // מפה למיפוי סרטונים למספר צפיות
 std::map<std::string, int> video_view_map;
 
+
+void printVideoViewMap(const std::map<std::string, int>& video_view_map) {
+    for (const auto& pair : video_view_map) {
+        std::cout << "Video ID: " << pair.first << ", Views: " << pair.second << std::endl;
+    }
+}
+
 // פונקציה להדפסת כל המידע על המשתמשים והוידאוים שלהם
 void print_user_video_map() {
     for (const auto& pair : user_video_map) {
@@ -49,6 +56,11 @@ std::vector<std::string> get_recommendations(const std::string& user_id) {
             }
         }
     }
+
+  /*  if (recommended_videos.size() > 10) {
+        // יש יותר מעשרה סרטונים
+    }  */ 
+
 
      //המרת הסט לרשימה והחזרת התוצאה
     return std::vector<std::string>(recommended_videos.begin(), recommended_videos.end());

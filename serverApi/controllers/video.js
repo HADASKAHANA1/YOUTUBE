@@ -19,6 +19,8 @@ const getVideos  = async (req, res) => {
   const getRecVideos = async (req, res) => {
     try {
       const userid = req.params.id;
+      const pid = req.params.pid; // מזהה הסרטון שצריך לבדוק
+
   
       let sockets = jwtProvider.userThreads;
       const socket = sockets.get(userid.toString());
@@ -37,13 +39,23 @@ const getVideos  = async (req, res) => {
             const recommendationsString = response.split(":")[1]; // לקבל את המידע אחרי "recommended_videos:"
             const videoIds = recommendationsString.split(","); // לפצל את המידע לפי פסיקים
   
-            console.log(videoIds);
             const recVideos = [];
             for (const videoId of videoIds) {
               // קריאה לפונקציה getVideoById עבור כל מזהה סרטון
               const video = await videoService.getVideoById(videoId);
               recVideos.push(video);
             }
+
+            
+          recVideos = await videoService.completeVideoList(recVideos);
+          console.log(recVideos);
+          // מחיקת הסרטון עם המזהה pid מהרשימה
+          recVideos = recVideos.filter(video => video._id.toString() !== pid.toString());
+          // אם יש יותר מ-10 סרטונים, נבחר את עשרת הסרטונים עם הכי הרבה צפיות
+          if (recVideos.length > 10) {
+            recVideos.sort((a, b) => b.views - a.views);
+            recVideos = recVideos.slice(0, 10);
+          }
             // שליחת ההמלצות ללקוח
             res.status(200).json({ videos: recVideos });
             socket.removeListener('data', responseHandler); // להסיר את המאזין לאחר שליחת התגובה
