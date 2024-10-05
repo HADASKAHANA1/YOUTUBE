@@ -12,7 +12,10 @@ function UserPage() {
   const userId = parseInt(id);
   const navigate = useNavigate();
   console.log("thid: ",userId);
-
+  let user_id = -1
+  if(currentUser) {
+    user_id = currentUser._id;
+  }
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -85,7 +88,7 @@ function UserPage() {
             {userVideos.length ? (
               userVideos.map((video) => (
                 <div key={video.id} className="video-item">
-                  <Link to={`/${currentUser._id}/videos/${video._id}`}>
+                  <Link to={`/${user_id}/videos/${video._id}`}>
                   <img
                     src={video.thumbnail}
                     alt={video.title}
