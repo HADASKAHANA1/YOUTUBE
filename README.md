@@ -17,7 +17,7 @@ To clone this repository to your local machine, follow these steps:
 
  b. Open the terminal within Visual Studio Code.
 
- c. Run the following command in the terminal to clone the project: git clone -b serverApi https://github.com/HADASKAHANA1/WEB-PROJECT.git
+ c. Run the following command in the terminal to clone the project: git clone -b WSL https://github.com/HADASKAHANA1/WEB-PROJECT.git
 
 
  d. Run the following commands in the terminal: 
