@@ -141,17 +141,13 @@ node app.js
 
 ### *Registration and Login (Web and Android)*
 
-1. *Register a New User*
    - *Web*: 
-     - Open the side menu, click *Signup*, and enter the required information: username, password, and upload a profile picture.
+     - For *login* click the "SIGN IN" button on the home page.
+If you want to *sign up*, click "SIGN UP" on the login page.
+Please note that in order to sign up, you must meet the compatibility requirements regarding filling in the details,
    - *Android*: 
      - Press the floating *Signup* button, follow the instructions to enter the required details, and upload a profile picture. Note: Make sure to upload a real picture, not an emulator URI.
 
-2. *Login*
-   - *Web*: 
-     - Click *Signin*, enter your username and password, and access the home screen.
-   - *Android*: 
-     - Press the floating *Signin* button, fill in your username and password, and enter the app.
 
 ---
 
