@@ -181,13 +181,13 @@ function HomePage() {
 
         {currentUser && (
           <button className="btn" onClick={handleDeleteUser}>
-            <i className="bi bi-box-arrow-in-left"></i> delete user
+            <i class="bi bi-person-dash"></i> delete user
           </button>
         )}
         
         {currentUser && (
           <button className="btn" onClick={handleEditUser}>
-            <i className="bi bi-box-arrow-in-left"></i> update user
+            <i class="bi bi-person-exclamation"></i> update user
           </button>
         )}
 
