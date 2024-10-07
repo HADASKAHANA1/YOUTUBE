@@ -171,19 +171,7 @@ node app.js
 
 ---
 
-## *Challenges and Teamwork*
-We faced several challenges, especially with integrating the server-client architecture and managing various schedules. However, through clear communication and effective teamwork, we were able to ensure smooth development and meet the project deadlines.
+## *Sync Between Android and Web*
+There is full synchronization between the Android app and the web platform. Any action performed in one interface will immediately reflect on the other, thanks to the connection established through the Node.js server. This ensures real-time data consistency between both platforms.
 
 ---
-
-## *System Requirements*
-- *Node.js*: Ensure your Node.js and npm versions are up-to-date.
-- *Android Studio*: Make sure you have a compatible version installed.
-- *MongoDB*: Ensure MongoDB is running on your local machine.
-- *g++*: To compile and run the C++ server.
-
-If you encounter any issues, rerun the npm install and npm start commands.
-
----
-
-This format covers both the server-side setup and Android Studio app instructions in a unified way. You can further adjust the content to match your exact process.
