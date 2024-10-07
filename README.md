@@ -65,12 +65,16 @@ Before running the React project, you need to start the server that connects to 
 
 ## cpp server
 11. install WSL:
+    
     a. Run the following commands in the terminal: 
      
      wsl --install
 
-    b. open the visual studio code, go to Extensions panel and install Remote-WSL
-    c. open the terminal un vsc (with WSL), and run:
+    b. open the visual studio code, go to Extensions panel and install WSL
+
+    c. click on open the menu and choose `connect to WSL`
+    
+    d. open the terminal in vsc (with WSL), and run:
 
         cd serverCpp
 
