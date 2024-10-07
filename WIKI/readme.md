@@ -1,7 +1,7 @@
 # *Project Wiki*
 
 ## *Project Overview*
-This project is part of the third phase of a YouTube-like app, developed in both Android Studio (mobile app) and using server-side components (Node.js and C++ servers). The system allows users to upload, manage, and watch videos, integrating a backend to handle video data and user information.
+This project simulates YouTube in both an app and a website. The system allows users to upload, manage, and watch videos, integrating a backend for managing video data and user information.
 
 ### *Team Members:*
 - Hadas Ben David (Kahana)
