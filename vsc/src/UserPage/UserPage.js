@@ -84,7 +84,7 @@ function UserPage() {
         
         {/* אזור הסרטונים */}
         <div className={`videos-section ${darkMode ? 'dark-theme' : ''}`}>
-          <div className="video-grid">
+          <div className="video-grid-user">
             {userVideos.length ? (
               userVideos.map((video) => (
                 <div key={video.id} className="video-item">
