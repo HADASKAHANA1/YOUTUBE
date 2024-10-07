@@ -146,7 +146,9 @@ node app.js
 If you want to *sign up*, click "SIGN UP" on the login page.
 Please note that in order to sign up, you must meet the compatibility requirements regarding filling in the details,
    - *Android*: 
-     - Press the floating *Signup* button, follow the instructions to enter the required details, and upload a profile picture. Note: Make sure to upload a real picture, not an emulator URI.
+     - For login, click the floating button on the right side (user icon) and proceed to the login screen.  
+To sign up, click "Don't have an account? Register here" on the login screen, and you will be redirected to the registration page.  
+Please note that in order to sign up, you must meet the compatibility requirements regarding filling in the details.
 
 
 ---
