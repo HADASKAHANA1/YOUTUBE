@@ -1,4 +1,4 @@
-# project - server
+# part 4
 ##
 Hadas Ben David (Kahana)
 
@@ -7,6 +7,7 @@ Hodaya Ben Yashar
 Ester Hadas Yanir (Itzhaki)
 
 ## instruction:
+## general:
 1. install mongodb
   
 2. Clone the Repository
@@ -18,7 +19,6 @@ To clone this repository to your local machine, follow these steps:
  b. Open the terminal within Visual Studio Code.
 
  c. Run the following command in the terminal to clone the project: git clone -b WSL https://github.com/HADASKAHANA1/WEB-PROJECT.git
-
 
  d. Run the following commands in the terminal: 
 
@@ -44,11 +44,12 @@ After cloning the repository, navigate to the project directory and run the foll
    
    cd ..
    
-
-9. Run the Server
+## node server
+9. Run the Server node
 Before running the React project, you need to start the server that connects to MongoDB: node app.js
 
-10. open new terminal. Run the Project
+## react
+10. open new terminal. Run the react
 
     a. Run the following commands in the terminal: 
      
@@ -61,6 +62,24 @@ Before running the React project, you need to start the server that connects to 
         run the following command in the terminal to install all the necessary dependencies: npm install
 
     c. Once the dependencies are installed, you can start the project using the following command: npm start
+
+## cpp server
+11. install WSL:
+    a. Run the following commands in the terminal: 
+     
+     wsl --install
+
+    b. open the visual studio code, go to Extensions panel and install Remote-WSL
+    c. open the terminal un vsc (with WSL), and run:
+
+        cd serverCpp
+
+        g++ server.cpp -o server
+
+        ./server
+    
+    
+    
     
 
 #### System Requirements
