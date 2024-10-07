@@ -119,7 +119,7 @@ node app.js
 
 ---
 
-## *Android App Setup*
+### *Android App Setup*
 
 1. *Clone the Android Repository*
    - Run the following commands to clone the Android app:
