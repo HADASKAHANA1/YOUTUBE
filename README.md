@@ -1,5 +1,5 @@
 # part 4
-### the Android for this part is in this repository: *git clone https://github.com/Hodayaby/androidpart4.git*
+### the Android for this part is in this repository: *https://github.com/Hodayaby/androidpart4.git*
 ### the rest of the code is in this repository..
 
 ### *Team Members:*
