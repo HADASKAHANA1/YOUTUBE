@@ -139,33 +139,42 @@ node app.js
 
 ## *User Operations*
 
-### *Registration and Login (Web and Android)*
+### *Managing Users (Web and Android))*
 
+1. *Registration and Login (Web and Android)*
    - *Web*: 
      - For *login* click the "SIGN IN" button on the home page.
 If you want to *sign up*, click "SIGN UP" on the login page.
 Please note that in order to sign up, you must meet the compatibility requirements regarding filling in the details,
    - *Android*: 
-     - For login, click the floating button on the right side (user icon) and proceed to the login screen.  
-To sign up, click "Don't have an account? Register here" on the login screen, and you will be redirected to the registration page.  
+     - For *login* click the floating button on the right side (user icon) and proceed to the login screen.  
+To *sign up*, click "Don't have an account? Register here" on the login screen, and you will be redirected to the registration page.  
 Please note that in order to sign up, you must meet the compatibility requirements regarding filling in the details.
 
+2. *Edit or Delete a User*
+   - *Web*: 
+     - To edit or delete a user, make sure you are logged in to the account, and in the side menu on the home page, select the appropriate button.
+   - *Android*: 
+     - To edit or delete a user, make sure you are logged in to the account, click on the profile picture at the top of the home page, and navigate to the user page. There you can edit or delete the user, as well as view the videos you have uploaded.  
 
----
 
 ### *Managing Videos (Web and Android)*
 
 1. *Create a Video*
    - *Web*: 
-     - In the side menu, click *Upload Video*, fill in the title, description, and upload the video.
+     - In the side menu, click the "Upload Video" button and fill in the required fields.
+Please note that you must be logged in to upload videos (the same applies for liking and commenting).
    - *Android*: 
-     - After signing in, press the floating *Upload Video* button and upload the video file (not URI).
+     -To upload a video, click the middle floating button (with the plus icon) and fill in the required fields.
+Please note that you must be logged in to upload videos (the same applies for liking and commenting).
 
 2. *Edit or Delete a Video*
    - *Web*: 
-     - After logging in, click on the video, then click *Edit* to modify the title or description. To delete, click *Delete*.
+     - If you want to edit or delete a video, you need to go to the relevant video's viewing page.
+Please note that only the user who uploaded the video can edit or delete it.
    - *Android*: 
-     - In the video screen, click *Edit Video, make changes, or click **Delete* to remove the video.
+     - If you want to edit or delete a video, you need to go to the video's viewing page and click the appropriate button.  
+Please note that only the user who uploaded the video can edit or delete it.
 
 ---
 
