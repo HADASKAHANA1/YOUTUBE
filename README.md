@@ -28,43 +28,47 @@ Before setting up, ensure you have the following installed:
 
 2. *Clone the Repository*
    - Open the terminal and run:
-     bash
+     
      git clone -b WSL https://github.com/HADASKAHANA1/WEB-PROJECT.git
+     
      cd WEB-PROJECT
+     
      cd serverApi
      
 
 3. *Install Dependencies*
    - Run the following command to install necessary dependencies:
-     bash
+    
      npm install
      
    - Install mongoose to connect to MongoDB:
-     bash
+     
      npm install mongoose
      
 
 4. *Initialize Database*
    - Run the command to seed the database with default data:
-     bash
+    
      node addDefaultData.js
      
 
 5. *Additional Setup:*
    - Install uuid package for unique identifiers:
-     bash
+    
      npm install uuid
      
    - Create an uploads directory for video uploads:
-     bash
+   
      cd public
+     
      mkdir uploads
+     
      cd ..
      
 
 ### *Start the Node.js Server*
 To start the server that connects to MongoDB, run:
-bash
+
 node app.js
 
 
@@ -73,19 +77,19 @@ node app.js
 ### *React Frontend Setup*
 
 1. *Navigate to the React project directory:*
-   bash
+   
    cd vsc/src
    
 
 2. *Install Dependencies*
    - Run the following command to install React dependencies:
-     bash
+    
      npm install
      
 
 3. *Start the React Frontend*
    - Once the dependencies are installed, start the frontend:
-     bash
+     
      npm start
      
 
@@ -95,24 +99,24 @@ node app.js
 
 1. *Install WSL (Windows Subsystem for Linux)*
    - Run the following commands:
-     bash
+   
      wsl --install
      
 
 2. *Open Visual Studio Code with WSL*
    - Go to the Extensions panel in VS Code and install the *WSL* extension.
    - Open the terminal and connect to WSL:
-     bash
+     
      cd serverCpp
      
 
 3. *Compile and Run the C++ Server*
    - Compile the C++ server:
-     bash
+     
      g++ server.cpp -o server
      
    - Run the C++ server:
-     bash
+    
      ./server
      
 
@@ -122,8 +126,9 @@ node app.js
 
 1. *Clone the Android Repository*
    - Run the following commands to clone the Android app:
-     bash
+     
      git clone https://github.com/Hodayaby/androidpart4.git
+     
      git checkout master
      
 
