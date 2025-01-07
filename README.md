@@ -18,7 +18,7 @@ Before setting up, ensure you have the following installed:
 2. *Clone the Repository*
    - Open the terminal and run:
      
-     git clone -b WEB&SERVER https://github.com/HADASKAHANA1/YOUTUBE.git
+     git clone -b "WEB&SERVER" https://github.com/HADASKAHANA1/YOUTUBE.git
      
      cd YOUTUBE
      
@@ -116,10 +116,7 @@ node app.js
 1. *Clone the Android Repository*
    - Run the following commands to clone the Android app:
      
-     git clone https://github.com/HADASKAHANA1/YOUTUBE.git
-
-     
-     git checkout ANDROID
+     git clone -b ANDROID https://github.com/HADASKAHANA1/YOUTUBE.git
      
 
 2. *Sync Project with Gradle*
@@ -130,12 +127,6 @@ node app.js
    - Press the green arrow or use the shortcut *Shift + F10* to run the app.
 
 ---
-
-## our team work:
-We faced challenges with different and busy schedules, which required us to carefully coordinate our work.
-Additionally, organizing and maintaining order in our project was essential.
-Effective teamwork and regular communication helped us overcome these obstacles and keep the project on track.
-
 
 
 
