@@ -1,14 +1,3 @@
-# part 4
-### the Android for this part is in this repository: *https://github.com/Hodayaby/androidpart4.git*
-### the rest of the code is in this repository..
-
-### *Team Members:*
-- Hadas Ben David (Kahana)
-- Hodaya Ben Yashar
-- Ester Hadas Yanir (Itzhaki)
-
----
-
 ## *Setting Up the Environment*
 
 ### *General Prerequisites*
@@ -29,9 +18,9 @@ Before setting up, ensure you have the following installed:
 2. *Clone the Repository*
    - Open the terminal and run:
      
-     git clone -b WSL https://github.com/HADASKAHANA1/WEB-PROJECT.git
+     git clone -b WEB&SERVER https://github.com/HADASKAHANA1/YOUTUBE.git
      
-     cd WEB-PROJECT
+     cd YOUTUBE
      
      cd serverApi
      
@@ -127,9 +116,10 @@ node app.js
 1. *Clone the Android Repository*
    - Run the following commands to clone the Android app:
      
-     git clone https://github.com/Hodayaby/androidpart4.git
+     git clone https://github.com/HADASKAHANA1/YOUTUBE.git
+
      
-     git checkout master
+     git checkout ANDROID
      
 
 2. *Sync Project with Gradle*
